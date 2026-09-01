@@ -1,0 +1,405 @@
+<title>1인 1기술 재능기부 제안서</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ink: #16283A;
+    --ink-soft: #3C4F5C;
+    --muted: #5C6B70;
+    --paper: #EAEBE1;
+    --paper-raised: #F5F5EE;
+    --line: #C9CDBE;
+    --blue: #2E6B8C;
+    --blue-soft: #E4EDF0;
+    --moss: #55724A;
+    --moss-soft: #E7EDE1;
+    --ochre: #B97A1F;
+    --ochre-soft: #F3E6CC;
+    --shadow: 0 1px 2px rgba(22,40,58,0.06), 0 8px 24px rgba(22,40,58,0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #E7E9DE;
+      --ink-soft: #C3CAC1;
+      --muted: #92A0A0;
+      --paper: #121A1E;
+      --paper-raised: #182228;
+      --line: #2C3A3B;
+      --blue: #6FA8C6;
+      --blue-soft: #1B2C33;
+      --moss: #8FAE80;
+      --moss-soft: #1E2A1D;
+      --ochre: #D9A44F;
+      --ochre-soft: #2C2314;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #E7E9DE;
+    --ink-soft: #C3CAC1;
+    --muted: #92A0A0;
+    --paper: #121A1E;
+    --paper-raised: #182228;
+    --line: #2C3A3B;
+    --blue: #6FA8C6;
+    --blue-soft: #1B2C33;
+    --moss: #8FAE80;
+    --moss-soft: #1E2A1D;
+    --ochre: #D9A44F;
+    --ochre-soft: #2C2314;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .sheet {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 56px 48px 96px;
+  }
+
+  .titleblock {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: end;
+    border: 1.5px solid var(--ink);
+    padding: 22px 26px;
+    margin-bottom: 44px;
+    background: var(--paper-raised);
+    box-shadow: var(--shadow);
+  }
+  .titleblock .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin: 0 0 10px;
+  }
+  .titleblock h1 {
+    font-family: "Gowun Batang", serif;
+    font-size: clamp(28px, 4vw, 38px);
+    line-height: 1.3;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+  .titleblock .sub {
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .titleblock .meta {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.9;
+    white-space: nowrap;
+  }
+  .titleblock .meta b { color: var(--ink); font-weight: 600; }
+
+  h2 {
+    font-family: "Gowun Batang", serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 52px 0 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--blue);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    text-wrap: balance;
+  }
+  h2 .num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--blue);
+  }
+
+  h3 {
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 26px 0 10px;
+  }
+
+  p { margin: 0 0 14px; max-width: 68ch; color: var(--ink-soft); }
+  p.lead { color: var(--ink); font-size: 16.5px; }
+
+  ul.blist { margin: 0 0 14px; padding-left: 0; list-style: none; }
+  ul.blist li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 9px;
+    color: var(--ink-soft);
+    max-width: 66ch;
+  }
+  ul.blist li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 10px;
+    width: 7px;
+    height: 7px;
+    background: var(--ochre);
+  }
+
+  .overview {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4px 0 8px;
+    box-shadow: var(--shadow);
+  }
+  .overview tr { border-bottom: 1px solid var(--line); }
+  .overview tr:last-child { border-bottom: none; }
+  .overview th, .overview td { padding: 13px 16px; text-align: left; vertical-align: top; font-size: 14.5px; }
+  .overview th {
+    width: 150px;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--blue);
+    background: var(--blue-soft);
+    text-transform: uppercase;
+  }
+  .overview td { background: var(--paper-raised); color: var(--ink); }
+  .overview .quote { font-family: "Gowun Batang", serif; font-size: 16px; }
+
+  .tablewrap { overflow-x: auto; box-shadow: var(--shadow); }
+  table.data {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  table.data caption { display: none; }
+  table.data thead th {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 500;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 10px 14px;
+  }
+  table.data tbody td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-soft);
+    vertical-align: top;
+  }
+  table.data tbody tr:nth-child(even) td { background: var(--paper-raised); }
+  table.data tbody td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  table.data tfoot td {
+    padding: 11px 14px;
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--ochre-soft);
+    border-top: 2px solid var(--ochre);
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    padding: 2px 7px;
+    background: var(--moss-soft);
+    color: var(--moss);
+    border: 1px solid var(--moss);
+  }
+
+  .steps {
+    counter-reset: step;
+    display: grid;
+    gap: 14px;
+    margin: 6px 0 8px;
+  }
+  .steps li {
+    counter-increment: step;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .steps li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    color: var(--blue);
+    border: 1px solid var(--blue);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--blue-soft);
+  }
+  .steps li p { margin: 0; padding-top: 4px; }
+  .steps li b { color: var(--ink); }
+
+  .callout {
+    border-left: 3px solid var(--ochre);
+    background: var(--ochre-soft);
+    padding: 16px 20px;
+    margin: 8px 0 4px;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+  }
+  .callout b { color: var(--ink); }
+
+  .footer-note {
+    margin-top: 60px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--muted);
+    font-family: "IBM Plex Mono", monospace;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .sheet { max-width: none; padding: 0 8mm; }
+    h2 { break-after: avoid; }
+    table.data, .titleblock, .overview { break-inside: avoid; }
+  }
+
+  @media (max-width: 600px) {
+    .sheet { padding: 32px 18px 64px; }
+    .titleblock { grid-template-columns: 1fr; }
+    .titleblock .meta { text-align: left; }
+    .overview th { width: 110px; }
+  }
+</style>
+
+<div class="sheet">
+
+  <div class="titleblock">
+    <div>
+      <p class="eyebrow">환경재단 그린리더 발굴 프로젝트</p>
+      <h1>"1인 1기술 재능기부" 캠페인 제안서</h1>
+      <p class="sub">전문가 실무 매칭형 환경 재능기부 프로그램</p>
+    </div>
+    <div class="meta">
+      문서번호 <b>GLP-2026-01</b><br>
+      제안일 <b>2026. 09. 01.</b><br>
+      버전 <b>v1.0 · 파일럿(안)</b>
+    </div>
+  </div>
+
+  <h2><span class="num">01</span> 제안 배경</h2>
+  <p class="lead">환경재단이 시민을 대상으로 진행하는 캠페인은 대체로 플로깅, 분리수거 챌린지 같은 참여형에 머물러 있어, 전문 지식과 기술을 가진 현직 종사자의 역량은 활용되지 못하고 있습니다.</p>
+  <p>한국어 합성 페르소나 데이터셋(Nemotron-Personas-Korea) 분석 결과, 서울 거주자 중 상당수가 자신의 직무 — 건설, 화학, 섬유, 폐기물 처리, 교육 등 — 와 환경 가치관을 이미 연결 짓고 있는 것으로 나타났습니다. 이들에게 필요한 제안은 "환경운동가가 되어달라"가 아니라, <b style="color:var(--ink)">"이미 하는 일을 재단 프로젝트에 한 번 빌려달라"</b>는 낮은 진입장벽의 요청입니다.</p>
+
+  <h2><span class="num">02</span> 캠페인 개요</h2>
+  <table class="overview">
+    <tr><th>캠페인명</th><td>1인 1기술 재능기부</td></tr>
+    <tr><th>핵심 메시지</th><td class="quote">"당신의 전공이 이미 환경운동입니다"</td></tr>
+    <tr><th>대상</th><td>건설·화학·섬유·폐기물·교육 등 전문 기술직 종사자</td></tr>
+    <tr><th>운영 방식</th><td>전문가의 실무 기술을 재단 프로젝트에 단발성으로 투입하는 프로보노 매칭</td></tr>
+    <tr><th>시범 참여자</th><td>6인 <span class="tag">문영무</span> <span class="tag">김정미</span> <span class="tag">염종한</span> <span class="tag">박강은</span> <span class="tag">김형근</span> <span class="tag">정현진</span></td></tr>
+    <tr><th>기간(안)</th><td>6개월 파일럿 운영 후 정기 시즌제 전환</td></tr>
+  </table>
+
+  <h2><span class="num">03</span> 참여 그린리더 소개<span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);font-weight:400;">— 시범 6인</span></h2>
+  <div class="tablewrap">
+    <table class="data">
+      <thead><tr><th>이름</th><th>나이 · 지역</th><th>직업</th><th>기여 가능 활동</th></tr></thead>
+      <tbody>
+        <tr><td>문영무</td><td>38 · 영등포구</td><td>기업 고위 임원(건설업)</td><td>저탄소 건축 공법 자문, 커뮤니티센터 리모델링 기술 검토</td></tr>
+        <tr><td>김정미</td><td>36 · 동작구</td><td>건축시공 기술자</td><td>친환경 소규모 시설 시공 자문, 현장 하자 사전 점검</td></tr>
+        <tr><td>염종한</td><td>56 · 동대문구</td><td>섬유소재 개발 연구원</td><td>친환경 소재 전환 클리닉 — 원단·소재 컨설팅</td></tr>
+        <tr><td>박강은</td><td>29 · 은평구</td><td>화학 연구원</td><td>친환경 소재 전환 클리닉 — 화학·플라스틱 대체재 자문</td></tr>
+        <tr><td>김형근</td><td>32 · 송파구</td><td>폐기물 처리 기술자</td><td>동네 단위 제로웨이스트 배출 진단 설계 및 진행</td></tr>
+        <tr><td>정현진</td><td>41 · 금천구</td><td>공학·건설 분야 교수</td><td>시민 강좌 "우리 동네 도시재생과 환경" 강연</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="num">04</span> 세부 프로그램 구성</h2>
+  <div class="tablewrap">
+    <table class="data">
+      <thead><tr><th>프로그램</th><th>내용</th><th>담당 그린리더</th></tr></thead>
+      <tbody>
+        <tr><td>저탄소 건축 자문</td><td>재단 산하 커뮤니티센터·보육시설 리모델링에 저탄소 공법 자문 제공</td><td>문영무, 김정미</td></tr>
+        <tr><td>친환경 소재 전환 클리닉</td><td>지역 소상공인 대상 원단·화학 소재 무료 컨설팅 데이(월 1회)</td><td>염종한, 박강은</td></tr>
+        <tr><td>제로웨이스트 배출 진단</td><td>지자체 협업, 동네 단위 폐기물 배출 실태 진단 및 개선안 제시</td><td>김형근</td></tr>
+        <tr><td>시민 강좌</td><td>"우리 동네 도시재생과 환경" 등 재단 주최 강연 시리즈</td><td>정현진</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="num">05</span> 운영 프로세스</h2>
+  <ol class="steps">
+    <li><p><b>모집·매칭</b> — 그린리더의 전문 분야와 재단 프로젝트 수요를 매칭합니다.</p></li>
+    <li><p><b>활동 실행</b> — 프로그램별 일정에 따라 자문·컨설팅·강연·진단을 수행합니다.</p></li>
+    <li><p><b>기록·공유</b> — 활동 결과를 사례집·SNS 콘텐츠로 정리해 확산합니다.</p></li>
+    <li><p><b>피드백·확대</b> — 참여 그린리더 만족도 조사 후 다음 시즌 모집 규모를 확대합니다.</p></li>
+  </ol>
+
+  <h2><span class="num">06</span> 기대 효과</h2>
+  <ul class="blist">
+    <li>전문성 기반 참여로 일회성 캠페인보다 높은 실질적 임팩트 창출</li>
+    <li>참여자 개인에게는 재능기부 이력 및 네트워크 형성 기회 제공</li>
+    <li>재단은 저비용으로 전문 자문 인력을 확보, 프로젝트 품질 향상</li>
+    <li>사례 확산을 통한 재단 브랜드 및 후속 캠페인("그린 커리어 전환소" 등) 연계 기반 마련</li>
+  </ul>
+
+  <h2><span class="num">07</span> 실행 일정(안)</h2>
+  <div class="tablewrap">
+    <table class="data">
+      <thead><tr><th>단계</th><th>기간(안)</th><th>주요 활동</th></tr></thead>
+      <tbody>
+        <tr><td>1. 준비</td><td>1개월차</td><td>그린리더 6인 최종 참여 확정, 프로그램별 실행 계획 수립, 재단 내부 협업 부서 지정</td></tr>
+        <tr><td>2. 시범 운영</td><td>2~3개월차</td><td>프로그램별 1회 파일럿 진행(리모델링 자문 1건, 클리닉 1회, 진단 1개 동, 강좌 1회)</td></tr>
+        <tr><td>3. 정기 운영</td><td>4~6개월차</td><td>월간 정기 스케줄 확정 및 운영, 참여 그린리더 확대 모집</td></tr>
+        <tr><td>4. 성과 공유</td><td>6개월차</td><td>성과 보고회 및 콘텐츠 제작(사례집, SNS 카드뉴스), 차기 시즌 기획</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="num">08</span> 예산 개요(안)</h2>
+  <div class="tablewrap">
+    <table class="data">
+      <thead><tr><th>항목</th><th>개산(6개월)</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>그린리더 활동비</td><td>약 600만원</td><td>6인 × 회당 활동비(10만원 기준, 총 60회 내외)</td></tr>
+        <tr><td>클리닉·강좌 운영비</td><td>약 300만원</td><td>월 1회 클리닉 및 강좌 대관·자재비</td></tr>
+        <tr><td>홍보·콘텐츠 제작비</td><td>약 200만원</td><td>랜딩 페이지, 카드뉴스, 성과 사례집 제작</td></tr>
+        <tr><td>예비비</td><td>약 100만원</td><td>현장 대응 예비 자금</td></tr>
+      </tbody>
+      <tfoot><tr><td>합계</td><td>약 1,200만원</td><td></td></tr></tfoot>
+    </table>
+  </div>
+
+  <h2><span class="num">09</span> 문의</h2>
+  <div class="callout">
+    본 제안서는 파일럿 운영을 위한 초안이며, 세부 일정과 예산은 재단 협의를 통해 조정 가능합니다.<br>
+    <b>환경재단 그린리더 발굴 프로젝트</b> 담당자 앞
+  </div>
+
+  <div class="footer-note">
+    <span>green-persona-ji22222 · 그린리더 발굴 프로젝트</span>
+    <span>GLP-2026-01 · v1.0</span>
+  </div>
+
+</div>
