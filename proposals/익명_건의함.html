@@ -223,74 +223,6 @@
     color: var(--danger);
   }
 
-  .feed {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .feed-header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  .feed-header h2 {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0;
-  }
-
-  .badge {
-    font-family: "IBM Plex Mono", ui-monospace, monospace;
-    font-size: 12px;
-    color: var(--ink-muted);
-    font-variant-numeric: tabular-nums;
-  }
-
-  ul#feed-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 420px;
-    overflow-y: auto;
-  }
-
-  ul#feed-list li {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .entry-text {
-    font-size: 14.5px;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  .entry-time {
-    font-family: "IBM Plex Mono", ui-monospace, monospace;
-    font-size: 11.5px;
-    color: var(--ink-faint);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .empty {
-    color: var(--ink-faint);
-    font-size: 13.5px;
-    padding: 18px 4px;
-    text-align: center;
-  }
-
   [hidden] { display: none !important; }
 
   footer.note {
@@ -329,20 +261,11 @@
     <p id="status" role="status" aria-live="polite" hidden></p>
   </section>
 
-  <section class="feed">
-    <div class="feed-header">
-      <h2>접수된 건의</h2>
-      <span id="feed-count" class="badge">최근 0건</span>
-    </div>
-    <ul id="feed-list"></ul>
-    <p id="feed-empty" class="empty">아직 접수된 건의가 없어요. 첫 건의를 남겨보세요.</p>
-  </section>
-
   <footer class="note">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 2 3 6v6c0 5 3.8 9.4 9 10 5.2-.6 9-5 9-10V6l-9-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
     </svg>
-    <span>작성자 정보, 접속 위치, 로그인 여부는 어디에도 남지 않습니다. 회사 구성원이라면 누구나 작성하고 볼 수 있어요.</span>
+    <span>작성자 정보, 접속 위치, 로그인 여부는 어디에도 남지 않습니다. 보낸 건의는 관리자만 따로 확인합니다.</span>
   </footer>
 </div>
 
@@ -352,9 +275,6 @@
   var counterEl = document.getElementById("counter");
   var submitEl = document.getElementById("submit");
   var statusEl = document.getElementById("status");
-  var listEl = document.getElementById("feed-list");
-  var emptyEl = document.getElementById("feed-empty");
-  var countEl = document.getElementById("feed-count");
   var LIMIT = 1000;
   var db = null;
   var statusTimer = null;
@@ -373,46 +293,6 @@
     statusTimer = setTimeout(function () {
       statusEl.hidden = true;
     }, 4000);
-  }
-
-  function relativeTime(iso) {
-    var then = new Date(iso).getTime();
-    if (isNaN(then)) return "";
-    var diff = Math.max(0, Date.now() - then);
-    var min = Math.floor(diff / 60000);
-    if (min < 1) return "방금 전";
-    if (min < 60) return min + "분 전";
-    var hr = Math.floor(min / 60);
-    if (hr < 24) return hr + "시간 전";
-    var day = Math.floor(hr / 24);
-    if (day < 30) return day + "일 전";
-    return new Date(iso).toLocaleDateString("ko-KR");
-  }
-
-  function escapeHtml(s) {
-    var div = document.createElement("div");
-    div.textContent = s;
-    return div.innerHTML;
-  }
-
-  function render(docs) {
-    listEl.innerHTML = "";
-    emptyEl.hidden = docs.length > 0;
-    countEl.textContent = "최근 " + docs.length + "건";
-    docs.forEach(function (d) {
-      var data = d.data();
-      if (!data || !data.content) return;
-      var li = document.createElement("li");
-      var textDiv = document.createElement("div");
-      textDiv.className = "entry-text";
-      textDiv.textContent = data.content;
-      var timeDiv = document.createElement("div");
-      timeDiv.className = "entry-time";
-      timeDiv.textContent = relativeTime(data.createdAt);
-      li.appendChild(textDiv);
-      li.appendChild(timeDiv);
-      listEl.appendChild(li);
-    });
   }
 
   function errorMessage(code) {
@@ -465,15 +345,7 @@
     }
     if (!db) {
       showStatus("이 화면에서는 건의함 저장 기능을 사용할 수 없어요.", false);
-      return;
     }
-    db.collection("suggestions")
-      .orderBy("createdAt", "desc")
-      .limit(50)
-      .onSnapshot(
-        function (snap) { render(snap.docs); },
-        function () { /* falls back silently; list simply stays as last known state */ }
-      );
   }
 
   init();
