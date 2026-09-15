@@ -238,6 +238,147 @@
 
   footer.note svg { flex-shrink: 0; margin-top: 2px; }
 
+  .admin-entry {
+    display: flex;
+    justify-content: center;
+  }
+
+  .admin-link {
+    appearance: none;
+    border: none;
+    background: none;
+    color: var(--ink-faint);
+    font: inherit;
+    font-size: 12px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .admin-link:hover { color: var(--ink-muted); }
+
+  .admin-gate {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .admin-gate-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .admin-gate input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    min-width: 0;
+  }
+
+  .admin-gate input:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+
+  .admin-gate button {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .admin-gate button:hover { border-color: var(--accent); }
+
+  .admin-gate-error {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--danger);
+  }
+
+  .admin-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .admin-panel-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .admin-panel-header h2 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .badge {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  ul#admin-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+
+  ul#admin-list li {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .entry-text {
+    font-size: 14.5px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .entry-time {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .empty {
+    color: var(--ink-faint);
+    font-size: 13.5px;
+    padding: 18px 4px;
+    text-align: center;
+  }
+
   @media (max-width: 420px) {
     .page { padding-inline: 16px; }
     .card { padding: 16px; }
@@ -267,6 +408,28 @@
     </svg>
     <span>작성자 정보, 접속 위치, 로그인 여부는 어디에도 남지 않습니다. 보낸 건의는 관리자만 따로 확인합니다.</span>
   </footer>
+
+  <div class="admin-entry">
+    <button id="admin-toggle" class="admin-link" type="button">관리자로 보기</button>
+  </div>
+
+  <div id="admin-gate" class="admin-gate" hidden>
+    <label for="admin-code">관리자 암호</label>
+    <div class="admin-gate-row">
+      <input id="admin-code" type="password" autocomplete="off" placeholder="암호 입력" />
+      <button id="admin-code-submit" type="button">확인</button>
+    </div>
+    <p id="admin-gate-error" class="admin-gate-error" hidden>암호가 올바르지 않아요.</p>
+  </div>
+
+  <section id="admin-panel" class="admin-panel" hidden>
+    <div class="admin-panel-header">
+      <h2>접수된 건의</h2>
+      <span id="admin-count" class="badge">최근 0건</span>
+    </div>
+    <ul id="admin-list"></ul>
+    <p id="admin-empty" class="empty">아직 접수된 건의가 없어요.</p>
+  </section>
 </div>
 
 <script>
@@ -275,9 +438,20 @@
   var counterEl = document.getElementById("counter");
   var submitEl = document.getElementById("submit");
   var statusEl = document.getElementById("status");
+  var adminToggle = document.getElementById("admin-toggle");
+  var adminGate = document.getElementById("admin-gate");
+  var adminCodeInput = document.getElementById("admin-code");
+  var adminCodeSubmit = document.getElementById("admin-code-submit");
+  var adminGateError = document.getElementById("admin-gate-error");
+  var adminPanel = document.getElementById("admin-panel");
+  var adminList = document.getElementById("admin-list");
+  var adminEmpty = document.getElementById("admin-empty");
+  var adminCount = document.getElementById("admin-count");
+  var ADMIN_CODE = "건의함-2691";
   var LIMIT = 1000;
   var db = null;
   var statusTimer = null;
+  var adminSubscribed = false;
 
   function updateCounter() {
     var len = contentEl.value.length;
@@ -295,6 +469,77 @@
     }, 4000);
   }
 
+  function relativeTime(iso) {
+    var then = new Date(iso).getTime();
+    if (isNaN(then)) return "";
+    var diff = Math.max(0, Date.now() - then);
+    var min = Math.floor(diff / 60000);
+    if (min < 1) return "방금 전";
+    if (min < 60) return min + "분 전";
+    var hr = Math.floor(min / 60);
+    if (hr < 24) return hr + "시간 전";
+    var day = Math.floor(hr / 24);
+    if (day < 30) return day + "일 전";
+    return new Date(iso).toLocaleDateString("ko-KR");
+  }
+
+  function renderAdminList(docs) {
+    adminList.innerHTML = "";
+    adminEmpty.hidden = docs.length > 0;
+    adminCount.textContent = "최근 " + docs.length + "건";
+    docs.forEach(function (d) {
+      var data = d.data();
+      if (!data || !data.content) return;
+      var li = document.createElement("li");
+      var textDiv = document.createElement("div");
+      textDiv.className = "entry-text";
+      textDiv.textContent = data.content;
+      var timeDiv = document.createElement("div");
+      timeDiv.className = "entry-time";
+      timeDiv.textContent = relativeTime(data.createdAt);
+      li.appendChild(textDiv);
+      li.appendChild(timeDiv);
+      adminList.appendChild(li);
+    });
+  }
+
+  async function unlockAdmin() {
+    adminGate.hidden = true;
+    adminToggle.hidden = true;
+    adminPanel.hidden = false;
+    if (adminSubscribed) return;
+    adminSubscribed = true;
+    await dbReady;
+    if (!db) return;
+    db.collection("suggestions")
+      .orderBy("createdAt", "desc")
+      .limit(50)
+      .onSnapshot(
+        function (snap) { renderAdminList(snap.docs); },
+        function () { /* falls back silently; panel keeps last known state */ }
+      );
+  }
+
+  function checkAdminCode() {
+    if (adminCodeInput.value === ADMIN_CODE) {
+      adminGateError.hidden = true;
+      unlockAdmin();
+    } else {
+      adminGateError.hidden = false;
+      adminCodeInput.value = "";
+      adminCodeInput.focus();
+    }
+  }
+
+  adminToggle.addEventListener("click", function () {
+    adminGate.hidden = false;
+    adminCodeInput.focus();
+  });
+  adminCodeSubmit.addEventListener("click", checkAdminCode);
+  adminCodeInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") checkAdminCode();
+  });
+
   function errorMessage(code) {
     if (code === "quota_exceeded") return "건의함이 가득 찼어요. 관리자에게 알려주세요.";
     if (code === "resource_exhausted") return "잠시 요청이 몰렸어요. 조금 뒤 다시 시도해주세요.";
@@ -308,6 +553,7 @@
       showStatus("내용을 입력한 뒤 보내주세요.", false);
       return;
     }
+    await dbReady;
     if (!db) {
       showStatus("지금은 건의함을 사용할 수 없어요.", false);
       return;
@@ -337,7 +583,7 @@
   submitEl.addEventListener("click", submit);
   updateCounter();
 
-  async function init() {
+  var dbReady = (async function () {
     try {
       db = window.claude && window.claude.use ? await window.claude.use("db") : null;
     } catch (e) {
@@ -346,8 +592,6 @@
     if (!db) {
       showStatus("이 화면에서는 건의함 저장 기능을 사용할 수 없어요.", false);
     }
-  }
-
-  init();
+  })();
 })();
 </script>
