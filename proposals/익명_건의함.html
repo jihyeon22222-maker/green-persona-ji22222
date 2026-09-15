@@ -1,0 +1,481 @@
+<title>익명 건의함</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f1f3f1;
+    --surface: #ffffff;
+    --surface-2: #f7f8f7;
+    --ink: #1b211e;
+    --ink-muted: #5d6a63;
+    --ink-faint: #8b968f;
+    --line: #dfe4e0;
+    --accent: #2f6f62;
+    --accent-strong: #1f4e44;
+    --accent-tint: #e4f0ec;
+    --danger: #b3492f;
+    --danger-tint: #fbe9e4;
+    --shadow: 0 1px 2px rgba(20, 30, 25, 0.04), 0 12px 32px -16px rgba(20, 30, 25, 0.18);
+    --focus: #2f6f62;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12161a;
+      --surface: #1a2024;
+      --surface-2: #20272b;
+      --ink: #e9ede9;
+      --ink-muted: #a2ada4;
+      --ink-faint: #6f7a72;
+      --line: #2b3339;
+      --accent: #55b79c;
+      --accent-strong: #7fd0b6;
+      --accent-tint: #1c332d;
+      --danger: #e18066;
+      --danger-tint: #3a231c;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -20px rgba(0, 0, 0, 0.6);
+      --focus: #7fd0b6;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #12161a;
+    --surface: #1a2024;
+    --surface-2: #20272b;
+    --ink: #e9ede9;
+    --ink-muted: #a2ada4;
+    --ink-faint: #6f7a72;
+    --line: #2b3339;
+    --accent: #55b79c;
+    --accent-strong: #7fd0b6;
+    --accent-tint: #1c332d;
+    --danger: #e18066;
+    --danger-tint: #3a231c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -20px rgba(0, 0, 0, 0.6);
+    --focus: #7fd0b6;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans KR", -apple-system, "Malgun Gothic", sans-serif;
+  }
+
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 48px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  header.top {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--accent-strong);
+    background: var(--accent-tint);
+    padding: 5px 10px;
+    border-radius: 999px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: "Noto Serif KR", serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 34px);
+    line-height: 1.25;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .lede {
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 52ch;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .card label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-muted);
+  }
+
+  textarea#content {
+    width: 100%;
+    min-height: 140px;
+    resize: vertical;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    font: inherit;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  textarea#content::placeholder {
+    color: var(--ink-faint);
+  }
+
+  textarea#content:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+
+  .composer-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  #counter {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  #counter.limit {
+    color: var(--danger);
+  }
+
+  button#submit {
+    appearance: none;
+    border: none;
+    background: var(--accent);
+    color: #fbfdfc;
+    font: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 11px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+
+  button#submit:hover:not(:disabled) { background: var(--accent-strong); }
+  button#submit:active:not(:disabled) { transform: scale(0.98); }
+
+  button#submit:disabled {
+    background: var(--ink-faint);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  button#submit:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  #status {
+    margin: 0;
+    font-size: 13px;
+    padding: 9px 12px;
+    border-radius: 8px;
+  }
+
+  #status.ok {
+    background: var(--accent-tint);
+    color: var(--accent-strong);
+  }
+
+  #status.err {
+    background: var(--danger-tint);
+    color: var(--danger);
+  }
+
+  .feed {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .feed-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .feed-header h2 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .badge {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  ul#feed-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+
+  ul#feed-list li {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .entry-text {
+    font-size: 14.5px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .entry-time {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .empty {
+    color: var(--ink-faint);
+    font-size: 13.5px;
+    padding: 18px 4px;
+    text-align: center;
+  }
+
+  [hidden] { display: none !important; }
+
+  footer.note {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    color: var(--ink-faint);
+    font-size: 12.5px;
+    line-height: 1.6;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+  }
+
+  footer.note svg { flex-shrink: 0; margin-top: 2px; }
+
+  @media (max-width: 420px) {
+    .page { padding-inline: 16px; }
+    .card { padding: 16px; }
+  }
+</style>
+
+<div class="page">
+  <header class="top">
+    <span class="eyebrow">사내 전용 · 완전 익명</span>
+    <h1>익명 건의함</h1>
+    <p class="lede">누구 글인지 저장하지 않아요. 하고 싶은 이야기를 편하게 적어서 보내주세요.</p>
+  </header>
+
+  <section class="card">
+    <label for="content">건의 내용</label>
+    <textarea id="content" maxlength="1000" placeholder="불편한 점, 제안하고 싶은 아이디어, 무엇이든 좋아요."></textarea>
+    <div class="composer-footer">
+      <span id="counter">0 / 1000</span>
+      <button id="submit" type="button">보내기</button>
+    </div>
+    <p id="status" role="status" aria-live="polite" hidden></p>
+  </section>
+
+  <section class="feed">
+    <div class="feed-header">
+      <h2>접수된 건의</h2>
+      <span id="feed-count" class="badge">최근 0건</span>
+    </div>
+    <ul id="feed-list"></ul>
+    <p id="feed-empty" class="empty">아직 접수된 건의가 없어요. 첫 건의를 남겨보세요.</p>
+  </section>
+
+  <footer class="note">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 2 3 6v6c0 5 3.8 9.4 9 10 5.2-.6 9-5 9-10V6l-9-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </svg>
+    <span>작성자 정보, 접속 위치, 로그인 여부는 어디에도 남지 않습니다. 회사 구성원이라면 누구나 작성하고 볼 수 있어요.</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var contentEl = document.getElementById("content");
+  var counterEl = document.getElementById("counter");
+  var submitEl = document.getElementById("submit");
+  var statusEl = document.getElementById("status");
+  var listEl = document.getElementById("feed-list");
+  var emptyEl = document.getElementById("feed-empty");
+  var countEl = document.getElementById("feed-count");
+  var LIMIT = 1000;
+  var db = null;
+  var statusTimer = null;
+
+  function updateCounter() {
+    var len = contentEl.value.length;
+    counterEl.textContent = len + " / " + LIMIT;
+    counterEl.classList.toggle("limit", len >= LIMIT);
+  }
+
+  function showStatus(message, ok) {
+    clearTimeout(statusTimer);
+    statusEl.textContent = message;
+    statusEl.hidden = false;
+    statusEl.className = ok ? "ok" : "err";
+    statusTimer = setTimeout(function () {
+      statusEl.hidden = true;
+    }, 4000);
+  }
+
+  function relativeTime(iso) {
+    var then = new Date(iso).getTime();
+    if (isNaN(then)) return "";
+    var diff = Math.max(0, Date.now() - then);
+    var min = Math.floor(diff / 60000);
+    if (min < 1) return "방금 전";
+    if (min < 60) return min + "분 전";
+    var hr = Math.floor(min / 60);
+    if (hr < 24) return hr + "시간 전";
+    var day = Math.floor(hr / 24);
+    if (day < 30) return day + "일 전";
+    return new Date(iso).toLocaleDateString("ko-KR");
+  }
+
+  function escapeHtml(s) {
+    var div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  function render(docs) {
+    listEl.innerHTML = "";
+    emptyEl.hidden = docs.length > 0;
+    countEl.textContent = "최근 " + docs.length + "건";
+    docs.forEach(function (d) {
+      var data = d.data();
+      if (!data || !data.content) return;
+      var li = document.createElement("li");
+      var textDiv = document.createElement("div");
+      textDiv.className = "entry-text";
+      textDiv.textContent = data.content;
+      var timeDiv = document.createElement("div");
+      timeDiv.className = "entry-time";
+      timeDiv.textContent = relativeTime(data.createdAt);
+      li.appendChild(textDiv);
+      li.appendChild(timeDiv);
+      listEl.appendChild(li);
+    });
+  }
+
+  function errorMessage(code) {
+    if (code === "quota_exceeded") return "건의함이 가득 찼어요. 관리자에게 알려주세요.";
+    if (code === "resource_exhausted") return "잠시 요청이 몰렸어요. 조금 뒤 다시 시도해주세요.";
+    if (code === "revoked" || code === "not_granted") return "지금은 건의함을 사용할 수 없어요.";
+    return "전송 중 문제가 생겼어요. 다시 시도해주세요.";
+  }
+
+  async function submit() {
+    var text = contentEl.value.trim();
+    if (!text) {
+      showStatus("내용을 입력한 뒤 보내주세요.", false);
+      return;
+    }
+    if (!db) {
+      showStatus("지금은 건의함을 사용할 수 없어요.", false);
+      return;
+    }
+    submitEl.disabled = true;
+    submitEl.textContent = "보내는 중…";
+    try {
+      await db.collection("suggestions").add({
+        content: text,
+        createdAt: new Date().toISOString()
+      });
+      contentEl.value = "";
+      updateCounter();
+      showStatus("건의가 접수됐어요. 감사합니다.", true);
+    } catch (e) {
+      showStatus(errorMessage(e && e.code), false);
+    } finally {
+      submitEl.disabled = false;
+      submitEl.textContent = "보내기";
+    }
+  }
+
+  contentEl.addEventListener("input", updateCounter);
+  contentEl.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") submit();
+  });
+  submitEl.addEventListener("click", submit);
+  updateCounter();
+
+  async function init() {
+    try {
+      db = window.claude && window.claude.use ? await window.claude.use("db") : null;
+    } catch (e) {
+      db = null;
+    }
+    if (!db) {
+      showStatus("이 화면에서는 건의함 저장 기능을 사용할 수 없어요.", false);
+      return;
+    }
+    db.collection("suggestions")
+      .orderBy("createdAt", "desc")
+      .limit(50)
+      .onSnapshot(
+        function (snap) { render(snap.docs); },
+        function () { /* falls back silently; list simply stays as last known state */ }
+      );
+  }
+
+  init();
+})();
+</script>
