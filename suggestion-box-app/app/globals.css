@@ -1,0 +1,241 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --bg: #f1f3f1;
+  --surface: #ffffff;
+  --surface-2: #f7f8f7;
+  --ink: #1b211e;
+  --ink-muted: #5d6a63;
+  --ink-faint: #8b968f;
+  --line: #dfe4e0;
+  --accent: #2f6f62;
+  --accent-strong: #1f4e44;
+  --accent-tint: #e4f0ec;
+  --danger: #b3492f;
+  --danger-tint: #fbe9e4;
+  --shadow: 0 1px 2px rgba(20, 30, 25, 0.04), 0 12px 32px -16px rgba(20, 30, 25, 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12161a;
+    --surface: #1a2024;
+    --surface-2: #20272b;
+    --ink: #e9ede9;
+    --ink-muted: #a2ada4;
+    --ink-faint: #6f7a72;
+    --line: #2b3339;
+    --accent: #55b79c;
+    --accent-strong: #7fd0b6;
+    --accent-tint: #1c332d;
+    --danger: #e18066;
+    --danger-tint: #3a231c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -20px rgba(0, 0, 0, 0.6);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Noto Sans KR", -apple-system, "Malgun Gothic", sans-serif;
+}
+
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 20px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--accent-strong);
+  background: var(--accent-tint);
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+
+h1 {
+  font-family: "Noto Serif KR", serif;
+  font-weight: 700;
+  font-size: clamp(26px, 5vw, 32px);
+  line-height: 1.25;
+  margin: 0;
+}
+
+.lede {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 52ch;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+textarea,
+input[type="password"] {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+textarea {
+  min-height: 140px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+textarea::placeholder {
+  color: var(--ink-faint);
+}
+
+.composer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.counter {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+button {
+  appearance: none;
+  border: none;
+  background: var(--accent);
+  color: #fbfdfc;
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 11px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: var(--accent-strong);
+}
+
+button:disabled {
+  background: var(--ink-faint);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.status {
+  margin: 0;
+  font-size: 13px;
+  padding: 9px 12px;
+  border-radius: 8px;
+}
+
+.status.ok {
+  background: var(--accent-tint);
+  color: var(--accent-strong);
+}
+
+.status.err {
+  background: var(--danger-tint);
+  color: var(--danger);
+}
+
+footer.note {
+  color: var(--ink-faint);
+  font-size: 12.5px;
+  line-height: 1.6;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.admin-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.admin-header button {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-weight: 500;
+  padding: 8px 14px;
+}
+
+.admin-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-list li {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.entry-text {
+  font-size: 14.5px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.entry-time {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+
+.empty {
+  color: var(--ink-faint);
+  font-size: 13.5px;
+  padding: 18px 4px;
+  text-align: center;
+}
