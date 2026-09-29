@@ -59,6 +59,17 @@ body {
 .stat small { font-size: 11px; color: var(--muted); letter-spacing: .06em; }
 .stat b { font-family: var(--font-display); font-size: 22px; font-weight: 400; }
 .hp { display: flex; gap: 3px; }
+.sound {
+  appearance: none; cursor: pointer; width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--field); color: var(--ink);
+  display: grid; place-items: center; padding: 0;
+}
+.sound svg { width: 18px; height: 18px; }
+.sound .x { display: none; }
+.sound[aria-pressed="false"] .x { display: inline; }
+.sound[aria-pressed="false"] .w { display: none; }
+.sound[aria-pressed="false"] { color: var(--muted); }
+.sound:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 .hp i { width: 14px; height: 14px; border-radius: 50%; background: var(--accent); display: block; transition: background .2s, transform .2s; }
 .hp i.off { background: var(--line); transform: scale(.8); }
 
@@ -174,6 +185,13 @@ body {
       <div class="stat"><small>지구 체력</small><div class="hp" id="hp"></div></div>
       <div class="stat"><small>콤보</small><b id="combo">0</b></div>
       <div class="stat"><small>점수</small><b id="score">0</b></div>
+      <button class="sound" id="soundBtn" type="button" aria-pressed="true" aria-label="효과음 끄기" title="효과음 (M)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
+          <path class="w" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>
+          <path class="x" d="M17 9l5 6M22 9l-5 6"/>
+        </svg>
+      </button>
     </div>
   </header>
 
@@ -185,7 +203,7 @@ body {
         <ul class="muted">
           <li>잘못 버리거나 바닥에 떨어지면 지구 체력이 줄어요</li>
           <li>연속으로 맞히면 콤보 점수가 붙어요</li>
-          <li>키보드 1~6으로도 버릴 수 있어요</li>
+          <li>키보드 1~6으로도 버릴 수 있어요 · M은 효과음 켜기/끄기</li>
         </ul>
         <div>
           <p class="muted" style="margin-bottom:6px">헷갈리는 쓰레기도 섞여 있어요</p>
@@ -270,6 +288,70 @@ body {
   const load = () => { try { return +localStorage.getItem('recycle-best') || 0; } catch { return 0; } };
   const save = v => { try { localStorage.setItem('recycle-best', String(v)); } catch {} };
   let best = load();
+
+  // 효과음: Web Audio로 직접 합성 (외부 파일 없음)
+  const sfx = (() => {
+    let ctx = null, master = null;
+    let on = true;
+    try { on = localStorage.getItem('recycle-sound') !== 'off'; } catch {}
+    const ensure = () => {
+      if (!ctx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        ctx = new AC();
+        master = ctx.createGain(); master.gain.value = .35; master.connect(ctx.destination);
+      }
+      if (ctx.state === 'suspended') ctx.resume();
+      return ctx;
+    };
+    const tone = (freq, at, dur, { type = 'sine', vol = .6, to = null } = {}) => {
+      const t0 = ctx.currentTime + at;
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = type; o.frequency.setValueAtTime(freq, t0);
+      if (to) o.frequency.exponentialRampToValueAtTime(to, t0 + dur);
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(vol, t0 + .008);
+      g.gain.exponentialRampToValueAtTime(.001, t0 + dur);
+      o.connect(g); g.connect(master);
+      o.start(t0); o.stop(t0 + dur + .02);
+    };
+    const noise = (at, dur, vol = .3) => {
+      const t0 = ctx.currentTime + at, len = Math.floor(ctx.sampleRate * dur);
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+      const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+      src.buffer = buf; f.type = 'lowpass'; f.frequency.value = 900; g.gain.value = vol;
+      src.connect(f); f.connect(g); g.connect(master); src.start(t0);
+    };
+    const SCALE = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51];
+    const play = fn => { if (on && ensure()) fn(); };
+    return {
+      get on() { return on; },
+      set(v) { on = v; try { localStorage.setItem('recycle-sound', v ? 'on' : 'off'); } catch {} if (v) ensure(); },
+      unlock: () => { if (on) ensure(); },
+      start: () => play(() => { tone(392, 0, .12, { type: 'triangle' }); tone(523.25, .1, .12, { type: 'triangle' }); tone(783.99, .2, .22, { type: 'triangle' }); }),
+      correct: combo => play(() => {
+        const f = SCALE[Math.min(SCALE.length - 1, Math.max(0, combo - 1) % 8)];
+        tone(f, 0, .16, { type: 'triangle', vol: .55 }); tone(f * 2, .03, .1, { vol: .15 });
+        noise(0, .05, .12);
+      }),
+      combo: () => play(() => { [659.25, 783.99, 1046.5, 1318.51].forEach((f, i) => tone(f, .12 + i * .06, .14, { type: 'square', vol: .18 })); }),
+      wrong: () => play(() => { tone(180, 0, .12, { type: 'square', vol: .28 }); tone(150, .13, .2, { type: 'square', vol: .28 }); }),
+      miss: () => play(() => { tone(200, 0, .25, { vol: .8, to: 55 }); noise(0, .18, .35); }),
+      over: best => play(() => {
+        if (best) [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone(f, .25 + i * .12, i === 3 ? .5 : .14, { type: 'triangle' }));
+        else [392, 329.63, 261.63].forEach((f, i) => tone(f, .25 + i * .18, i === 2 ? .5 : .2, { type: 'triangle' }));
+      }),
+    };
+  })();
+  const soundBtn = $('soundBtn');
+  const drawSound = () => {
+    soundBtn.setAttribute('aria-pressed', String(sfx.on));
+    soundBtn.setAttribute('aria-label', sfx.on ? '효과음 끄기' : '효과음 켜기');
+  };
+  const toggleSound = () => { sfx.set(!sfx.on); drawSound(); };
+  soundBtn.addEventListener('click', toggleSound);
+  drawSound();
   $('bestLine').textContent = best ? `내 최고 점수 ${best}점` : '';
 
   BINS.forEach((b, i) => {
@@ -353,12 +435,15 @@ body {
       st.correct++; st.combo++; st.maxCombo = Math.max(st.maxCombo, st.combo);
       st.score += 10 * (1 + Math.floor(st.combo / 5));
       flash(btn, 'flash-ok');
+      sfx.correct(st.combo);
+      if (st.combo % 5 === 0) sfx.combo();
       tick(true, `${it.nm} → ${BIN_NAME[it.bin]}. ${it.tip}`);
       removeItem(it, field.clientHeight);
       drawStats();
     } else {
       flash(btn, 'flash-bad');
       flash($('bin-' + it.bin), 'flash-ok');
+      sfx.wrong();
       tick(false, `${it.nm}은(는) ${BIN_NAME[it.bin]}이에요. ${it.tip}`);
       st.mistakes.push(it);
       it.el.classList.add('wrong');
@@ -380,6 +465,7 @@ body {
     for (const it of [...st.items]) {
       it.y += speed * dt; place(it);
       if (it.y + it.h >= floor) {
+        sfx.miss();
         tick(false, `${it.nm}이(가) 바닥에 떨어졌어요. 정답은 ${BIN_NAME[it.bin]}. ${it.tip}`);
         st.mistakes.push(it);
         it.el.classList.add('wrong');
@@ -401,6 +487,7 @@ body {
     tick(true, '가장 아래 쓰레기부터 버려요. 키보드 1~6도 돼요.');
     last = performance.now();
     raf = requestAnimationFrame(loop);
+    sfx.start();
   }
 
   function end() {
@@ -408,6 +495,7 @@ body {
     const acc = st.sorted ? Math.round(st.correct / st.sorted * 100) : 0;
     const isBest = st.score > best;
     if (isBest) { best = st.score; save(best); }
+    sfx.over(isBest && st.score > 0);
     $('overTitle').textContent = isBest && st.score > 0 ? '최고 기록이에요!' : '지구가 지쳤어요';
     $('rScore').textContent = st.score;
     $('rAcc').textContent = acc + '%';
@@ -428,6 +516,7 @@ body {
   document.addEventListener('keydown', e => {
     const n = parseInt(e.key, 10);
     if (n >= 1 && n <= 6) { e.preventDefault(); sort(BINS[n - 1].id); }
+    else if (e.key === 'm' || e.key === 'M' || e.key === 'ㅡ') toggleSound();
     else if ((e.key === 'Enter' || e.key === ' ') && (!st || !st.running) && document.activeElement?.tagName !== 'BUTTON') { e.preventDefault(); start(); }
   });
   document.addEventListener('visibilitychange', () => {
