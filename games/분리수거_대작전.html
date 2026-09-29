@@ -154,6 +154,10 @@ body {
   padding: 12px 16px; border-radius: 12px; background: var(--accent); color: var(--on-bin);
 }
 .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.btn.ghost { background: var(--field); color: var(--ink); border: 1px solid var(--line); font-size: 17px; }
+.btn:disabled { opacity: .6; cursor: progress; }
+.actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; }
+.save-msg { margin: 0; min-height: 1.2em; font-size: 12.5px; color: var(--muted); text-align: center; }
 .result { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; font-variant-numeric: tabular-nums; }
 .result div { background: var(--field); border: 1px solid var(--line); border-radius: 10px; padding: 8px 4px; }
 .result small { display: block; font-size: 11px; color: var(--muted); }
@@ -232,7 +236,11 @@ body {
           <p class="muted" style="margin-bottom:6px">틀린 쓰레기, 이렇게 버려요</p>
           <div class="review" id="review"></div>
         </div>
-        <button class="btn" id="againBtn" type="button">다시 하기</button>
+        <div class="actions">
+          <button class="btn ghost" id="saveBtn" type="button">이미지 저장</button>
+          <button class="btn" id="againBtn" type="button">다시 하기</button>
+        </div>
+        <p class="save-msg" id="saveMsg" aria-live="polite"></p>
       </div>
     </div>
   </main>
@@ -470,7 +478,7 @@ body {
     if (!st.running) return;
     const dt = Math.min(.05, (t - last) / 1000 || 0); last = t;
     st.time += dt;
-    const speed = Math.min(210, 56 + st.time * 1.8);
+    const speed = Math.min(230, 64 + st.time * 2);
     const every = Math.max(.8, 2.4 - st.time * .03);
     st.spawnIn -= dt;
     if (st.spawnIn <= 0) { spawn(); st.spawnIn = every; }
@@ -527,6 +535,12 @@ body {
       rv.appendChild(row);
     }
     $('reviewWrap').hidden = !seen.size;
+    lastResult = {
+      title: $('overTitle').textContent, cleared, score: st.score, acc, maxCombo: st.maxCombo,
+      correct: st.correct, best, bonus, isBest: isBest && st.score > 0,
+      mistakes: st.mistakes.filter((m, i, a) => a.findIndex(x => x.nm === m.nm) === i),
+    };
+    $('saveMsg').textContent = '';
     $('overOv').hidden = false;
     $('againBtn').focus();
   }
@@ -544,6 +558,110 @@ body {
   });
   $('startBtn').addEventListener('click', start);
   $('againBtn').addEventListener('click', start);
+
+  // 결과 이미지 저장: 결과 카드를 캔버스에 다시 그려 PNG로 저장해요.
+  let lastResult = null;
+  const downloadsP = window.claude?.use ? window.claude.use('downloads').catch(() => null) : Promise.resolve(null);
+  const IMG_COL = {
+    bg: '#e4ebe7', card: '#f5f8f6', ink: '#1b2822', muted: '#5a6962', line: '#c6d1cb', accent: '#1e8757', danger: '#c33f2c',
+    bins: ['#2f6bd1', '#e07b12', '#b8453a', '#178a86', '#8a4fc2', '#5d6660'],
+  };
+  const DISPLAY = '"Black Han Sans", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';
+  const BODY = '"IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';
+  function rrect(c, x, y, w, h, r) { c.beginPath(); c.roundRect ? c.roundRect(x, y, w, h, r) : c.rect(x, y, w, h); }
+  function wrap(c, text, x, y, maxW, lh, maxLines = 2) {
+    const words = text.split(' '); let line = '', lines = [];
+    for (const w of words) {
+      const t = line ? line + ' ' + w : w;
+      if (c.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t;
+    }
+    if (line) lines.push(line);
+    if (lines.length > maxLines) { lines = lines.slice(0, maxLines); lines[maxLines - 1] = lines[maxLines - 1].replace(/.{1}$/, '') + '…'; }
+    lines.forEach((l, i) => c.fillText(l, x, y + i * lh));
+    return lines.length * lh;
+  }
+  async function drawResult(r) {
+    try { await document.fonts?.ready; } catch {}
+    const W = 1080, H = 1350, P = 72;
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const c = cv.getContext('2d');
+    c.fillStyle = IMG_COL.bg; c.fillRect(0, 0, W, H);
+    // 수거함 색 띠
+    const bw = W / 6; IMG_COL.bins.forEach((col, i) => { c.fillStyle = col; c.fillRect(i * bw, H - 28, bw, 28); });
+    c.fillStyle = IMG_COL.card; rrect(c, 48, 48, W - 96, H - 150, 36); c.fill();
+    c.strokeStyle = IMG_COL.line; c.lineWidth = 2; c.stroke();
+    c.textBaseline = 'top';
+    c.fillStyle = IMG_COL.accent; c.font = `40px ${DISPLAY}`; c.fillText('분리수거 대작전', P + 24, P + 32);
+    c.fillStyle = IMG_COL.ink; c.font = `88px ${DISPLAY}`;
+    let y = P + 100; y += wrap(c, r.title, P + 24, y, W - 2 * P - 48, 100, 2) + 30;
+    // 숫자 3칸
+    const stats = [['점수', r.score], ['정확도', r.acc + '%'], ['최고 콤보', r.maxCombo]];
+    const gw = (W - 2 * P - 48 - 40) / 3;
+    stats.forEach(([k, v], i) => {
+      const x = P + 24 + i * (gw + 20);
+      c.fillStyle = IMG_COL.bg; rrect(c, x, y, gw, 190, 24); c.fill();
+      c.fillStyle = IMG_COL.muted; c.font = `500 30px ${BODY}`; c.textAlign = 'center';
+      c.fillText(k, x + gw / 2, y + 30);
+      c.fillStyle = IMG_COL.ink; c.font = `84px ${DISPLAY}`; c.fillText(String(v), x + gw / 2, y + 80);
+      c.textAlign = 'left';
+    });
+    y += 230;
+    c.fillStyle = IMG_COL.muted; c.font = `400 32px ${BODY}`;
+    const sub = `맞힌 쓰레기 ${r.correct}/${ITEMS.length}개` + (r.cleared ? ` · 체력 보너스 +${r.bonus}점` : '') + (r.isBest ? ' · 최고 기록 경신' : ` · 내 최고 ${r.best}점`);
+    y += wrap(c, sub, P + 24, y, W - 2 * P - 48, 44, 2) + 36;
+    c.strokeStyle = IMG_COL.line; c.beginPath(); c.moveTo(P + 24, y); c.lineTo(W - P - 24, y); c.stroke();
+    y += 36;
+    c.fillStyle = IMG_COL.ink; c.font = `700 36px ${BODY}`;
+    if (!r.mistakes.length) {
+      c.fillText('하나도 틀리지 않았어요!', P + 24, y);
+    } else {
+      c.fillText('틀린 쓰레기, 이렇게 버려요', P + 24, y); y += 64;
+      const room = H - 150 - y - 40, per = 120, max = Math.max(1, Math.floor(room / per));
+      const list = r.mistakes.slice(0, max);
+      for (const m of list) {
+        c.font = `56px ${BODY}`; c.fillText(m.emo, P + 24, y - 4);
+        c.fillStyle = IMG_COL.ink; c.font = `700 34px ${BODY}`;
+        c.fillText(`${m.nm} → ${BIN_NAME[m.bin]}`, P + 110, y);
+        c.fillStyle = IMG_COL.muted; c.font = `400 28px ${BODY}`;
+        wrap(c, m.tip, P + 110, y + 46, W - 2 * P - 150, 36, 1);
+        c.fillStyle = IMG_COL.ink; y += per;
+      }
+      if (r.mistakes.length > list.length) {
+        c.fillStyle = IMG_COL.muted; c.font = `400 28px ${BODY}`; c.fillText(`외 ${r.mistakes.length - list.length}개`, P + 110, y - 10);
+      }
+    }
+    c.fillStyle = IMG_COL.muted; c.font = `400 26px ${BODY}`;
+    const d = new Date(), ds = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+    c.fillText(`${ds} · 환경부 분리배출 가이드라인 기반`, P + 24, H - 150 - 10);
+    return new Promise(res => cv.toBlob(res, 'image/png'));
+  }
+  $('saveBtn').addEventListener('click', async () => {
+    if (!lastResult) return;
+    const btn = $('saveBtn'), msg = $('saveMsg');
+    btn.disabled = true; msg.textContent = '이미지를 만드는 중이에요…';
+    try {
+      const blob = await drawResult(lastResult);
+      const d = new Date();
+      const filename = `분리수거대작전_${lastResult.score}점_${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}.png`;
+      const downloads = await downloadsP;
+      if (downloads) {
+        try {
+          await downloads.save({ filename, data: blob });
+          msg.textContent = '이미지를 저장했어요.';
+        } catch (e) {
+          msg.textContent = e?.code === 'declined' ? '저장을 취소했어요.' : e?.code === 'rate_limited' ? '저장 창이 이미 열려 있어요. 잠시 후 다시 눌러 주세요.' : '이 화면에서는 이미지를 저장할 수 없어요.';
+        }
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+        msg.textContent = '이미지를 저장했어요. 저장되지 않았다면 브라우저의 다운로드 설정을 확인해 주세요.';
+      }
+    } catch {
+      msg.textContent = '이미지를 만들지 못했어요. 다시 눌러 주세요.';
+    } finally { btn.disabled = false; }
+  });
   drawHp();
 })();
 </script>
