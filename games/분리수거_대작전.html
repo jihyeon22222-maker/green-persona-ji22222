@@ -1,0 +1,441 @@
+<title>분리수거 대작전</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one-screen arcade — status bar, falling field, rule ticker, six bins along the bottom like an apartment recycling corner */
+:root {
+  --bg: #e4ebe7;
+  --field: #f5f8f6;
+  --ink: #1b2822;
+  --muted: #5a6962;
+  --line: #c6d1cb;
+  --accent: #1e8757;
+  --danger: #c33f2c;
+  --paper: #2f6bd1;
+  --plastic: #e07b12;
+  --can: #b8453a;
+  --glass: #178a86;
+  --vinyl: #8a4fc2;
+  --general: #5d6660;
+  --on-bin: #ffffff;
+  --shadow: rgba(27, 40, 34, .14);
+  --font-display: "Black Han Sans", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121a16; --field: #19231e; --ink: #e5eee9; --muted: #93a39b; --line: #2b3832;
+    --accent: #4bc58b; --danger: #ff7c68;
+    --paper: #4d86e8; --plastic: #f0922f; --can: #d4604f; --glass: #2aa9a3; --vinyl: #a26de0; --general: #7a857f;
+    --shadow: rgba(0, 0, 0, .4); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121a16; --field: #19231e; --ink: #e5eee9; --muted: #93a39b; --line: #2b3832;
+  --accent: #4bc58b; --danger: #ff7c68;
+  --paper: #4d86e8; --plastic: #f0922f; --can: #d4604f; --glass: #2aa9a3; --vinyl: #a26de0; --general: #7a857f;
+  --shadow: rgba(0, 0, 0, .4); color-scheme: dark;
+}
+
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-inline: 16px; padding-block: 12px; box-sizing: border-box;
+  overflow: hidden; -webkit-tap-highlight-color: transparent;
+}
+.app {
+  height: 100%; max-width: 640px; margin: 0 auto;
+  display: grid; grid-template-rows: auto 1fr auto auto; gap: 10px;
+}
+
+/* status */
+.status { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--font-display); font-size: 22px; letter-spacing: .01em; }
+.stats { display: flex; gap: 16px; align-items: center; font-variant-numeric: tabular-nums; }
+.stat { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; }
+.stat small { font-size: 11px; color: var(--muted); letter-spacing: .06em; }
+.stat b { font-family: var(--font-display); font-size: 22px; font-weight: 400; }
+.hp { display: flex; gap: 3px; }
+.hp i { width: 14px; height: 14px; border-radius: 50%; background: var(--accent); display: block; transition: background .2s, transform .2s; }
+.hp i.off { background: var(--line); transform: scale(.8); }
+
+/* field */
+.field {
+  position: relative; overflow: hidden; min-height: 0;
+  background: var(--field); border: 1px solid var(--line); border-radius: 14px;
+  background-image: repeating-linear-gradient(0deg, transparent 0 47px, var(--line) 47px 48px);
+  background-blend-mode: normal;
+}
+.field::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px;
+  background: repeating-linear-gradient(90deg, var(--danger) 0 14px, transparent 14px 24px); opacity: .55;
+}
+.item {
+  position: absolute; left: 0; top: 0; width: 92px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 6px 4px; border-radius: 12px; border: 2px solid transparent;
+  background: var(--bg); box-shadow: 0 2px 6px var(--shadow);
+  will-change: transform; user-select: none; text-align: center;
+}
+.item .emo { font-size: 30px; line-height: 1.1; }
+.item .nm { font-size: 12px; font-weight: 500; line-height: 1.25; word-break: keep-all; }
+.item.active { border-color: var(--ink); }
+.item.active::before {
+  content: "지금 버릴 것"; position: absolute; top: -20px; font-size: 10px; font-weight: 700;
+  color: var(--bg); background: var(--ink); padding: 1px 6px; border-radius: 6px; white-space: nowrap;
+}
+.item.gone { transition: transform .28s ease-in, opacity .28s; opacity: 0; }
+.item.wrong { border-color: var(--danger); animation: shake .3s; }
+@keyframes shake { 25% { margin-left: -6px } 75% { margin-left: 6px } }
+
+/* ticker */
+.ticker {
+  min-height: 44px; display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 10px; background: var(--field); border: 1px solid var(--line);
+  font-size: 13.5px;
+}
+.ticker .tag { font-weight: 700; flex: none; font-size: 12px; padding: 2px 8px; border-radius: 6px; color: var(--on-bin); background: var(--accent); }
+.ticker.bad .tag { background: var(--danger); }
+.ticker .msg { min-width: 0; }
+
+/* bins */
+.bins { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.bin {
+  appearance: none; border: 0; cursor: pointer; font: inherit; color: var(--on-bin);
+  background: var(--c); border-radius: 6px 6px 12px 12px; padding: 16px 2px 10px; position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,.18); transition: transform .08s;
+  touch-action: manipulation;
+}
+.bin::before {
+  content: ""; position: absolute; top: 0; left: -2px; right: -2px; height: 8px;
+  background: var(--c); border-radius: 6px; filter: brightness(.82);
+}
+.bin .bn { font-weight: 700; font-size: 13px; word-break: keep-all; line-height: 1.2; }
+.bin .key { font-size: 10px; opacity: .8; font-variant-numeric: tabular-nums; }
+.bin:active, .bin.hit { transform: translateY(3px); }
+.bin.flash-ok { box-shadow: inset 0 -5px 0 rgba(0,0,0,.18), 0 0 0 3px var(--accent); }
+.bin.flash-bad { box-shadow: inset 0 -5px 0 rgba(0,0,0,.18), 0 0 0 3px var(--danger); }
+.bin:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* overlays */
+.overlay {
+  position: absolute; inset: 0; display: grid; place-items: center; padding: 16px;
+  background: color-mix(in srgb, var(--field) 82%, transparent); backdrop-filter: blur(2px);
+  overflow-y: auto;
+}
+.card {
+  max-width: 420px; width: 100%; background: var(--bg); border: 1px solid var(--line);
+  border-radius: 16px; padding: 20px; display: grid; gap: 12px; box-shadow: 0 10px 30px var(--shadow);
+}
+.card h1, .card h2 { margin: 0; font-family: var(--font-display); font-weight: 400; text-wrap: balance; }
+.card h1 { font-size: 34px; line-height: 1.1; }
+.card h2 { font-size: 26px; }
+.card p { margin: 0; color: var(--muted); }
+.card ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12.5px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--field); }
+.btn {
+  appearance: none; border: 0; cursor: pointer; font-family: var(--font-display); font-size: 20px;
+  padding: 12px 16px; border-radius: 12px; background: var(--accent); color: var(--on-bin);
+}
+.btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.result { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; font-variant-numeric: tabular-nums; }
+.result div { background: var(--field); border: 1px solid var(--line); border-radius: 10px; padding: 8px 4px; }
+.result small { display: block; font-size: 11px; color: var(--muted); }
+.result b { font-family: var(--font-display); font-weight: 400; font-size: 22px; }
+.review { display: grid; gap: 6px; max-height: 200px; overflow-y: auto; }
+.review .row { display: grid; grid-template-columns: 30px 1fr; gap: 8px; align-items: start; font-size: 13px; }
+.review .row .e { font-size: 22px; line-height: 1.2; }
+.review .row b { font-weight: 700; }
+.review .row span { color: var(--muted); }
+.muted { color: var(--muted); font-size: 12.5px; }
+
+@media (max-width: 420px) {
+  .brand { font-size: 18px; }
+  .stats { gap: 12px; }
+  .bin .bn { font-size: 11.5px; }
+  .item { width: 80px; }
+  .item .emo { font-size: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .item.gone, .bin, .hp i { transition: none; }
+  .item.wrong { animation: none; }
+}
+</style>
+
+<div class="app">
+  <header class="status">
+    <div class="brand">분리수거 대작전</div>
+    <div class="stats">
+      <div class="stat"><small>지구 체력</small><div class="hp" id="hp"></div></div>
+      <div class="stat"><small>콤보</small><b id="combo">0</b></div>
+      <div class="stat"><small>점수</small><b id="score">0</b></div>
+    </div>
+  </header>
+
+  <main class="field" id="field">
+    <div class="overlay" id="startOv">
+      <div class="card">
+        <h1>분리수거 대작전</h1>
+        <p>위에서 쓰레기가 떨어져요. <b>테두리가 있는 가장 아래 쓰레기</b>를 알맞은 수거함을 눌러 버리세요.</p>
+        <ul class="muted">
+          <li>잘못 버리거나 바닥에 떨어지면 지구 체력이 줄어요</li>
+          <li>연속으로 맞히면 콤보 점수가 붙어요</li>
+          <li>키보드 1~6으로도 버릴 수 있어요</li>
+        </ul>
+        <div>
+          <p class="muted" style="margin-bottom:6px">헷갈리는 쓰레기도 섞여 있어요</p>
+          <div class="chips">
+            <span class="chip">🧾 영수증</span><span class="chip">🍗 치킨 뼈</span><span class="chip">🍕 기름 밴 피자 상자</span><span class="chip">🥚 달걀 껍데기</span><span class="chip">🪥 칫솔</span>
+          </div>
+        </div>
+        <button class="btn" id="startBtn" type="button">시작하기</button>
+        <p class="muted" id="bestLine"></p>
+      </div>
+    </div>
+    <div class="overlay" id="overOv" hidden>
+      <div class="card">
+        <h2 id="overTitle">지구가 지쳤어요</h2>
+        <div class="result">
+          <div><small>점수</small><b id="rScore">0</b></div>
+          <div><small>정확도</small><b id="rAcc">0%</b></div>
+          <div><small>최고 콤보</small><b id="rCombo">0</b></div>
+        </div>
+        <p class="muted" id="rBest"></p>
+        <div id="reviewWrap">
+          <p class="muted" style="margin-bottom:6px">틀린 쓰레기, 이렇게 버려요</p>
+          <div class="review" id="review"></div>
+        </div>
+        <button class="btn" id="againBtn" type="button">다시 하기</button>
+      </div>
+    </div>
+  </main>
+
+  <div class="ticker" id="ticker"><span class="tag">TIP</span><span class="msg" id="tickerMsg">페트병은 라벨을 떼고, 내용물을 비우고, 찌그러뜨려 뚜껑을 닫아 버려요.</span></div>
+
+  <nav class="bins" id="bins" aria-label="수거함"></nav>
+</div>
+
+<script>
+(() => {
+  const BINS = [
+    { id: 'paper',   name: '종이',     c: '--paper' },
+    { id: 'plastic', name: '플라스틱', c: '--plastic' },
+    { id: 'can',     name: '캔·고철',  c: '--can' },
+    { id: 'glass',   name: '유리병',   c: '--glass' },
+    { id: 'vinyl',   name: '비닐',     c: '--vinyl' },
+    { id: 'general', name: '일반',     c: '--general' },
+  ];
+  const BIN_NAME = Object.fromEntries(BINS.map(b => [b.id, b.name]));
+
+  // [emoji, name, bin, tip]
+  const ITEMS = [
+    ['📦', '택배 상자', 'paper', '송장과 테이프를 떼고 납작하게 접어서 버려요.'],
+    ['📰', '신문지', 'paper', '물에 젖지 않게 묶어서 버려요.'],
+    ['📓', '다 쓴 공책', 'paper', '스프링이 있으면 빼고 버려요.'],
+    ['📚', '헌 책', 'paper', '비닐 코팅된 표지는 떼고 버려요.'],
+    ['🧴', '샴푸통', 'plastic', '펌프는 스프링이 있어 떼서 일반쓰레기로 버려요.'],
+    ['🥤', '플라스틱 음료컵', 'plastic', '헹군 뒤 버리고, 빨대는 일반쓰레기예요.'],
+    ['🥣', '요거트 용기', 'plastic', '내용물을 헹군 뒤 버려요. 뚜껑 은박은 떼요.'],
+    ['🍱', '배달 용기', 'plastic', '음식물을 씻어 내요. 빨간 양념이 안 지워지면 일반쓰레기예요.'],
+    ['🥫', '통조림 캔', 'can', '내용물을 비우고 헹궈서 버려요.'],
+    ['🔥', '부탄가스', 'can', '가스를 끝까지 빼고 버려요.'],
+    ['🍳', '낡은 프라이팬', 'can', '프라이팬은 고철로 버려요. 손잡이 플라스틱은 가능하면 떼요.'],
+    ['🍾', '와인병', 'glass', '비우고 헹궈서 버려요. 코르크는 일반쓰레기예요.'],
+    ['🫙', '잼 병', 'glass', '뚜껑은 분리해서 따로 버려요.'],
+    ['🍶', '소주병', 'glass', '빈 병은 마트에 가져가면 보증금을 돌려받아요.'],
+    ['🛍️', '비닐봉지', 'vinyl', '이물질을 털어 내고 모아서 버려요.'],
+    ['🍿', '과자 봉지', 'vinyl', '안쪽이 은색이어도 비닐로 버려요.'],
+    ['🍜', '라면 봉지', 'vinyl', '스프 봉지까지 비닐로 버려요.'],
+    ['🧾', '영수증', 'general', '감열지라서 종이로 재활용되지 않아요.'],
+    ['🍗', '치킨 뼈', 'general', '딱딱한 뼈는 음식물이 아니라 일반쓰레기예요.'],
+    ['🥚', '달걀 껍데기', 'general', '달걀 껍데기는 음식물이 아니라 일반쓰레기예요.'],
+    ['🍕', '기름 밴 피자 상자', 'general', '기름이 배어 있으면 종이로 재활용되지 않아요.'],
+    ['🪥', '칫솔', 'general', '여러 재질이 섞여 있어서 일반쓰레기예요.'],
+    ['🧸', '봉제 인형', 'general', '헌 인형은 일반쓰레기예요. 상태가 좋으면 기부해요.'],
+    ['🥛', '깨진 유리컵', 'general', '신문지에 싸서 종량제 봉투에 버려요. 유리병 수거함 아니에요.'],
+    ['🧤', '고무장갑', 'general', '고무는 재활용되지 않아 일반쓰레기예요.'],
+  ];
+
+  const $ = id => document.getElementById(id);
+  const field = $('field'), binsEl = $('bins'), hpEl = $('hp');
+  const MAX_HP = 5;
+  let st = null, raf = 0, last = 0, lastLane = -1, bag = [];
+
+  const load = () => { try { return +localStorage.getItem('recycle-best') || 0; } catch { return 0; } };
+  const save = v => { try { localStorage.setItem('recycle-best', String(v)); } catch {} };
+  let best = load();
+  $('bestLine').textContent = best ? `내 최고 점수 ${best}점` : '';
+
+  BINS.forEach((b, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'bin'; btn.id = 'bin-' + b.id;
+    btn.style.setProperty('--c', `var(${b.c})`);
+    btn.innerHTML = `<span class="bn">${b.name}</span><span class="key">${i + 1}</span>`;
+    btn.addEventListener('pointerdown', e => { e.preventDefault(); sort(b.id); });
+    btn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sort(b.id); } });
+    binsEl.appendChild(btn);
+  });
+
+  function drawHp() {
+    hpEl.innerHTML = '';
+    for (let i = 0; i < MAX_HP; i++) {
+      const d = document.createElement('i');
+      if (st && i >= st.hp) d.classList.add('off');
+      hpEl.appendChild(d);
+    }
+  }
+  function drawStats() {
+    $('score').textContent = st ? st.score : 0;
+    $('combo').textContent = st ? st.combo : 0;
+  }
+  function tick(ok, text) {
+    const t = $('ticker');
+    t.classList.toggle('bad', !ok);
+    t.querySelector('.tag').textContent = ok ? '정답' : '땡';
+    $('tickerMsg').textContent = text;
+  }
+
+  function nextItem() {
+    if (!bag.length) bag = ITEMS.map((_, i) => i).sort(() => Math.random() - .5);
+    return ITEMS[bag.pop()];
+  }
+
+  function spawn() {
+    const [emo, nm, bin, tip] = nextItem();
+    const el = document.createElement('div');
+    el.className = 'item';
+    el.innerHTML = `<span class="emo">${emo}</span><span class="nm">${nm}</span>`;
+    field.appendChild(el);
+    const w = el.offsetWidth, fw = field.clientWidth;
+    const lanes = Math.max(2, Math.floor(fw / (w + 8)));
+    let lane; do { lane = Math.floor(Math.random() * lanes); } while (lane === lastLane && lanes > 1);
+    lastLane = lane;
+    const x = Math.round(lane * (fw - w) / (lanes - 1));
+    const it = { el, emo, nm, bin, tip, x, y: -el.offsetHeight - 24, h: el.offsetHeight };
+    place(it);
+    st.items.push(it);
+  }
+  const place = it => { it.el.style.transform = `translate(${it.x}px, ${it.y}px)`; };
+
+  function active() {
+    let a = null;
+    for (const it of st.items) if (!a || it.y > a.y) a = it;
+    return a;
+  }
+
+  function removeItem(it, dy) {
+    st.items.splice(st.items.indexOf(it), 1);
+    it.el.classList.remove('active');
+    it.el.classList.add('gone');
+    it.el.style.transform = `translate(${it.x}px, ${it.y + dy}px) scale(.6)`;
+    setTimeout(() => it.el.remove(), 320);
+  }
+
+  function hurt() {
+    st.hp--; st.combo = 0; drawHp(); drawStats();
+    if (st.hp <= 0) end();
+  }
+
+  function sort(binId) {
+    if (!st || !st.running) return;
+    const it = active();
+    if (!it) return;
+    const btn = $('bin-' + binId);
+    btn.classList.add('hit'); setTimeout(() => btn.classList.remove('hit'), 90);
+    st.sorted++;
+    if (it.bin === binId) {
+      st.correct++; st.combo++; st.maxCombo = Math.max(st.maxCombo, st.combo);
+      st.score += 10 * (1 + Math.floor(st.combo / 5));
+      flash(btn, 'flash-ok');
+      tick(true, `${it.nm} → ${BIN_NAME[it.bin]}. ${it.tip}`);
+      removeItem(it, field.clientHeight);
+      drawStats();
+    } else {
+      flash(btn, 'flash-bad');
+      flash($('bin-' + it.bin), 'flash-ok');
+      tick(false, `${it.nm}은(는) ${BIN_NAME[it.bin]}이에요. ${it.tip}`);
+      st.mistakes.push(it);
+      it.el.classList.add('wrong');
+      removeItem(it, 0);
+      hurt();
+    }
+  }
+  function flash(btn, cls) { btn.classList.add(cls); setTimeout(() => btn.classList.remove(cls), 450); }
+
+  function loop(t) {
+    if (!st.running) return;
+    const dt = Math.min(.05, (t - last) / 1000 || 0); last = t;
+    st.time += dt;
+    const speed = Math.min(150, 36 + st.time * 1.3);
+    const every = Math.max(.8, 2.4 - st.time * .03);
+    st.spawnIn -= dt;
+    if (st.spawnIn <= 0) { spawn(); st.spawnIn = every; }
+    const floor = field.clientHeight - 6;
+    for (const it of [...st.items]) {
+      it.y += speed * dt; place(it);
+      if (it.y + it.h >= floor) {
+        tick(false, `${it.nm}이(가) 바닥에 떨어졌어요. 정답은 ${BIN_NAME[it.bin]}. ${it.tip}`);
+        st.mistakes.push(it);
+        it.el.classList.add('wrong');
+        removeItem(it, 0);
+        hurt();
+        if (!st.running) return;
+      }
+    }
+    const a = active();
+    for (const it of st.items) it.el.classList.toggle('active', it === a);
+    raf = requestAnimationFrame(loop);
+  }
+
+  function start() {
+    field.querySelectorAll('.item').forEach(e => e.remove());
+    st = { running: true, items: [], score: 0, combo: 0, maxCombo: 0, hp: MAX_HP, sorted: 0, correct: 0, mistakes: [], time: 0, spawnIn: .2 };
+    $('startOv').hidden = true; $('overOv').hidden = true;
+    drawHp(); drawStats();
+    tick(true, '가장 아래 쓰레기부터 버려요. 키보드 1~6도 돼요.');
+    last = performance.now();
+    raf = requestAnimationFrame(loop);
+  }
+
+  function end() {
+    st.running = false; cancelAnimationFrame(raf);
+    const acc = st.sorted ? Math.round(st.correct / st.sorted * 100) : 0;
+    const isBest = st.score > best;
+    if (isBest) { best = st.score; save(best); }
+    $('overTitle').textContent = isBest && st.score > 0 ? '최고 기록이에요!' : '지구가 지쳤어요';
+    $('rScore').textContent = st.score;
+    $('rAcc').textContent = acc + '%';
+    $('rCombo').textContent = st.maxCombo;
+    $('rBest').textContent = `내 최고 점수 ${best}점 · 맞힌 쓰레기 ${st.correct}개`;
+    const seen = new Set(), rv = $('review'); rv.innerHTML = '';
+    for (const m of st.mistakes) {
+      if (seen.has(m.nm)) continue; seen.add(m.nm);
+      const row = document.createElement('div'); row.className = 'row';
+      row.innerHTML = `<span class="e">${m.emo}</span><div><b>${m.nm} → ${BIN_NAME[m.bin]}</b><br><span>${m.tip}</span></div>`;
+      rv.appendChild(row);
+    }
+    $('reviewWrap').hidden = !seen.size;
+    $('overOv').hidden = false;
+    $('againBtn').focus();
+  }
+
+  document.addEventListener('keydown', e => {
+    const n = parseInt(e.key, 10);
+    if (n >= 1 && n <= 6) { e.preventDefault(); sort(BINS[n - 1].id); }
+    else if ((e.key === 'Enter' || e.key === ' ') && (!st || !st.running) && document.activeElement?.tagName !== 'BUTTON') { e.preventDefault(); start(); }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (!st || !st.running) return;
+    if (document.hidden) cancelAnimationFrame(raf);
+    else { last = performance.now(); raf = requestAnimationFrame(loop); }
+  });
+  $('startBtn').addEventListener('click', start);
+  $('againBtn').addEventListener('click', start);
+  drawHp();
+})();
+</script>
