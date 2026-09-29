@@ -74,7 +74,7 @@ body {
   background: repeating-linear-gradient(90deg, var(--danger) 0 14px, transparent 14px 24px); opacity: .55;
 }
 .item {
-  position: absolute; left: 0; top: 0; width: 92px;
+  position: absolute; left: 0; top: 0; z-index: 1; width: 92px;
   display: flex; flex-direction: column; align-items: center; gap: 2px;
   padding: 6px 4px; border-radius: 12px; border: 2px solid transparent;
   background: var(--bg); box-shadow: 0 2px 6px var(--shadow);
@@ -123,7 +123,7 @@ body {
 
 /* overlays */
 .overlay {
-  position: absolute; inset: 0; display: grid; place-items: center; padding: 16px;
+  position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; padding: 16px;
   background: color-mix(in srgb, var(--field) 82%, transparent); backdrop-filter: blur(2px);
   overflow-y: auto;
 }
