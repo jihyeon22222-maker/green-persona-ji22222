@@ -1,5 +1,5 @@
 <title>일기장</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
   /* Layout: 왼쪽은 달력과 지난 일기 목록, 오른쪽은 줄 노트 한 장. 좁은 화면에서는 노트가 먼저 온다. */
   :root {
@@ -18,9 +18,9 @@
     --ochre-soft: #F3E6CC;
     --danger: #A33B2B;
     --shadow: 0 10px 30px rgba(22,40,58,0.09);
-    --f-display: "Gowun Batang", "Nanum Myeongjo", serif;
+    --f-display: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
     --f-body: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
-    --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+    --f-mono: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -567,9 +567,9 @@
 
   // ---------- 인스타그램용 이미지 ----------
   const CARD = { w: 1080, h: 1350, paper: "#EDEEE4", sheet: "#F9F9F3", rule: "#DCE3E6", ink: "#16283A", soft: "#3C4F5C", muted: "#5C6B70", moss: "#4F6D44", mossSoft: "#E4EBDE", blue: "#2E6B8C" };
-  const SERIF = '"Gowun Batang", "Nanum Myeongjo", serif';
+  const SERIF = '"Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';
   const SANS = '"Noto Sans KR", "Apple SD Gothic Neo", sans-serif';
-  const MONO = '"IBM Plex Mono", ui-monospace, monospace';
+  const MONO = '"Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif';
   const EMOJI = '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
   let downloads = null;
   let cardBlob = null;
@@ -657,10 +657,10 @@
   async function drawCard(e, mode) {
     try {
       await Promise.all([
-        document.fonts.load(`700 64px "Gowun Batang"`, "가"),
-        document.fonts.load(`400 36px "Gowun Batang"`, "가"),
+        document.fonts.load(`700 64px "Noto Sans KR"`, "가"),
+        document.fonts.load(`400 36px "Noto Sans KR"`, "가"),
         document.fonts.load(`500 28px "Noto Sans KR"`, "가"),
-        document.fonts.load(`400 28px "IBM Plex Mono"`, "0"),
+        document.fonts.load(`400 28px "Noto Sans KR"`, "0"),
       ]);
     } catch {}
     const c = document.createElement("canvas");
