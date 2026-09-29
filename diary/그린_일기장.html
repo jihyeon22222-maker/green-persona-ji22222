@@ -279,6 +279,8 @@
   .agenda a { color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
   .agenda a:hover { text-decoration: underline; }
   .agenda .msg { font-size: 13px; color: var(--muted); margin: 0; }
+  .auto { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-soft); cursor: pointer; }
+  .auto input { accent-color: var(--moss); margin: 0; }
   .cal-done { font-size: 13px; color: var(--moss); text-decoration: none; }
   .cal-done:hover { text-decoration: underline; }
 
@@ -360,6 +362,7 @@
 
       <div class="foot" id="foot">
         <span class="count" id="count">0자</span>
+        <label class="auto" id="calAutoWrap" hidden><input type="checkbox" id="calAuto" checked> 캘린더에 자동 기록</label>
         <a class="cal-done" id="calDone" href="#" target="_blank" rel="noopener" hidden>캘린더에 남김 ✓</a>
         <button class="btn ghost" type="button" id="calBtn" hidden>캘린더에 남기기</button>
         <button class="btn ghost" type="button" id="delBtn">삭제</button>
@@ -416,6 +419,7 @@
   let writing = Promise.resolve();
   let mcp = null;
   let stopAgenda = null;
+  let autoCal = true;
 
   function blank(date) { return { date, mood: "", weather: "", title: "", body: "", greens: [] }; }
   function isEmpty(e) { return !e.mood && !e.weather && !e.title.trim() && !e.body.trim() && !e.greens.length; }
@@ -502,14 +506,17 @@
     dirty = false;
     const entry = { ...structuredClone(draft), updatedAt: new Date().toISOString() };
     const prev = entries[entry.date];
-    if (prev && prev.calEventId && !entry.calEventId) { entry.calEventId = prev.calEventId; entry.calLink = prev.calLink; }
+    if (prev && prev.calEventId && !entry.calEventId) { entry.calEventId = prev.calEventId; entry.calLink = prev.calLink; entry.calSig = prev.calSig; }
     if (isEmpty(entry)) { setStatus("", ""); return writing; }
     entries[entry.date] = entry;
     renderCal(); renderList(); renderStats();
     if (entry.date === current) $("delBtn").hidden = false;
     setStatus("저장하는 중…", "");
     writing = writing.then(() => store.save(entry)).then(
-      () => { if (entry.date === current && !dirty) setStatus("저장됨 " + new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }), "ok"); },
+      () => {
+        if (entry.date === current && !dirty) setStatus("저장됨 " + new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }), "ok");
+        scheduleCalSync(entry.date);
+      },
       (err) => {
         dirty = true;
         const msg = err && err.code === "quota_exceeded"
@@ -713,6 +720,7 @@
   function renderCalButton() {
     const e = entries[current];
     const done = $("calDone"), btn = $("calBtn");
+    $("calAutoWrap").hidden = !mcp;
     if (!mcp || !e) { btn.hidden = true; done.hidden = true; return; }
     if (e.calEventId) {
       btn.hidden = true;
@@ -720,7 +728,7 @@
       if (typeof e.calLink === "string" && e.calLink.startsWith("https://")) done.href = e.calLink; else done.removeAttribute("href");
     } else {
       done.hidden = true;
-      btn.hidden = false;
+      btn.hidden = autoCal;
     }
   }
 
@@ -741,9 +749,12 @@
     if (yes) { yes.disabled = true; yes.textContent = "남기는 중…"; }
     flush();
     await writing.catch(() => {});
-    const k = current;
-    const e = entries[k];
-    if (!e) { closeConfirm(); return; }
+    await syncCal(current, true);
+    closeConfirm();
+  }
+
+  // 일기 내용을 캘린더 일정 모양으로
+  function calPayload(e) {
     const mood = MOODS.find((x) => x.id === e.mood);
     const weather = WEATHERS.find((x) => x.id === e.weather);
     const lines = [];
@@ -751,33 +762,91 @@
     if (e.greens && e.greens.length) lines.push("그린 실천: " + e.greens.join(", "));
     if (e.body.trim()) lines.push("", e.body.trim());
     const title = e.title.trim() || e.body.trim().split("\n")[0].slice(0, 40) || "오늘의 일기";
+    return { summary: "📝 " + title, description: lines.join("\n") };
+  }
+
+  // 자동 기록 설정 (브라우저별 기억, 기본 켜짐)
+  const AUTO_KEY = "green-diary-cal-auto";
+  try { autoCal = localStorage.getItem(AUTO_KEY) !== "off"; } catch {}
+  $("calAuto").checked = autoCal;
+  $("calAuto").addEventListener("change", (ev) => {
+    autoCal = ev.target.checked;
+    try { localStorage.setItem(AUTO_KEY, autoCal ? "on" : "off"); } catch {}
+    renderCalButton();
+    if (autoCal && entries[current]) scheduleCalSync(current);
+  });
+
+  const calTimers = {};
+  let calQueue = Promise.resolve();
+  function scheduleCalSync(k) {
+    if (!mcp || !autoCal) return;
+    clearTimeout(calTimers[k]);
+    calTimers[k] = setTimeout(() => { delete calTimers[k]; syncCal(k, false); }, 4000);
+  }
+
+  function syncCal(k, manual) {
+    calQueue = calQueue.then(() => doSyncCal(k, manual)).catch(() => {});
+    return calQueue;
+  }
+
+  async function findEventId(k, summary) {
+    const r = await mcp.callTool(GCAL, "list_events", { startTime: isoMidnight(k), endTime: isoMidnight(k, 1), fullText: summary.replace(/^📝 /, ""), pageSize: 10, timeZone: tz }, { cache: false });
+    const list = ((r.payload || {}).events || []).filter((e) => e.summary === summary && e.start && e.start.date === k);
+    return list.length ? list[list.length - 1] : null;
+  }
+
+  async function doSyncCal(k, manual) {
+    const e = entries[k];
+    if (!mcp || !e) return;
+    const body = calPayload(e);
+    const sig = body.summary + "\u0000" + body.description;
+    if (e.calEventId && e.calEventId !== "added" && e.calSig === sig) return;
+    if (k === current) setStatus("캘린더에 기록하는 중…", "");
+    let id = e.calEventId && e.calEventId !== "added" ? e.calEventId : "";
+    let link = e.calLink || "";
     try {
-      const res = await mcp.callTool(GCAL, "create_event", {
-        summary: "📝 " + title,
-        description: lines.join("\n"),
-        allDay: true,
-        startTime: isoMidnight(k),
-        endTime: isoMidnight(k, 1),
-        timeZone: tz,
-        availability: "AVAILABILITY_FREE",
-        useDefaultReminders: false,
-        notificationLevel: "NONE",
-      }, { cache: false });
-      const p = res.payload || {};
-      const made = p.event || p;
-      const updated = { ...entries[k], calEventId: made.id || "added", calLink: made.htmlLink || "" };
+      if (id) {
+        try {
+          await mcp.callTool(GCAL, "update_event", { eventId: id, ...body, notificationLevel: "NONE" }, { cache: false });
+        } catch (err) {
+          // 캘린더에서 일정을 지운 경우: 새로 만든다
+          if (err && err.code === "tool_error") id = ""; else throw err;
+        }
+      }
+      if (!id) {
+        const res = await mcp.callTool(GCAL, "create_event", {
+          ...body,
+          allDay: true,
+          startTime: isoMidnight(k),
+          endTime: isoMidnight(k, 1),
+          timeZone: tz,
+          availability: "AVAILABILITY_FREE",
+          useDefaultReminders: false,
+          notificationLevel: "NONE",
+        }, { cache: false });
+        const p = res.payload || {};
+        const made = p.event || p;
+        id = typeof made.id === "string" ? made.id : "";
+        link = typeof made.htmlLink === "string" ? made.htmlLink : "";
+        if (!id) {
+          const found = await findEventId(k, body.summary).catch(() => null);
+          if (found) { id = found.id; link = found.htmlLink || ""; }
+        }
+      }
+      const updated = { ...entries[k], calEventId: id || "added", calLink: link, calSig: sig };
       entries[k] = updated;
-      if (k === current && !dirty) { draft.calEventId = updated.calEventId; draft.calLink = updated.calLink; }
-      closeConfirm();
+      if (k === current) {
+        draft.calEventId = updated.calEventId; draft.calLink = updated.calLink; draft.calSig = sig;
+        if (!dirty) setStatus("저장됨 · 캘린더에도 기록했어요", "ok");
+      }
       renderCalButton();
-      setStatus("캘린더에 남겼어요", "ok");
       writing = writing.then(() => store.save(updated)).catch(() => {});
       mcp.invalidate(GCAL, "list_events").catch(() => {});
     } catch (err) {
-      closeConfirm();
+      if (k !== current && !manual) return;
       setStatus(err && err.code === "server_unavailable"
-        ? "캘린더 응답이 없었어요. 캘린더에서 일정이 생겼는지 먼저 확인해 주세요."
-        : calErrorText(err, "눌러 주세요"), "err");
+        ? "캘린더 응답이 없었어요. 캘린더에 일정이 생겼는지 확인해 주세요."
+        : calErrorText(err, manual ? "눌러 주세요" : "저장해 주세요"), "err");
     }
   }
 
