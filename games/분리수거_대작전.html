@@ -470,7 +470,7 @@ body {
     if (!st.running) return;
     const dt = Math.min(.05, (t - last) / 1000 || 0); last = t;
     st.time += dt;
-    const speed = Math.min(175, 44 + st.time * 1.5);
+    const speed = Math.min(210, 56 + st.time * 1.8);
     const every = Math.max(.8, 2.4 - st.time * .03);
     st.spawnIn -= dt;
     if (st.spawnIn <= 0) { spawn(); st.spawnIn = every; }
