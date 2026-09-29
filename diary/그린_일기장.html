@@ -506,7 +506,7 @@
     dirty = false;
     const entry = { ...structuredClone(draft), updatedAt: new Date().toISOString() };
     const prev = entries[entry.date];
-    if (prev && prev.calEventId && !entry.calEventId) { entry.calEventId = prev.calEventId; entry.calLink = prev.calLink; entry.calSig = prev.calSig; }
+    if (prev && prev.calEventId && !entry.calEventId) { entry.calEventId = prev.calEventId; entry.calLink = prev.calLink; entry.calSig = prev.calSig; entry.calFix = prev.calFix; }
     if (isEmpty(entry)) { setStatus("", ""); return writing; }
     entries[entry.date] = entry;
     renderCal(); renderList(); renderStats();
@@ -652,6 +652,12 @@
     return `${keyOf(d)}T00:00:00${sign}${pad(Math.floor(a / 60))}:${pad(a % 60)}`;
   }
 
+  // 종일 일정은 날짜 그대로(UTC 자정) 보내야 하루 밀리지 않는다
+  function allDayRange(k) {
+    const d = parseKey(k); d.setDate(d.getDate() + 1);
+    return { allDay: true, startTime: `${k}T00:00:00Z`, endTime: `${keyOf(d)}T00:00:00Z` };
+  }
+
   function calErrorText(err, action) {
     switch (err && err.code) {
       case "server_not_connected":
@@ -698,7 +704,14 @@
         return;
       }
       const p = ev.result.payload || {};
-      const list = (Array.isArray(p.events) ? p.events : []).filter((e) => e.status !== "cancelled");
+      const list = (Array.isArray(p.events) ? p.events : []).filter((e) => {
+        if (e.status === "cancelled") return false;
+        if (e.start && e.start.date && e.end && e.end.date) {
+          const s0 = String(e.start.date).slice(0, 10), e0 = String(e.end.date).slice(0, 10);
+          return s0 <= k && k < e0;
+        }
+        return true;
+      });
       const ul = $("agendaList");
       ul.innerHTML = "";
       list.forEach((e) => {
@@ -790,8 +803,8 @@
   }
 
   async function findEventId(k, summary) {
-    const r = await mcp.callTool(GCAL, "list_events", { startTime: isoMidnight(k), endTime: isoMidnight(k, 1), fullText: summary.replace(/^📝 /, ""), pageSize: 10, timeZone: tz }, { cache: false });
-    const list = ((r.payload || {}).events || []).filter((e) => e.summary === summary && e.start && e.start.date === k);
+    const r = await mcp.callTool(GCAL, "list_events", { startTime: isoMidnight(k, -1), endTime: isoMidnight(k, 2), fullText: summary.replace(/^📝 /, ""), pageSize: 10, timeZone: tz }, { cache: false });
+    const list = ((r.payload || {}).events || []).filter((e) => e.summary === summary && e.start && e.start.date);
     return list.length ? list[list.length - 1] : null;
   }
 
@@ -800,14 +813,19 @@
     if (!mcp || !e) return;
     const body = calPayload(e);
     const sig = body.summary + "\u0000" + body.description;
-    if (e.calEventId && e.calEventId !== "added" && e.calSig === sig) return;
+    if (e.calEventId && e.calEventId !== "added" && e.calSig === sig && e.calFix === 2) return;
     if (k === current) setStatus("캘린더에 기록하는 중…", "");
     let id = e.calEventId && e.calEventId !== "added" ? e.calEventId : "";
     let link = e.calLink || "";
+    if (!id && e.calEventId === "added") {
+      // 전에 만들었지만 id를 못 받은 일정은 먼저 찾아본다 (중복 방지)
+      const found = await findEventId(k, calPayload(e).summary).catch(() => null);
+      if (found) { id = found.id; link = found.htmlLink || link; }
+    }
     try {
       if (id) {
         try {
-          await mcp.callTool(GCAL, "update_event", { eventId: id, ...body, notificationLevel: "NONE" }, { cache: false });
+          await mcp.callTool(GCAL, "update_event", { eventId: id, ...body, ...allDayRange(k), notificationLevel: "NONE" }, { cache: false });
         } catch (err) {
           // 캘린더에서 일정을 지운 경우: 새로 만든다
           if (err && err.code === "tool_error") id = ""; else throw err;
@@ -816,10 +834,7 @@
       if (!id) {
         const res = await mcp.callTool(GCAL, "create_event", {
           ...body,
-          allDay: true,
-          startTime: isoMidnight(k),
-          endTime: isoMidnight(k, 1),
-          timeZone: tz,
+          ...allDayRange(k),
           availability: "AVAILABILITY_FREE",
           useDefaultReminders: false,
           notificationLevel: "NONE",
@@ -833,10 +848,10 @@
           if (found) { id = found.id; link = found.htmlLink || ""; }
         }
       }
-      const updated = { ...entries[k], calEventId: id || "added", calLink: link, calSig: sig };
+      const updated = { ...entries[k], calEventId: id || "added", calLink: link, calSig: sig, calFix: 2 };
       entries[k] = updated;
       if (k === current) {
-        draft.calEventId = updated.calEventId; draft.calLink = updated.calLink; draft.calSig = sig;
+        draft.calEventId = updated.calEventId; draft.calLink = updated.calLink; draft.calSig = sig; draft.calFix = 2;
         if (!dirty) setStatus("저장됨 · 캘린더에도 기록했어요", "ok");
       }
       renderCalButton();
@@ -856,7 +871,17 @@
     if (!mcp) return;
     watchAgenda();
     renderCalButton();
+    repairOldCalEvents();
   })();
+
+  // 이전 버전이 하루 앞 날짜로 넣은 일정을 제자리로 옮긴다
+  const repairTried = new Set();
+  function repairOldCalEvents() {
+    if (!mcp || !autoCal) return;
+    Object.values(entries).forEach((e) => {
+      if (e.calEventId && e.calFix !== 2 && !repairTried.has(e.date)) { repairTried.add(e.date); syncCal(e.date, false); }
+    });
+  }
 
   // ---------- claude.ai 에서 열렸다면 계정별 비공개 저장소로 전환 ----------
   (async () => {
@@ -894,6 +919,7 @@
         draft.greens = draft.greens || [];
       }
       renderAll();
+      repairOldCalEvents();
     }, () => {
       store = localStore;
       const n = $("notice");
