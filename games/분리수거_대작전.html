@@ -85,14 +85,14 @@ body {
   background: repeating-linear-gradient(90deg, var(--danger) 0 14px, transparent 14px 24px); opacity: .55;
 }
 .item {
-  position: absolute; left: 0; top: 0; z-index: 1; width: 92px;
+  position: absolute; left: 0; top: 0; z-index: 1; width: 124px;
   display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 6px 4px; border-radius: 12px; border: 2px solid transparent;
+  padding: 10px 6px 8px; border-radius: 14px; border: 2px solid transparent;
   background: var(--bg); box-shadow: 0 2px 6px var(--shadow);
   will-change: transform; user-select: none; text-align: center;
 }
-.item .emo { font-size: 30px; line-height: 1.1; }
-.item .nm { font-size: 12px; font-weight: 500; line-height: 1.25; word-break: keep-all; }
+.item .emo { font-size: 46px; line-height: 1.1; }
+.item .nm { font-size: 14.5px; font-weight: 500; line-height: 1.25; word-break: keep-all; }
 .item.active { border-color: var(--ink); }
 .item.active::before {
   content: "지금 버릴 것"; position: absolute; top: -20px; font-size: 10px; font-weight: 700;
@@ -166,11 +166,12 @@ body {
 .muted { color: var(--muted); font-size: 12.5px; }
 
 @media (max-width: 420px) {
-  .brand { font-size: 18px; }
-  .stats { gap: 12px; }
+  .brand { font-size: 20px; flex-basis: 100%; }
+  .stats { gap: 10px; width: 100%; justify-content: space-between; }
   .bin .bn { font-size: 11.5px; }
-  .item { width: 80px; }
-  .item .emo { font-size: 26px; }
+  .item { width: 104px; }
+  .item .emo { font-size: 38px; }
+  .item .nm { font-size: 13px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .item.gone, .bin, .hp i { transition: none; }
@@ -183,6 +184,7 @@ body {
     <div class="brand">분리수거 대작전</div>
     <div class="stats">
       <div class="stat"><small>지구 체력</small><div class="hp" id="hp"></div></div>
+      <div class="stat"><small>남은 쓰레기</small><b id="left">25</b></div>
       <div class="stat"><small>콤보</small><b id="combo">0</b></div>
       <div class="stat"><small>점수</small><b id="score">0</b></div>
       <button class="sound" id="soundBtn" type="button" aria-pressed="true" aria-label="효과음 끄기" title="효과음 (M)">
@@ -201,7 +203,8 @@ body {
         <h1>분리수거 대작전</h1>
         <p>위에서 쓰레기가 떨어져요. <b>테두리가 있는 가장 아래 쓰레기</b>를 알맞은 수거함을 눌러 버리세요.</p>
         <ul class="muted">
-          <li>잘못 버리거나 바닥에 떨어지면 지구 체력이 줄어요</li>
+          <li>25가지 쓰레기를 모두 제대로 버리면 클리어예요. 같은 쓰레기는 두 번 나오지 않아요</li>
+          <li>잘못 버리거나 바닥에 떨어지면 지구 체력이 줄고, 그 쓰레기는 나중에 다시 나와요</li>
           <li>연속으로 맞히면 콤보 점수가 붙어요</li>
           <li>키보드 1~6으로도 버릴 수 있어요 · M은 효과음 켜기/끄기</li>
         </ul>
@@ -383,13 +386,22 @@ body {
     $('tickerMsg').textContent = text;
   }
 
-  function nextItem() {
-    if (!bag.length) bag = ITEMS.map((_, i) => i).sort(() => Math.random() - .5);
-    return ITEMS[bag.pop()];
+  // 한 게임에 25개가 한 번씩만 나와요. 틀린 쓰레기만 남은 순서 사이에 다시 끼워 넣어요.
+  function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
   }
+  function requeue(idx) {
+    if (!bag.length) bag.push(idx);
+    else bag.splice(Math.floor(Math.random() * bag.length), 0, idx); // 바로 다음 순서는 피해요
+    drawLeft();
+  }
+  const drawLeft = () => { $('left').textContent = st ? bag.length + st.items.length : ITEMS.length; };
 
   function spawn() {
-    const [emo, nm, bin, tip] = nextItem();
+    if (!bag.length) return;
+    const idx = bag.pop();
+    const [emo, nm, bin, tip] = ITEMS[idx];
     const el = document.createElement('div');
     el.className = 'item';
     el.innerHTML = `<span class="emo">${emo}</span><span class="nm">${nm}</span>`;
@@ -399,7 +411,7 @@ body {
     let lane; do { lane = Math.floor(Math.random() * lanes); } while (lane === lastLane && lanes > 1);
     lastLane = lane;
     const x = Math.round(lane * (fw - w) / (lanes - 1));
-    const it = { el, emo, nm, bin, tip, x, y: -el.offsetHeight - 24, h: el.offsetHeight };
+    const it = { el, idx, emo, nm, bin, tip, x, y: -el.offsetHeight - 24, h: el.offsetHeight };
     place(it);
     st.items.push(it);
   }
@@ -439,7 +451,7 @@ body {
       if (st.combo % 5 === 0) sfx.combo();
       tick(true, `${it.nm} → ${BIN_NAME[it.bin]}. ${it.tip}`);
       removeItem(it, field.clientHeight);
-      drawStats();
+      drawStats(); drawLeft();
     } else {
       flash(btn, 'flash-bad');
       flash($('bin-' + it.bin), 'flash-ok');
@@ -448,6 +460,7 @@ body {
       st.mistakes.push(it);
       it.el.classList.add('wrong');
       removeItem(it, 0);
+      requeue(it.idx);
       hurt();
     }
   }
@@ -470,10 +483,12 @@ body {
         st.mistakes.push(it);
         it.el.classList.add('wrong');
         removeItem(it, 0);
+        requeue(it.idx);
         hurt();
         if (!st.running) return;
       }
     }
+    if (!bag.length && !st.items.length) { end(true); return; }
     const a = active();
     for (const it of st.items) it.el.classList.toggle('active', it === a);
     raf = requestAnimationFrame(loop);
@@ -482,25 +497,28 @@ body {
   function start() {
     field.querySelectorAll('.item').forEach(e => e.remove());
     st = { running: true, items: [], score: 0, combo: 0, maxCombo: 0, hp: MAX_HP, sorted: 0, correct: 0, mistakes: [], time: 0, spawnIn: .2 };
+    bag = shuffle(ITEMS.map((_, i) => i));
     $('startOv').hidden = true; $('overOv').hidden = true;
-    drawHp(); drawStats();
+    drawHp(); drawStats(); drawLeft();
     tick(true, '가장 아래 쓰레기부터 버려요. 키보드 1~6도 돼요.');
     last = performance.now();
     raf = requestAnimationFrame(loop);
     sfx.start();
   }
 
-  function end() {
+  function end(cleared = false) {
     st.running = false; cancelAnimationFrame(raf);
+    const bonus = cleared ? st.hp * 30 : 0;
+    st.score += bonus; drawStats();
     const acc = st.sorted ? Math.round(st.correct / st.sorted * 100) : 0;
     const isBest = st.score > best;
     if (isBest) { best = st.score; save(best); }
-    sfx.over(isBest && st.score > 0);
-    $('overTitle').textContent = isBest && st.score > 0 ? '최고 기록이에요!' : '지구가 지쳤어요';
+    sfx.over(cleared || (isBest && st.score > 0));
+    $('overTitle').textContent = cleared ? `${ITEMS.length}개 모두 분리했어요!` : isBest && st.score > 0 ? '최고 기록이에요!' : '지구가 지쳤어요';
     $('rScore').textContent = st.score;
     $('rAcc').textContent = acc + '%';
     $('rCombo').textContent = st.maxCombo;
-    $('rBest').textContent = `내 최고 점수 ${best}점 · 맞힌 쓰레기 ${st.correct}개`;
+    $('rBest').textContent = (cleared ? `남은 지구 체력 보너스 +${bonus}점 · ` : '') + (isBest && st.score > 0 ? '최고 기록 경신 · ' : '') + `내 최고 점수 ${best}점 · 맞힌 쓰레기 ${st.correct}/${ITEMS.length}개`;
     const seen = new Set(), rv = $('review'); rv.innerHTML = '';
     for (const m of st.mistakes) {
       if (seen.has(m.nm)) continue; seen.add(m.nm);
