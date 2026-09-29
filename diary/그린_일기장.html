@@ -260,6 +260,28 @@
   .btn.danger { background: var(--danger); border-color: var(--danger); color: var(--sheet); }
   .confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 14px; color: var(--danger); }
 
+  /* 그날 캘린더 일정 */
+  .agenda {
+    border-left: 3px solid var(--blue);
+    background: var(--blue-soft);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+  .agenda-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .agenda-head span { font-size: 12px; letter-spacing: 0.06em; color: var(--ink-soft); }
+  .agenda-head small { font-family: var(--f-mono); font-size: 11px; color: var(--muted); }
+  .agenda ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .agenda li { display: grid; grid-template-columns: 5.5em minmax(0, 1fr); gap: 10px; font-size: 14px; }
+  .agenda .tm { font-family: var(--f-mono); font-size: 12px; color: var(--blue); padding-top: 2px; font-variant-numeric: tabular-nums; }
+  .agenda a { color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
+  .agenda a:hover { text-decoration: underline; }
+  .agenda .msg { font-size: 13px; color: var(--muted); margin: 0; }
+  .cal-done { font-size: 13px; color: var(--moss); text-decoration: none; }
+  .cal-done:hover { text-decoration: underline; }
+
   .notice {
     font-size: 13px;
     color: var(--ink-soft);
@@ -310,6 +332,12 @@
 
       <p class="notice" id="notice" hidden></p>
 
+      <section class="agenda" id="agenda" hidden aria-label="이날의 구글 캘린더 일정">
+        <div class="agenda-head"><span>이날의 캘린더 일정</span><small id="agendaWhen"></small></div>
+        <ul id="agendaList"></ul>
+        <p class="msg" id="agendaMsg">일정을 불러오는 중…</p>
+      </section>
+
       <div class="row">
         <fieldset>
           <legend>오늘의 기분</legend>
@@ -332,6 +360,8 @@
 
       <div class="foot" id="foot">
         <span class="count" id="count">0자</span>
+        <a class="cal-done" id="calDone" href="#" target="_blank" rel="noopener" hidden>캘린더에 남김 ✓</a>
+        <button class="btn ghost" type="button" id="calBtn" hidden>캘린더에 남기기</button>
         <button class="btn ghost" type="button" id="delBtn">삭제</button>
         <button class="btn" type="submit" id="saveBtn">저장</button>
       </div>
@@ -384,6 +414,8 @@
   let dirty = false;
   let saveTimer = null;
   let writing = Promise.resolve();
+  let mcp = null;
+  let stopAgenda = null;
 
   function blank(date) { return { date, mood: "", weather: "", title: "", body: "", greens: [] }; }
   function isEmpty(e) { return !e.mood && !e.weather && !e.title.trim() && !e.body.trim() && !e.greens.length; }
@@ -432,6 +464,7 @@
     renderEditor();
     renderCal();
     renderList();
+    watchAgenda();
   }
 
   function renderEditor() {
@@ -440,6 +473,7 @@
     if ($("body").value !== draft.body) $("body").value = draft.body;
     ["moods", "weathers", "greens"].forEach((id) => $(id)._sync());
     $("delBtn").hidden = !entries[current];
+    renderCalButton();
     updateCount();
   }
 
@@ -467,6 +501,8 @@
     if (!dirty) return writing;
     dirty = false;
     const entry = { ...structuredClone(draft), updatedAt: new Date().toISOString() };
+    const prev = entries[entry.date];
+    if (prev && prev.calEventId && !entry.calEventId) { entry.calEventId = prev.calEventId; entry.calLink = prev.calLink; }
     if (isEmpty(entry)) { setStatus("", ""); return writing; }
     entries[entry.date] = entry;
     renderCal(); renderList(); renderStats();
@@ -596,6 +632,162 @@
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") flush(); });
 
   renderAll();
+
+  // ---------- 구글 캘린더 ----------
+  const GCAL = "Google Calendar";
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Seoul";
+
+  function isoMidnight(k, addDays = 0) {
+    const d = parseKey(k); d.setDate(d.getDate() + addDays);
+    const off = -d.getTimezoneOffset();
+    const sign = off >= 0 ? "+" : "-";
+    const a = Math.abs(off);
+    return `${keyOf(d)}T00:00:00${sign}${pad(Math.floor(a / 60))}:${pad(a % 60)}`;
+  }
+
+  function calErrorText(err, action) {
+    switch (err && err.code) {
+      case "server_not_connected":
+      case "selection_required":
+        return "구글 캘린더가 연결되어 있지 않아요. claude.ai 설정 → 커넥터에서 Google Calendar를 연결해 주세요.";
+      case "needs_reauth":
+        return "구글 캘린더 연결이 만료됐어요. claude.ai 설정 → 커넥터에서 다시 연결해 주세요.";
+      case "not_in_manifest":
+      case "consent_required":
+        return "이 페이지에서 캘린더 사용을 허락하지 않았어요. 페이지를 새로고침하면 다시 물어봐요.";
+      case "blocked_by_policy":
+      case "approval_required":
+        return "조직 정책 때문에 캘린더를 쓸 수 없어요.";
+      case "server_unavailable":
+        return `구글 캘린더가 잠시 응답하지 않아요. 조금 뒤에 다시 ${action}.`;
+      case "tool_error":
+        return "캘린더가 요청을 거절했어요: " + (err.message || "");
+      default:
+        return `캘린더에 연결하지 못했어요. 잠시 후 다시 ${action}.`;
+    }
+  }
+
+  function fmtTime(ev) {
+    if (!ev.start || ev.start.date) return "종일";
+    const d = new Date(ev.start.dateTime);
+    return isNaN(d) ? "" : d.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", hour12: false });
+  }
+
+  function watchAgenda() {
+    if (!mcp) return;
+    if (stopAgenda) stopAgenda();
+    const k = current;
+    $("agenda").hidden = false;
+    $("agendaList").innerHTML = "";
+    $("agendaWhen").textContent = "";
+    showAgendaMsg("일정을 불러오는 중…");
+    const input = { startTime: isoMidnight(k), endTime: isoMidnight(k, 1), orderBy: "startTime", pageSize: 30, timeZone: tz };
+    stopAgenda = mcp.watchTool(GCAL, "list_events", input, (ev) => {
+      if (k !== current) return;
+      if (ev.type === "error") {
+        const denied = ["needs_reauth", "server_not_connected", "blocked_by_policy", "approval_required", "not_in_manifest", "selection_required", "consent_required"];
+        if (denied.includes(ev.error.code)) $("agendaList").innerHTML = "";
+        showAgendaMsg(calErrorText(ev.error, "열어 주세요"));
+        return;
+      }
+      const p = ev.result.payload || {};
+      const list = (Array.isArray(p.events) ? p.events : []).filter((e) => e.status !== "cancelled");
+      const ul = $("agendaList");
+      ul.innerHTML = "";
+      list.forEach((e) => {
+        const li = document.createElement("li");
+        const t = document.createElement("span"); t.className = "tm"; t.textContent = fmtTime(e);
+        const a = document.createElement("a");
+        a.textContent = e.summary || "(제목 없음)";
+        if (typeof e.htmlLink === "string" && e.htmlLink.startsWith("https://")) { a.href = e.htmlLink; a.target = "_blank"; a.rel = "noopener"; }
+        li.append(t, a);
+        ul.append(li);
+      });
+      showAgendaMsg(list.length ? "" : "이날은 캘린더 일정이 없어요.");
+      const at = ev.result.cache ? new Date(ev.result.cache.storedAt) : new Date();
+      $("agendaWhen").textContent = at.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", hour12: false }) + " 기준";
+    }, { refetchInterval: 5 * 60 * 1000 });
+  }
+  function showAgendaMsg(t) { const m = $("agendaMsg"); m.textContent = t; m.hidden = !t; }
+
+  function renderCalButton() {
+    const e = entries[current];
+    const done = $("calDone"), btn = $("calBtn");
+    if (!mcp || !e) { btn.hidden = true; done.hidden = true; return; }
+    if (e.calEventId) {
+      btn.hidden = true;
+      done.hidden = false;
+      if (typeof e.calLink === "string" && e.calLink.startsWith("https://")) done.href = e.calLink; else done.removeAttribute("href");
+    } else {
+      done.hidden = true;
+      btn.hidden = false;
+    }
+  }
+
+  $("calBtn").addEventListener("click", () => {
+    if (confirmEl) return;
+    confirmEl = document.createElement("div");
+    confirmEl.className = "confirm";
+    confirmEl.style.color = "var(--ink-soft)";
+    confirmEl.innerHTML = '<span>이 날짜에 종일 일정으로 일기를 남길까요?</span><button type="button" class="btn" id="calYes">남기기</button><button type="button" class="btn ghost" id="calNo">취소</button>';
+    foot.after(confirmEl);
+    $("calNo").addEventListener("click", closeConfirm);
+    $("calYes").addEventListener("click", addToCalendar);
+    $("calYes").focus();
+  });
+
+  async function addToCalendar() {
+    const yes = $("calYes");
+    if (yes) { yes.disabled = true; yes.textContent = "남기는 중…"; }
+    flush();
+    await writing.catch(() => {});
+    const k = current;
+    const e = entries[k];
+    if (!e) { closeConfirm(); return; }
+    const mood = MOODS.find((x) => x.id === e.mood);
+    const weather = WEATHERS.find((x) => x.id === e.weather);
+    const lines = [];
+    if (mood || weather) lines.push([mood && `기분: ${mood.e} ${mood.label}`, weather && `날씨: ${weather.e} ${weather.label}`].filter(Boolean).join(" · "));
+    if (e.greens && e.greens.length) lines.push("그린 실천: " + e.greens.join(", "));
+    if (e.body.trim()) lines.push("", e.body.trim());
+    const title = e.title.trim() || e.body.trim().split("\n")[0].slice(0, 40) || "오늘의 일기";
+    try {
+      const res = await mcp.callTool(GCAL, "create_event", {
+        summary: "📝 " + title,
+        description: lines.join("\n"),
+        allDay: true,
+        startTime: isoMidnight(k),
+        endTime: isoMidnight(k, 1),
+        timeZone: tz,
+        availability: "AVAILABILITY_FREE",
+        useDefaultReminders: false,
+        notificationLevel: "NONE",
+      }, { cache: false });
+      const p = res.payload || {};
+      const made = p.event || p;
+      const updated = { ...entries[k], calEventId: made.id || "added", calLink: made.htmlLink || "" };
+      entries[k] = updated;
+      if (k === current && !dirty) { draft.calEventId = updated.calEventId; draft.calLink = updated.calLink; }
+      closeConfirm();
+      renderCalButton();
+      setStatus("캘린더에 남겼어요", "ok");
+      writing = writing.then(() => store.save(updated)).catch(() => {});
+      mcp.invalidate(GCAL, "list_events").catch(() => {});
+    } catch (err) {
+      closeConfirm();
+      setStatus(err && err.code === "server_unavailable"
+        ? "캘린더 응답이 없었어요. 캘린더에서 일정이 생겼는지 먼저 확인해 주세요."
+        : calErrorText(err, "눌러 주세요"), "err");
+    }
+  }
+
+  (async () => {
+    if (!window.claude || !window.claude.use) return;
+    mcp = await window.claude.use("mcp");
+    if (!mcp) return;
+    watchAgenda();
+    renderCalButton();
+  })();
 
   // ---------- claude.ai 에서 열렸다면 계정별 비공개 저장소로 전환 ----------
   (async () => {
