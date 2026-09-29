@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>나의 책장</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4efe6;
+    --paper: #fffdf8;
+    --ink: #2b2420;
+    --muted: #7a6d62;
+    --line: #e2d8c9;
+    --wood: #8a5a36;
+    --wood-dark: #5e3b22;
+    --wood-light: #a97448;
+    --wall: #efe6d6;
+    --accent: #6b8f5e;
+    --star: #e0a526;
+    --shadow: 0 10px 30px rgba(60, 40, 20, .18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1c1916; --paper: #26221e; --ink: #efe7dc; --muted: #a89a8b; --line: #3a332c;
+      --wood: #6d4529; --wood-dark: #472b18; --wood-light: #845534; --wall: #221e1a;
+      --accent: #8fb57f; --shadow: 0 10px 30px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1916; --paper: #26221e; --ink: #efe7dc; --muted: #a89a8b; --line: #3a332c;
+    --wood: #6d4529; --wood-dark: #472b18; --wood-light: #845534; --wall: #221e1a;
+    --accent: #8fb57f; --shadow: 0 10px 30px rgba(0,0,0,.5);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Noto Sans KR", system-ui, sans-serif; line-height: 1.6;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+
+  header { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between; margin-bottom: 24px; }
+  h1 { font-family: "Gowun Batang", serif; font-size: clamp(28px, 5vw, 40px); margin: 0; letter-spacing: -.5px; }
+  .sub { color: var(--muted); margin: 4px 0 0; font-size: 15px; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  button { font: inherit; cursor: pointer; }
+  .btn {
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+    padding: 9px 16px; border-radius: 999px; font-size: 14px; font-weight: 500;
+  }
+  .btn:hover { border-color: var(--muted); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.danger { color: #b3452f; }
+
+  .stats { display: flex; gap: 20px; flex-wrap: wrap; color: var(--muted); font-size: 14px; margin-bottom: 16px; }
+  .stats b { color: var(--ink); font-size: 18px; margin-right: 4px; }
+
+  /* 책장 */
+  .bookcase {
+    background: var(--wall);
+    border: 14px solid var(--wood);
+    border-radius: 6px;
+    box-shadow: var(--shadow), inset 0 0 40px rgba(0,0,0,.12);
+    padding: 0 12px;
+  }
+  .shelf {
+    display: flex; align-items: flex-end; gap: 3px;
+    min-height: 250px; padding: 22px 8px 0;
+    position: relative;
+    overflow-x: auto; overflow-y: hidden;
+  }
+  .shelf::after {
+    content: ""; position: absolute; left: -12px; right: -12px; bottom: 0; height: 0;
+  }
+  .board {
+    height: 16px; margin: 0 -12px;
+    background: linear-gradient(var(--wood-light), var(--wood) 40%, var(--wood-dark));
+    box-shadow: 0 4px 6px rgba(0,0,0,.2);
+  }
+  .book {
+    flex: 0 0 auto; position: relative;
+    border: none; padding: 10px 0; color: #fff;
+    border-radius: 3px 3px 1px 1px;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    box-shadow: inset 3px 0 4px rgba(255,255,255,.18), inset -4px 0 6px rgba(0,0,0,.28), 2px 0 3px rgba(0,0,0,.15);
+    transition: transform .2s ease;
+    transform-origin: bottom center;
+  }
+  .book:hover, .book:focus-visible { transform: translateY(-12px); outline: none; }
+  .book:focus-visible { box-shadow: 0 0 0 3px var(--accent); }
+  .book .band { position: absolute; left: 0; right: 0; height: 5px; background: rgba(255,255,255,.35); }
+  .book .band.top { top: 16px; } .book .band.bot { bottom: 16px; }
+  .book .t {
+    writing-mode: vertical-rl; text-orientation: mixed;
+    font-family: "Gowun Batang", serif; font-weight: 700; font-size: 14px; letter-spacing: 1px;
+    flex: 1 1 auto; min-height: 0; overflow: hidden; white-space: nowrap;
+    margin-top: 24px; line-height: 1.2;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+  }
+  .book .a { flex: 0 0 auto; writing-mode: vertical-rl; font-size: 10px; line-height: 1.2; opacity: .85; margin: 8px 0 24px; max-height: 52px; overflow: hidden; white-space: nowrap; }
+  .book.reading::before {
+    content: ""; position: absolute; top: -10px; left: 50%; width: 8px; height: 26px; margin-left: -4px;
+    background: #c9402f; clip-path: polygon(0 0,100% 0,100% 100%,50% 75%,0 100%);
+  }
+  .decor { flex: 0 0 auto; align-self: flex-end; font-size: 34px; margin: 0 10px 2px; user-select: none; }
+  .empty-shelf { color: var(--muted); font-size: 14px; align-self: center; margin: 0 auto; padding-bottom: 20px; }
+
+  .legend { color: var(--muted); font-size: 13px; margin-top: 14px; }
+
+  /* 모달 */
+  dialog {
+    border: none; padding: 0; border-radius: 14px; background: var(--paper); color: var(--ink);
+    width: min(640px, calc(100% - 32px)); max-height: calc(100% - 48px);
+    box-shadow: var(--shadow);
+  }
+  dialog::backdrop { background: rgba(20, 14, 8, .5); }
+  .modal-inner { padding: 28px; }
+  .detail-head { display: flex; gap: 20px; align-items: flex-start; }
+  .cover {
+    flex: 0 0 90px; height: 130px; border-radius: 3px 8px 8px 3px; color: #fff;
+    display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px;
+    font-family: "Gowun Batang", serif; font-weight: 700; font-size: 13px;
+    box-shadow: inset 6px 0 6px rgba(0,0,0,.25), 3px 4px 10px rgba(0,0,0,.2);
+  }
+  .detail-head h2 { font-family: "Gowun Batang", serif; margin: 0 0 4px; font-size: 24px; line-height: 1.3; }
+  .meta { color: var(--muted); font-size: 14px; margin: 0; }
+  .stars { color: var(--star); font-size: 18px; letter-spacing: 2px; margin-top: 6px; }
+  .tag { display: inline-block; font-size: 12px; padding: 2px 10px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); margin-top: 8px; }
+  .section { margin-top: 24px; }
+  .section h3 { font-size: 13px; letter-spacing: 1px; color: var(--muted); margin: 0 0 8px; font-weight: 700; }
+  .review { white-space: pre-wrap; font-family: "Gowun Batang", serif; font-size: 16px; line-height: 1.9; margin: 0; }
+  .quote {
+    border-left: 3px solid var(--accent); padding: 6px 14px; margin: 0 0 10px;
+    font-family: "Gowun Batang", serif; background: var(--bg); border-radius: 0 6px 6px 0;
+  }
+  .quote small { display: block; color: var(--muted); font-family: "Noto Sans KR", sans-serif; font-size: 12px; margin-top: 2px; }
+  .modal-foot { display: flex; justify-content: space-between; gap: 8px; margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+  .close-x { position: absolute; top: 12px; right: 14px; background: none; border: none; font-size: 22px; color: var(--muted); line-height: 1; padding: 4px 8px; }
+
+  /* 폼 */
+  form label { display: block; font-size: 13px; font-weight: 500; margin: 14px 0 6px; color: var(--muted); }
+  form input, form textarea, form select {
+    width: 100%; font: inherit; color: var(--ink); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px;
+  }
+  form textarea { resize: vertical; min-height: 110px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .colors { display: flex; gap: 8px; flex-wrap: wrap; }
+  .colors input { display: none; }
+  .colors label { margin: 0; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
+  .colors input:checked + label { border-color: var(--ink); }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  @media (max-width: 560px) {
+    .detail-head { flex-direction: column; }
+    .row { grid-template-columns: 1fr; }
+    .modal-inner { padding: 22px 18px; }
+    .shelf { min-height: 230px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>나의 책장</h1>
+      <p class="sub">책을 한 권 꺼내면 그때 남긴 감상과 기록을 볼 수 있어요.</p>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="addBtn">+ 책 기록하기</button>
+      <button class="btn" id="exportBtn" title="기록을 JSON 파일로 저장">내보내기</button>
+      <button class="btn" id="importBtn" title="JSON 파일에서 기록 불러오기">불러오기</button>
+      <input type="file" id="importFile" accept="application/json" hidden>
+    </div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+  <div class="bookcase" id="bookcase"></div>
+  <p class="legend">🔖 빨간 책갈피가 꽂힌 책은 지금 읽고 있는 책이에요.</p>
+</div>
+
+<!-- 상세 보기 -->
+<dialog id="detail">
+  <div class="modal-inner" style="position:relative">
+    <button class="close-x" data-close aria-label="닫기">×</button>
+    <div id="detailBody"></div>
+    <div class="modal-foot">
+      <button class="btn danger" id="deleteBtn">삭제</button>
+      <div class="actions">
+        <button class="btn" id="editBtn">수정</button>
+        <button class="btn primary" data-close>닫기</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- 작성/수정 폼 -->
+<dialog id="editor">
+  <form class="modal-inner" id="bookForm" method="dialog" style="position:relative">
+    <button type="button" class="close-x" data-close aria-label="닫기">×</button>
+    <h2 id="formTitle" style="font-family:'Gowun Batang',serif;margin:0">책 기록하기</h2>
+    <label for="f-title">제목 *</label>
+    <input id="f-title" name="title" required>
+    <div class="row">
+      <div><label for="f-author">지은이</label><input id="f-author" name="author"></div>
+      <div><label for="f-status">상태</label>
+        <select id="f-status" name="status">
+          <option value="done">다 읽음</option>
+          <option value="reading">읽는 중</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div><label for="f-start">읽기 시작한 날</label><input type="date" id="f-start" name="start"></div>
+      <div><label for="f-end">다 읽은 날</label><input type="date" id="f-end" name="end"></div>
+    </div>
+    <label for="f-rating">별점</label>
+    <select id="f-rating" name="rating">
+      <option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option>
+      <option value="2">★★☆☆☆</option><option value="1">★☆☆☆☆</option><option value="0">별점 없음</option>
+    </select>
+    <label for="f-review">감상평</label>
+    <textarea id="f-review" name="review" placeholder="이 책을 읽고 든 생각을 자유롭게 적어보세요."></textarea>
+    <label for="f-quotes">기억에 남는 문장</label>
+    <textarea id="f-quotes" name="quotes" placeholder="한 줄에 한 문장씩 적어주세요.&#10;쪽수를 남기려면 문장 뒤에 | 를 붙이고 적어요. 예) 문장 | p.42"></textarea>
+    <p class="hint">한 줄에 한 문장 · 쪽수는 “ | p.42” 처럼 덧붙이기</p>
+    <label>책등 색깔</label>
+    <div class="colors" id="colorPicker"></div>
+    <div class="modal-foot">
+      <span></span>
+      <div class="actions">
+        <button type="button" class="btn" data-close>취소</button>
+        <button type="submit" class="btn primary">저장</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<script>
+const STORAGE_KEY = "reading-log-books";
+const COLORS = ["#3f5e8c", "#8c3f3f", "#4f7a4a", "#c0873a", "#6b4f8c", "#2f6f73", "#a0522d", "#3b3b3b", "#b5657a", "#7a8a3a"];
+const DECOR = ["🪴", "🕯️", "🧸", "☕", "🌵"];
+
+const SAMPLE = [
+  { id: "s1", title: "아몬드", author: "손원평", status: "done", start: "2026-01-03", end: "2026-01-10", rating: 5, color: COLORS[1],
+    review: "감정을 느끼지 못하는 소년 윤재가 곤이를 만나 조금씩 변해가는 이야기.\n'괴물'이라고 불리는 두 아이가 서로에게 가장 따뜻한 존재가 되는 과정이 오래 마음에 남았다.",
+    quotes: [{ text: "멀면 먼 대로, 가까우면 가까운 대로 할 수 있는 일이 있다.", page: "" }] },
+  { id: "s2", title: "불편한 편의점", author: "김호연", status: "done", start: "2026-02-11", end: "2026-02-18", rating: 4, color: COLORS[2],
+    review: "청파동 골목 편의점에 모여드는 사람들의 이야기. 독고 씨의 서툰 친절이 하나씩 사람들을 바꿔 놓는다.\n읽는 내내 따뜻한 옥수수수염차 한 잔 마신 기분.",
+    quotes: [{ text: "삶은 관계였고 관계는 소통이었다.", page: "" }] },
+  { id: "s3", title: "사피엔스", author: "유발 하라리", status: "reading", start: "2026-09-01", end: "", rating: 0, color: COLORS[0],
+    review: "인지혁명 파트까지 읽는 중. '허구를 믿는 능력'이 인류를 협력하게 만들었다는 관점이 신선하다.", quotes: [] },
+  { id: "s4", title: "데미안", author: "헤르만 헤세", status: "done", start: "2026-03-02", end: "2026-03-20", rating: 5, color: COLORS[5],
+    review: "나 자신에게로 가는 길. 학창 시절에 읽었을 때와 지금 읽었을 때 전혀 다른 책처럼 느껴졌다.",
+    quotes: [{ text: "새는 알에서 나오려고 투쟁한다. 알은 세계이다.", page: "" }] },
+  { id: "s5", title: "작별하지 않는다", author: "한강", status: "done", start: "2026-04-05", end: "2026-04-22", rating: 5, color: COLORS[7],
+    review: "눈이 내리는 장면들이 계속 떠오른다. 슬픔을 끝까지 붙들고 있는 사람들에 대한 이야기.", quotes: [] },
+  { id: "s6", title: "달러구트 꿈 백화점", author: "이미예", status: "done", start: "2026-05-10", end: "2026-05-14", rating: 3, color: COLORS[4],
+    review: "잠들어야만 입장할 수 있는 꿈 백화점이라는 설정이 귀엽다. 가볍게 읽기 좋았다.", quotes: [] },
+];
+
+let books = load();
+let currentId = null;
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return SAMPLE.slice();
+}
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(books)); } catch (e) {}
+}
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function hash(str) { let h = 0; for (const c of str) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
+function stars(n) { return n ? "★".repeat(n) + "☆".repeat(5 - n) : ""; }
+function fmt(d) { return d ? d.replaceAll("-", ".") : ""; }
+
+/* 화면 폭에 따라 한 칸에 들어갈 책 수 */
+function perShelf() {
+  const w = document.getElementById("bookcase").clientWidth;
+  return Math.max(5, Math.floor((w - 100) / 50));
+}
+
+function render() {
+  const done = books.filter(b => b.status === "done").length;
+  const reading = books.length - done;
+  const year = new Date().getFullYear();
+  const thisYear = books.filter(b => b.status === "done" && (b.end || "").startsWith(String(year))).length;
+  document.getElementById("stats").innerHTML =
+    `<span><b>${books.length}</b>권 기록</span><span><b>${done}</b>권 완독</span><span><b>${reading}</b>권 읽는 중</span><span>올해 <b>${thisYear}</b>권</span>`;
+
+  const sorted = [...books].sort((a, b) => (a.start || "").localeCompare(b.start || ""));
+  const n = perShelf();
+  const rows = [];
+  for (let i = 0; i < sorted.length; i += n) rows.push(sorted.slice(i, i + n));
+  while (rows.length < 2) rows.push([]);
+
+  const html = rows.map((row, ri) => {
+    const booksHtml = row.map(b => {
+      const h = hash(b.id + b.title);
+      const height = 180 + (h % 40);
+      const width = 38 + (h % 14);
+      return `<button class="book ${b.status === "reading" ? "reading" : ""}" data-id="${esc(b.id)}"
+        style="height:${height}px;width:${width}px;background:${esc(b.color || COLORS[h % COLORS.length])}"
+        title="${esc(b.title)}${b.author ? " · " + esc(b.author) : ""}" aria-label="${esc(b.title)} 기록 보기">
+        <span class="band top"></span><span class="t" style="font-size:${b.title.length > 9 ? 11 : b.title.length > 6 ? 12 : 14}px">${esc(b.title)}</span><span class="a">${esc((b.author || "").slice(0, 4))}</span><span class="band bot"></span>
+      </button>`;
+    }).join("");
+    const empty = !row.length && ri === 0 ? `<span class="empty-shelf">아직 꽂힌 책이 없어요. 첫 책을 기록해보세요!</span>` : "";
+    const decor = row.length && row.length < n ? `<span class="decor" aria-hidden="true">${DECOR[ri % DECOR.length]}</span>` : "";
+    return `<div class="shelf">${booksHtml}${decor}${empty}</div><div class="board"></div>`;
+  }).join("");
+  document.getElementById("bookcase").innerHTML = html;
+}
+
+/* 상세 */
+function openDetail(id) {
+  const b = books.find(x => x.id === id);
+  if (!b) return;
+  currentId = id;
+  const period = b.start || b.end ? `${fmt(b.start)} ~ ${b.status === "reading" ? "읽는 중" : fmt(b.end)}` : "";
+  const quotes = (b.quotes || []).filter(q => q.text);
+  document.getElementById("detailBody").innerHTML = `
+    <div class="detail-head">
+      <div class="cover" style="background:${esc(b.color)}">${esc(b.title)}</div>
+      <div>
+        <h2>${esc(b.title)}</h2>
+        <p class="meta">${esc(b.author || "지은이 미상")}</p>
+        ${period ? `<p class="meta">${period}</p>` : ""}
+        ${b.rating ? `<div class="stars" aria-label="별점 ${b.rating}점">${stars(+b.rating)}</div>` : ""}
+        <span class="tag">${b.status === "reading" ? "📖 읽는 중" : "✅ 다 읽음"}</span>
+      </div>
+    </div>
+    <div class="section"><h3>감상평</h3>
+      ${b.review ? `<p class="review">${esc(b.review)}</p>` : `<p class="meta">아직 남긴 감상이 없어요.</p>`}
+    </div>
+    ${quotes.length ? `<div class="section"><h3>기억에 남는 문장</h3>
+      ${quotes.map(q => `<blockquote class="quote">${esc(q.text)}${q.page ? `<small>${esc(q.page)}</small>` : ""}</blockquote>`).join("")}
+    </div>` : ""}`;
+  document.getElementById("detail").showModal();
+}
+
+/* 폼 */
+function renderColors(selected) {
+  document.getElementById("colorPicker").innerHTML = COLORS.map((c, i) =>
+    `<input type="radio" name="color" id="c${i}" value="${c}" ${c === selected ? "checked" : ""}><label for="c${i}" style="background:${c}" aria-label="색 ${i + 1}"></label>`
+  ).join("");
+}
+function openEditor(id) {
+  const b = id ? books.find(x => x.id === id) : null;
+  const f = document.getElementById("bookForm");
+  f.reset();
+  f.dataset.id = b ? b.id : "";
+  document.getElementById("formTitle").textContent = b ? "기록 수정하기" : "책 기록하기";
+  renderColors(b ? b.color : COLORS[Math.floor(Math.random() * COLORS.length)]);
+  if (b) {
+    f.title.value = b.title; f.author.value = b.author || ""; f.status.value = b.status;
+    f.start.value = b.start || ""; f.end.value = b.end || ""; f.rating.value = String(b.rating || 0);
+    f.review.value = b.review || "";
+    f.quotes.value = (b.quotes || []).map(q => q.page ? `${q.text} | ${q.page}` : q.text).join("\n");
+  } else {
+    f.start.value = new Date().toISOString().slice(0, 10);
+  }
+  document.getElementById("editor").showModal();
+  f.title.focus();
+}
+
+document.getElementById("bookForm").addEventListener("submit", e => {
+  const f = e.target;
+  const data = {
+    id: f.dataset.id || "b" + Date.now(),
+    title: f.title.value.trim(),
+    author: f.author.value.trim(),
+    status: f.status.value,
+    start: f.start.value,
+    end: f.status.value === "done" ? f.end.value : "",
+    rating: +f.rating.value,
+    review: f.review.value.trim(),
+    color: (f.querySelector('input[name="color"]:checked') || {}).value || COLORS[0],
+    quotes: f.quotes.value.split("\n").map(l => l.trim()).filter(Boolean).map(l => {
+      const i = l.lastIndexOf("|");
+      return i > 0 ? { text: l.slice(0, i).trim(), page: l.slice(i + 1).trim() } : { text: l, page: "" };
+    }),
+  };
+  const idx = books.findIndex(b => b.id === data.id);
+  if (idx >= 0) books[idx] = data; else books.push(data);
+  save(); render();
+  if (idx >= 0) setTimeout(() => openDetail(data.id), 0);
+});
+
+document.getElementById("bookcase").addEventListener("click", e => {
+  const el = e.target.closest(".book");
+  if (el) openDetail(el.dataset.id);
+});
+document.getElementById("addBtn").onclick = () => openEditor(null);
+document.getElementById("editBtn").onclick = () => { document.getElementById("detail").close(); openEditor(currentId); };
+document.getElementById("deleteBtn").onclick = () => {
+  const b = books.find(x => x.id === currentId);
+  if (b && confirm(`'${b.title}' 기록을 책장에서 뺄까요?`)) {
+    books = books.filter(x => x.id !== currentId);
+    save(); render(); document.getElementById("detail").close();
+  }
+};
+document.querySelectorAll("dialog").forEach(d => {
+  d.addEventListener("click", e => {
+    if (e.target === d || e.target.closest("[data-close]")) d.close();
+  });
+});
+
+/* 내보내기 / 불러오기 */
+document.getElementById("exportBtn").onclick = () => {
+  const blob = new Blob([JSON.stringify(books, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `reading-log-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+document.getElementById("importBtn").onclick = () => document.getElementById("importFile").click();
+document.getElementById("importFile").onchange = async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const data = JSON.parse(await file.text());
+    if (!Array.isArray(data)) throw new Error();
+    books = data; save(); render();
+  } catch { alert("올바른 기록 파일이 아니에요."); }
+  e.target.value = "";
+};
+
+let resizeTimer;
+window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(render, 150); });
+render();
+</script>
+</body>
+</html>
