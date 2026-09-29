@@ -279,8 +279,6 @@
   .agenda a { color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
   .agenda a:hover { text-decoration: underline; }
   .agenda .msg { font-size: 13px; color: var(--muted); margin: 0; }
-  .auto { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-soft); cursor: pointer; }
-  .auto input { accent-color: var(--moss); margin: 0; }
   .cal-done { font-size: 13px; color: var(--moss); text-decoration: none; }
   .cal-done:hover { text-decoration: underline; }
 
@@ -392,7 +390,6 @@
 
       <div class="foot" id="foot">
         <span class="count" id="count">0자</span>
-        <label class="auto" id="calAutoWrap" hidden><input type="checkbox" id="calAuto" checked> 캘린더에 자동 기록</label>
         <a class="cal-done" id="calDone" href="#" target="_blank" rel="noopener" hidden>캘린더에 남김 ✓</a>
         <button class="btn ghost" type="button" id="calBtn" hidden>캘린더에 남기기</button>
         <button class="btn ghost" type="button" id="imgBtn" hidden>이미지로 저장</button>
@@ -467,7 +464,6 @@
   let writing = Promise.resolve();
   let mcp = null;
   let stopAgenda = null;
-  let autoCal = true;
 
   function blank(date) { return { date, mood: "", weather: "", title: "", body: "", greens: [] }; }
   function isEmpty(e) { return !e.mood && !e.weather && !e.title.trim() && !e.body.trim() && !e.greens.length; }
@@ -565,7 +561,6 @@
     writing = writing.then(() => store.save(entry)).then(
       () => {
         if (entry.date === current && !dirty) setStatus("저장됨 " + new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }), "ok");
-        scheduleCalSync(entry.date);
       },
       (err) => {
         dirty = true;
@@ -980,7 +975,6 @@
   function renderCalButton() {
     const e = entries[current];
     const done = $("calDone"), btn = $("calBtn");
-    $("calAutoWrap").hidden = !mcp;
     if (!mcp || !e) { btn.hidden = true; done.hidden = true; return; }
     if (e.calEventId) {
       btn.hidden = true;
@@ -988,7 +982,7 @@
       if (typeof e.calLink === "string" && e.calLink.startsWith("https://")) done.href = e.calLink; else done.removeAttribute("href");
     } else {
       done.hidden = true;
-      btn.hidden = autoCal;
+      btn.hidden = false;
     }
   }
 
@@ -1025,25 +1019,7 @@
     return { summary: "📝 " + title, description: lines.join("\n") };
   }
 
-  // 자동 기록 설정 (브라우저별 기억, 기본 켜짐)
-  const AUTO_KEY = "green-diary-cal-auto";
-  try { autoCal = localStorage.getItem(AUTO_KEY) !== "off"; } catch {}
-  $("calAuto").checked = autoCal;
-  $("calAuto").addEventListener("change", (ev) => {
-    autoCal = ev.target.checked;
-    try { localStorage.setItem(AUTO_KEY, autoCal ? "on" : "off"); } catch {}
-    renderCalButton();
-    if (autoCal && entries[current]) scheduleCalSync(current);
-  });
-
-  const calTimers = {};
   let calQueue = Promise.resolve();
-  function scheduleCalSync(k) {
-    if (!mcp || !autoCal) return;
-    clearTimeout(calTimers[k]);
-    calTimers[k] = setTimeout(() => { delete calTimers[k]; syncCal(k, false); }, 4000);
-  }
-
   function syncCal(k, manual) {
     calQueue = calQueue.then(() => doSyncCal(k, manual)).catch(() => {});
     return calQueue;
@@ -1119,17 +1095,9 @@
     if (!mcp) return;
     watchAgenda();
     renderCalButton();
-    repairOldCalEvents();
   })();
 
-  // 이전 버전이 하루 앞 날짜로 넣은 일정을 제자리로 옮긴다
-  const repairTried = new Set();
-  function repairOldCalEvents() {
-    if (!mcp || !autoCal) return;
-    Object.values(entries).forEach((e) => {
-      if (e.calEventId && e.calFix !== 2 && !repairTried.has(e.date)) { repairTried.add(e.date); syncCal(e.date, false); }
-    });
-  }
+
 
   // ---------- claude.ai 에서 열렸다면 계정별 비공개 저장소로 전환 ----------
   (async () => {
@@ -1167,7 +1135,6 @@
         draft.greens = draft.greens || [];
       }
       renderAll();
-      repairOldCalEvents();
     }, () => {
       store = localStore;
       const n = $("notice");
