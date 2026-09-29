@@ -303,7 +303,7 @@
     <div class="stats" aria-live="polite">
       <div><b id="stTotal">0</b>쓴 날</div>
       <div><b id="stStreak">0</b>연속 기록</div>
-      <div><b id="stGreen">0</b>그린 실천</div>
+      <div><b id="stGreen">0</b>실천</div>
     </div>
   </header>
 
@@ -356,7 +356,7 @@
       <textarea id="body" placeholder="오늘은 어떤 하루였나요?"></textarea>
 
       <fieldset>
-        <legend>오늘의 그린 실천</legend>
+        <legend>오늘의 실천</legend>
         <div class="chips green" id="greens"></div>
       </fieldset>
 
@@ -772,7 +772,7 @@
     const weather = WEATHERS.find((x) => x.id === e.weather);
     const lines = [];
     if (mood || weather) lines.push([mood && `기분: ${mood.e} ${mood.label}`, weather && `날씨: ${weather.e} ${weather.label}`].filter(Boolean).join(" · "));
-    if (e.greens && e.greens.length) lines.push("그린 실천: " + e.greens.join(", "));
+    if (e.greens && e.greens.length) lines.push("실천: " + e.greens.join(", "));
     if (e.body.trim()) lines.push("", e.body.trim());
     const title = e.title.trim() || e.body.trim().split("\n")[0].slice(0, 40) || "오늘의 일기";
     return { summary: "📝 " + title, description: lines.join("\n") };
