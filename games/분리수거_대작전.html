@@ -188,7 +188,7 @@ body {
     <div class="brand">분리수거 대작전</div>
     <div class="stats">
       <div class="stat"><small>지구 체력</small><div class="hp" id="hp"></div></div>
-      <div class="stat"><small>남은 쓰레기</small><b id="left">25</b></div>
+      <div class="stat"><small>남은 쓰레기</small><b id="left"></b></div>
       <div class="stat"><small>콤보</small><b id="combo">0</b></div>
       <div class="stat"><small>점수</small><b id="score">0</b></div>
       <button class="sound" id="soundBtn" type="button" aria-pressed="true" aria-label="효과음 끄기" title="효과음 (M)">
@@ -207,8 +207,8 @@ body {
         <h1>분리수거 대작전</h1>
         <p>위에서 쓰레기가 떨어져요. <b>테두리가 있는 가장 아래 쓰레기</b>를 알맞은 수거함을 눌러 버리세요.</p>
         <ul class="muted">
-          <li>25가지 쓰레기를 모두 제대로 버리면 클리어예요. 같은 쓰레기는 두 번 나오지 않아요</li>
-          <li>잘못 버리거나 바닥에 떨어지면 지구 체력이 줄고, 그 쓰레기는 나중에 다시 나와요</li>
+          <li><span id="itemCount"></span>가지 쓰레기가 한 번씩만 나와요. 지구 체력이 남은 채로 끝까지 버티면 클리어예요</li>
+          <li>잘못 버리거나 바닥에 떨어지면 지구 체력이 줄어요</li>
           <li>연속으로 맞히면 콤보 점수가 붙어요</li>
           <li>키보드 1~6으로도 버릴 수 있어요 · M은 효과음 켜기/끄기</li>
         </ul>
@@ -289,6 +289,19 @@ body {
     ['🧸', '봉제 인형', 'general', '헌 인형은 일반쓰레기예요. 상태가 좋으면 기부해요.'],
     ['🥃', '깨진 유리컵', 'general', '신문지에 싸서 종량제 봉투에 버려요. 유리병 수거함 아니에요.'],
     ['🧤', '고무장갑', 'general', '고무는 재활용되지 않아 일반쓰레기예요.'],
+    ['🧻', '사용한 휴지', 'general', '휴지는 섬유가 짧아 종이로 재활용되지 않아요.'],
+    ['📸', '인화한 사진', 'general', '인화지는 코팅돼 있어 종이로 재활용되지 않아요.'],
+    ['🪞', '거울', 'general', '거울은 유리병이 아니에요. 신문지에 싸서 일반쓰레기로 버려요.'],
+    ['🍷', '와인잔', 'general', '유리컵·와인잔은 유리병과 성분이 달라 일반쓰레기예요.'],
+    ['🍽️', '깨진 도자기 그릇', 'general', '도자기는 유리가 아니에요. 신문지에 싸서 일반쓰레기로 버려요.'],
+    ['🧊', '젤 아이스팩', 'general', '젤은 뜯지 말고 통째로 일반쓰레기예요. 동네에 아이스팩 수거함이 있으면 거기로 가져가요.'],
+    ['🥢', '나무젓가락', 'general', '나무라도 재활용되지 않아 일반쓰레기예요.'],
+    ['🐚', '조개껍데기', 'general', '딱딱한 껍데기는 음식물이 아니라 일반쓰레기예요. 지역에 따라 다를 수 있어요.'],
+    ['🍑', '복숭아 씨', 'general', '딱딱한 씨는 음식물이 아니라 일반쓰레기예요. 지역에 따라 다를 수 있어요.'],
+    ['🪒', '일회용 면도기', 'general', '금속 날과 플라스틱이 섞여 있어 일반쓰레기예요.'],
+    ['🎈', '고무 풍선', 'general', '고무는 재활용되지 않아 일반쓰레기예요.'],
+    ['🫧', '뽁뽁이(에어캡)', 'vinyl', '뽁뽁이는 비닐류예요. 붙은 테이프는 떼고 버려요.'],
+    ['🏷️', '페트병에서 뗀 라벨', 'vinyl', '페트병 라벨은 비닐류로 따로 버려요.'],
   ];
 
   const $ = id => document.getElementById(id);
@@ -394,15 +407,10 @@ body {
     $('tickerMsg').textContent = text;
   }
 
-  // 한 게임에 25개가 한 번씩만 나와요. 틀린 쓰레기만 남은 순서 사이에 다시 끼워 넣어요.
+  // 한 게임에 모든 쓰레기가 한 번씩만 나와요. 틀린 쓰레기도 다시 나오지 않아요.
   function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
     return a;
-  }
-  function requeue(idx) {
-    if (!bag.length) bag.push(idx);
-    else bag.splice(Math.floor(Math.random() * bag.length), 0, idx); // 바로 다음 순서는 피해요
-    drawLeft();
   }
   const drawLeft = () => { $('left').textContent = st ? bag.length + st.items.length : ITEMS.length; };
 
@@ -468,7 +476,7 @@ body {
       st.mistakes.push(it);
       it.el.classList.add('wrong');
       removeItem(it, 0);
-      requeue(it.idx);
+      drawLeft();
       hurt();
     }
   }
@@ -491,7 +499,7 @@ body {
         st.mistakes.push(it);
         it.el.classList.add('wrong');
         removeItem(it, 0);
-        requeue(it.idx);
+        drawLeft();
         hurt();
         if (!st.running) return;
       }
@@ -517,12 +525,13 @@ body {
   function end(cleared = false) {
     st.running = false; cancelAnimationFrame(raf);
     const bonus = cleared ? st.hp * 30 : 0;
+    const perfect = cleared && st.correct === ITEMS.length;
     st.score += bonus; drawStats();
     const acc = st.sorted ? Math.round(st.correct / st.sorted * 100) : 0;
     const isBest = st.score > best;
     if (isBest) { best = st.score; save(best); }
     sfx.over(cleared || (isBest && st.score > 0));
-    $('overTitle').textContent = cleared ? `${ITEMS.length}개 모두 분리했어요!` : isBest && st.score > 0 ? '최고 기록이에요!' : '지구가 지쳤어요';
+    $('overTitle').textContent = perfect ? `${ITEMS.length}개 모두 분리했어요!` : cleared ? '끝까지 버텼어요!' : isBest && st.score > 0 ? '최고 기록이에요!' : '지구가 지쳤어요';
     $('rScore').textContent = st.score;
     $('rAcc').textContent = acc + '%';
     $('rCombo').textContent = st.maxCombo;
@@ -558,6 +567,8 @@ body {
   });
   $('startBtn').addEventListener('click', start);
   $('againBtn').addEventListener('click', start);
+  $('itemCount').textContent = ITEMS.length;
+  drawLeft();
 
   // 결과 이미지 저장: 결과 카드를 캔버스에 다시 그려 PNG로 저장해요.
   let lastResult = null;
