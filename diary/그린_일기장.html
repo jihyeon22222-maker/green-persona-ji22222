@@ -284,6 +284,36 @@
   .cal-done { font-size: 13px; color: var(--moss); text-decoration: none; }
   .cal-done:hover { text-decoration: underline; }
 
+  /* 인스타용 이미지 */
+  .share {
+    border-top: 1px dashed var(--line);
+    padding-top: 18px;
+    display: grid;
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+    gap: 18px 24px;
+    align-items: start;
+  }
+  @media (max-width: 560px) { .share { grid-template-columns: minmax(0, 1fr); } }
+  .share img {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 4 / 5;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    display: block;
+  }
+  .share-side { display: grid; gap: 12px; align-content: start; font-size: 14px; }
+  .share-side h3 { margin: 0; font-family: var(--f-display); font-size: 18px; }
+  .share-side p { margin: 0; color: var(--muted); font-size: 13px; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px; gap: 2px; justify-self: start; }
+  .seg label { position: relative; cursor: pointer; }
+  .seg input { position: absolute; opacity: 0; pointer-events: none; }
+  .seg span { display: block; padding: 4px 14px; border-radius: 999px; font-size: 13px; }
+  .seg input:checked + span { background: var(--ink); color: var(--sheet); }
+  .seg input:focus-visible + span { outline: 2px solid var(--blue); outline-offset: 1px; }
+  .share-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
   .notice {
     font-size: 13px;
     color: var(--ink-soft);
@@ -365,9 +395,27 @@
         <label class="auto" id="calAutoWrap" hidden><input type="checkbox" id="calAuto" checked> 캘린더에 자동 기록</label>
         <a class="cal-done" id="calDone" href="#" target="_blank" rel="noopener" hidden>캘린더에 남김 ✓</a>
         <button class="btn ghost" type="button" id="calBtn" hidden>캘린더에 남기기</button>
+        <button class="btn ghost" type="button" id="imgBtn" hidden>이미지로 저장</button>
         <button class="btn ghost" type="button" id="delBtn">삭제</button>
         <button class="btn" type="submit" id="saveBtn">저장</button>
       </div>
+
+      <section class="share" id="share" hidden aria-label="인스타그램용 이미지">
+        <img id="shareImg" alt="일기 이미지 미리보기">
+        <div class="share-side">
+          <h3>인스타그램용 이미지</h3>
+          <div class="seg" role="radiogroup" aria-label="이미지 종류">
+            <label><input type="radio" name="cardMode" id="modeFull" value="full" checked><span>전체 일기</span></label>
+            <label><input type="radio" name="cardMode" id="modeSum" value="summary"><span>요약 카드</span></label>
+          </div>
+          <p id="shareHint">1080×1350 세로 사진이에요. 저장한 뒤 인스타그램 앱에서 사진을 골라 올려 주세요.</p>
+          <div class="share-actions">
+            <button class="btn" type="button" id="imgSave">저장하기</button>
+            <button class="btn ghost" type="button" id="imgClose">닫기</button>
+          </div>
+          <p id="shareStatus" aria-live="polite"></p>
+        </div>
+      </section>
     </form>
   </div>
 </div>
@@ -477,6 +525,8 @@
     if ($("body").value !== draft.body) $("body").value = draft.body;
     ["moods", "weathers", "greens"].forEach((id) => $(id)._sync());
     $("delBtn").hidden = !entries[current];
+    $("imgBtn").hidden = !entries[current];
+    if (!entries[current]) $("share").hidden = true; else if (!$("share").hidden) refreshCard();
     renderCalButton();
     updateCount();
   }
@@ -510,7 +560,7 @@
     if (isEmpty(entry)) { setStatus("", ""); return writing; }
     entries[entry.date] = entry;
     renderCal(); renderList(); renderStats();
-    if (entry.date === current) $("delBtn").hidden = false;
+    if (entry.date === current) { $("delBtn").hidden = false; $("imgBtn").hidden = false; }
     setStatus("저장하는 중…", "");
     writing = writing.then(() => store.save(entry)).then(
       () => {
@@ -553,6 +603,203 @@
     $("delYes").focus();
   });
   function closeConfirm() { if (confirmEl) { confirmEl.remove(); confirmEl = null; } }
+
+  // ---------- 인스타그램용 이미지 ----------
+  const CARD = { w: 1080, h: 1350, paper: "#EDEEE4", sheet: "#F9F9F3", rule: "#DCE3E6", ink: "#16283A", soft: "#3C4F5C", muted: "#5C6B70", moss: "#4F6D44", mossSoft: "#E4EBDE", blue: "#2E6B8C" };
+  const SERIF = '"Gowun Batang", "Nanum Myeongjo", serif';
+  const SANS = '"Noto Sans KR", "Apple SD Gothic Neo", sans-serif';
+  const MONO = '"IBM Plex Mono", ui-monospace, monospace';
+  const EMOJI = '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+  let downloads = null;
+  let cardBlob = null;
+  let cardUrl = "";
+  let cardJob = 0;
+
+  function wrapLines(ctx, text, maxW) {
+    const out = [];
+    text.split("\n").forEach((para) => {
+      if (!para.trim()) { out.push(""); return; }
+      let line = "";
+      for (const tok of para.match(/\S+\s*/g) || []) {
+        if (ctx.measureText(line + tok).width <= maxW) { line += tok; continue; }
+        if (line) { out.push(line.trimEnd()); line = ""; }
+        if (ctx.measureText(tok).width <= maxW) { line = tok; continue; }
+        for (const ch of tok) {
+          if (ctx.measureText(line + ch).width > maxW) { out.push(line); line = ""; }
+          line += ch;
+        }
+      }
+      if (line.trim()) out.push(line.trimEnd());
+    });
+    while (out.length && out[out.length - 1] === "") out.pop();
+    return out;
+  }
+
+  function clampLines(ctx, lines, max, maxW) {
+    if (lines.length <= max) return lines;
+    const cut = lines.slice(0, max);
+    let last = cut[max - 1];
+    while (last && ctx.measureText(last + "…").width > maxW) last = last.slice(0, -1);
+    cut[max - 1] = last + "…";
+    return cut;
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+
+  function drawPills(ctx, items, x, y, maxW, size) {
+    ctx.font = `500 ${size}px ${SANS}`;
+    const padX = size * 0.8, h = size * 1.9, gap = size * 0.5;
+    let cx = x, cy = y;
+    items.forEach((t) => {
+      const w = ctx.measureText(t).width + padX * 2;
+      if (cx + w > x + maxW) { cx = x; cy += h + gap; }
+      ctx.fillStyle = CARD.moss; roundRect(ctx, cx, cy, w, h, h / 2); ctx.fill();
+      ctx.fillStyle = CARD.sheet; ctx.textBaseline = "middle"; ctx.fillText(t, cx + padX, cy + h / 2 + 1);
+      cx += w + gap;
+    });
+    ctx.textBaseline = "alphabetic";
+    return cy + h;
+  }
+
+  async function drawCard(e, mode) {
+    try {
+      await Promise.all([
+        document.fonts.load(`700 64px "Gowun Batang"`, "가"),
+        document.fonts.load(`400 36px "Gowun Batang"`, "가"),
+        document.fonts.load(`500 28px "Noto Sans KR"`, "가"),
+        document.fonts.load(`400 28px "IBM Plex Mono"`, "0"),
+      ]);
+    } catch {}
+    const c = document.createElement("canvas");
+    c.width = CARD.w; c.height = CARD.h;
+    const ctx = c.getContext("2d");
+    const M = 64, X = M + 64, W = CARD.w - X * 2;
+
+    ctx.fillStyle = CARD.paper; ctx.fillRect(0, 0, CARD.w, CARD.h);
+    ctx.fillStyle = CARD.sheet; ctx.fillRect(M, M, CARD.w - M * 2, CARD.h - M * 2);
+    ctx.strokeStyle = "#C9CDBE"; ctx.lineWidth = 2; ctx.strokeRect(M, M, CARD.w - M * 2, CARD.h - M * 2);
+
+    const mood = MOODS.find((x) => x.id === e.mood);
+    const weather = WEATHERS.find((x) => x.id === e.weather);
+    const d = parseKey(e.date);
+    const dateStr = `${d.getFullYear()}. ${pad(d.getMonth() + 1)}. ${pad(d.getDate())}  ${d.toLocaleDateString("ko-KR", { weekday: "long" })}`;
+
+    let y = M + 110;
+    ctx.fillStyle = CARD.muted; ctx.font = `400 30px ${MONO}`;
+    ctx.fillText(dateStr, X, y);
+
+    const tags = [mood && `${mood.e} ${mood.label}`, weather && `${weather.e} ${weather.label}`].filter(Boolean).join("   ");
+    if (tags) {
+      ctx.font = `500 30px ${SANS}, ${EMOJI}`; ctx.fillStyle = CARD.soft;
+      ctx.textAlign = "right"; ctx.fillText(tags, X + W, y); ctx.textAlign = "left";
+    }
+
+    y += 40;
+    ctx.fillStyle = CARD.blue; ctx.fillRect(X, y, 72, 4);
+
+    const title = e.title.trim() || (mode === "summary" ? "오늘의 일기" : "");
+    const titleSize = mode === "summary" ? 76 : 64;
+    if (title) {
+      ctx.fillStyle = CARD.ink; ctx.font = `700 ${titleSize}px ${SERIF}`;
+      const tl = clampLines(ctx, wrapLines(ctx, title, W), mode === "summary" ? 3 : 2, W);
+      y += titleSize + 40;
+      tl.forEach((l, i) => ctx.fillText(l, X, y + i * titleSize * 1.3));
+      y += (tl.length - 1) * titleSize * 1.3;
+    }
+
+    const greens = e.greens || [];
+    const footY = CARD.h - M - 70;
+
+    if (mode === "summary") {
+      if (mood) {
+        ctx.font = `200px ${EMOJI}`; ctx.textAlign = "center";
+        ctx.fillText(mood.e, CARD.w / 2, y + 330);
+        ctx.textAlign = "left";
+      }
+      if (greens.length) {
+        const gy = footY - 260;
+        ctx.fillStyle = CARD.muted; ctx.font = `500 28px ${SANS}`;
+        ctx.fillText("오늘의 실천", X, gy);
+        drawPills(ctx, greens, X, gy + 24, W, 34);
+      }
+    } else {
+      let pillsTop = footY;
+      if (greens.length) {
+        const probe = document.createElement("canvas").getContext("2d");
+        const rows = drawPills(probe, greens, X, 0, W, 28);
+        pillsTop = footY - 30 - rows;
+        ctx.fillStyle = CARD.muted; ctx.font = `500 26px ${SANS}`;
+        ctx.fillText("오늘의 실천", X, pillsTop - 16);
+        drawPills(ctx, greens, X, pillsTop, W, 28);
+        pillsTop -= 70;
+      }
+      const LH = 64;
+      const top = y + 60;
+      const maxLines = Math.max(0, Math.floor((pillsTop - top) / LH));
+      ctx.strokeStyle = CARD.rule; ctx.lineWidth = 2;
+      for (let i = 0; i < maxLines; i++) {
+        const ly = top + LH * (i + 1) + 14;
+        ctx.beginPath(); ctx.moveTo(X, ly); ctx.lineTo(X + W, ly); ctx.stroke();
+      }
+      ctx.fillStyle = CARD.ink; ctx.font = `400 36px ${SERIF}`;
+      const bl = clampLines(ctx, wrapLines(ctx, e.body.trim(), W), maxLines, W);
+      bl.forEach((l, i) => ctx.fillText(l, X, top + LH * (i + 1)));
+    }
+
+    ctx.fillStyle = CARD.muted; ctx.font = `400 26px ${SERIF}`;
+    ctx.textAlign = "right"; ctx.fillText("일기장", X + W, footY + 34); ctx.textAlign = "left";
+
+    return new Promise((res) => c.toBlob((b) => res(b), "image/png"));
+  }
+
+  function cardMode() { return $("modeSum").checked ? "summary" : "full"; }
+
+  async function refreshCard() {
+    const e = entries[current];
+    if (!e) return;
+    const job = ++cardJob;
+    const blob = await drawCard(e, cardMode());
+    if (job !== cardJob || !blob) return;
+    cardBlob = blob;
+    if (cardUrl) URL.revokeObjectURL(cardUrl);
+    cardUrl = URL.createObjectURL(blob);
+    $("shareImg").src = cardUrl;
+  }
+
+  $("imgBtn").addEventListener("click", async () => {
+    flush();
+    await writing.catch(() => {});
+    $("share").hidden = false;
+    $("shareStatus").textContent = "";
+    $("imgSave").hidden = !downloads;
+    $("shareHint").textContent = downloads
+      ? "1080×1350 세로 사진이에요. 저장한 뒤 인스타그램 앱에서 사진을 골라 올려 주세요."
+      : "1080×1350 세로 사진이에요. 미리보기 이미지를 길게 누르거나 오른쪽 클릭해서 저장한 뒤 인스타그램에 올려 주세요.";
+    await refreshCard();
+    $("share").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+  $("imgClose").addEventListener("click", () => { $("share").hidden = true; });
+  $("modeFull").addEventListener("change", refreshCard);
+  $("modeSum").addEventListener("change", refreshCard);
+
+  $("imgSave").addEventListener("click", async () => {
+    if (!downloads || !cardBlob) return;
+    const st = $("shareStatus");
+    st.textContent = "";
+    try {
+      await downloads.save({ filename: `일기_${current}${cardMode() === "summary" ? "_요약" : ""}.png`, data: cardBlob });
+      st.textContent = "저장했어요. 인스타그램 앱에서 이 사진을 골라 올려 주세요.";
+    } catch (err) {
+      const code = err && err.code;
+      st.textContent = code === "declined" ? "저장을 취소했어요."
+        : code === "rate_limited" ? "저장 창이 이미 열려 있어요. 그 창을 먼저 닫아 주세요."
+        : "여기서는 바로 저장할 수 없어요. 미리보기 이미지를 길게 누르거나 오른쪽 클릭해서 저장해 주세요.";
+    }
+  });
 
   // ---------- 달력 ----------
   $("prevMonth").addEventListener("click", () => { viewMonth.setMonth(viewMonth.getMonth() - 1); renderCal(); });
@@ -867,6 +1114,7 @@
 
   (async () => {
     if (!window.claude || !window.claude.use) return;
+    window.claude.use("downloads").then((d) => { downloads = d; if (!$("share").hidden) $("imgSave").hidden = !d; });
     mcp = await window.claude.use("mcp");
     if (!mcp) return;
     watchAgenda();
