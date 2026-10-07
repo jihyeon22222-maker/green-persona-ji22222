@@ -25,6 +25,17 @@
     --viewer-ink: #F4F1E8;
     --viewer-soft: #A9A59A;
     --gutter: 16px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #171613; --card: #211F1B; --ink: #F2EFE6; --ink-soft: #B3AEA2; --line: #37342D;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #171613; --card: #211F1B; --ink: #F2EFE6; --ink-soft: #B3AEA2; --line: #37342D;
+    color-scheme: dark;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
@@ -119,13 +130,13 @@
   .book:focus-visible { outline: 3px solid var(--ink); outline-offset: 8px; border-radius: 4px; }
   .book-tag {
     position: absolute; left: 50%; bottom: -14px; transform: translate(-50%, 6px); white-space: nowrap;
-    background: var(--ink); color: #fff; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 99px;
+    background: var(--ink); color: var(--card); font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 99px;
     opacity: 0; transition: opacity .25s, transform .25s; pointer-events: none; z-index: 2;
   }
   .book:hover .book-tag, .book:focus-visible .book-tag { opacity: 1; transform: translate(-50%, 0); }
 
   .report-meta { max-width: 360px; padding-bottom: 6px; }
-  .report-meta .vol { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .1em; background: var(--brand); padding: 2px 10px; border-radius: 99px; }
+  .report-meta .vol { display: inline-block; color: #1B1B1B; font-size: 12px; font-weight: 700; letter-spacing: .1em; background: var(--brand); padding: 2px 10px; border-radius: 99px; }
   .report-meta h3 { margin: 10px 0 4px; font-size: 24px; font-weight: 900; letter-spacing: -.02em; }
   .report-meta p { margin: 0; color: var(--ink-soft); font-size: 15px; }
   .report-meta ul { margin: 12px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--ink-soft); }
@@ -136,7 +147,7 @@
     height: 44px; padding: 0 18px; border-radius: 99px; font-size: 15px; font-weight: 700;
     text-decoration: none; cursor: pointer; border: 1.5px solid var(--ink); background: var(--card);
   }
-  .btn.primary { background: var(--ink); color: #fff; }
+  .btn.primary { background: var(--ink); color: var(--card); }
   .btn:hover { filter: brightness(.94); }
   .btn:focus-visible { outline: 3px solid var(--brand-deep); outline-offset: 2px; }
   .shelf-note { margin: 44px 0 0; padding: 14px 0 18px; font-size: 13px; color: var(--ink-soft); text-align: center; position: relative; z-index: 1; }
