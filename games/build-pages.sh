@@ -22,4 +22,7 @@ HEAD
   cat "games/분리수거_대작전.html"
   printf '\n</body>\n</html>\n'
 } > "$out/index.html"
-echo "built $out/index.html"
+# 환경재단 연차보고서 웹 버전(푸른발자국 Vol.23)은 /report/ 로 함께 배포해요.
+mkdir -p "$out/report"
+cp -R report/. "$out/report/"
+echo "built $out/index.html, $out/report/"
