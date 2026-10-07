@@ -575,8 +575,12 @@ body {
   // 결과 이미지 저장: 결과 카드를 캔버스에 다시 그려 PNG로 저장해요.
   let lastResult = null, resultBlobP = null;
   // 일반 웹사이트(GitHub Pages)의 휴대폰에서는 공유 창으로 이미지를 바로 보내요. Claude 화면 안에서는 막혀 있어 저장만 해요.
+  // 컴퓨터(특히 Windows)의 공유 창은 SNS로 보낼 곳이 거의 없어 "다시 시도하세요"만 뜨므로, 휴대폰·태블릿에서만 공유를 써요.
+  const isMobile = navigator.userAgentData?.mobile
+    || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+    || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
   const canShareFiles = (() => {
-    if (window.claude) return false;
+    if (window.claude || !isMobile) return false;
     try { return !!navigator.canShare && navigator.canShare({ files: [new File(['x'], 'x.png', { type: 'image/png' })] }); } catch { return false; }
   })();
   if (canShareFiles) $('saveBtn').textContent = '결과 공유';
