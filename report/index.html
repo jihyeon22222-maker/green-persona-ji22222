@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>푸른발자국 Vol.23</title>
+<meta name="description" content="환경재단 「푸른발자국 Vol.23」 웹 버전. 2025년, 1,541,298명의 그린리더와 함께한 한 해.">
+<meta name="theme-color" content="#00b969">
+<meta property="og:type" content="website">
+<meta property="og:title" content="푸른발자국 Vol.23 · 환경재단">
+<meta property="og:description" content="그린리더가 세상을 바꿉니다. 2025년, 1,541,298명의 그린리더와 함께한 환경재단의 한 해.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --green:#00b969;          /* key color: fills, large display */
+  --green-text:#00804a;     /* key color for small text on light bg */
+  --on-green:#04140c;
+  --ink:#0d0f0e;
+  --ink-2:#4b514e;
+  --ink-3:#8a908d;
+  --hair:#e6e9e7;
+  --bg:#ffffff;
+  --bg-2:#f3f6f4;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --green-text:#2fd68a; --ink:#eef2f0; --ink-2:#b4bcb8; --ink-3:#7c8581; --hair:#262b29; --bg:#0c0e0d; --bg-2:#151917;
+  }
+}
+:root[data-theme="dark"]{
+  --green-text:#2fd68a; --ink:#eef2f0; --ink-2:#b4bcb8; --ink-3:#7c8581; --hair:#262b29; --bg:#0c0e0d; --bg-2:#151917;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.7;word-break:keep-all;overflow-x:hidden;transition:background .4s,color .4s}
+img{max-width:100%;display:block}
+a{color:inherit}
+::selection{background:var(--green);color:var(--on-green)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+@media (min-width:720px){.wrap{padding:0 40px}}
+.num{font-variant-numeric:tabular-nums}
+.label{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green-text)}
+.label::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:10px;vertical-align:1px}
+
+/* progress + nav */
+.progress{position:fixed;inset:0 0 auto 0;height:3px;z-index:60;background:var(--green);transform-origin:0 50%;transform:scaleX(0)}
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:transform .5s var(--ease),background .3s}
+.nav.hide{transform:translateY(-100%)}
+.nav.solid{background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.nav .wrap{display:flex;align-items:center;gap:12px;height:64px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;text-decoration:none;letter-spacing:-.02em;white-space:nowrap}
+.logo i{width:22px;height:22px;border-radius:50%;background:var(--green);display:inline-block;position:relative}
+.logo i::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--bg)}
+.links{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.links::-webkit-scrollbar{display:none}
+.links a{position:relative;text-decoration:none;font-size:14px;font-weight:600;color:var(--ink-2);padding:8px 12px;white-space:nowrap;transition:color .2s}
+.links a::after{content:"";position:absolute;left:12px;right:12px;bottom:4px;height:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+.links a:hover,.links a.on{color:var(--ink)}
+.links a:hover::after,.links a.on::after{transform:scaleX(1)}
+@media (max-width:719px){.links{display:none}.theme{margin-left:auto}}
+.theme{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--hair);background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:transform .5s var(--ease)}
+.theme:hover{transform:rotate(180deg)}
+.theme svg{width:18px;height:18px}
+
+/* cursor blob */
+.blob{position:fixed;left:0;top:0;width:420px;height:420px;margin:-210px 0 0 -210px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--green) 26%,transparent),transparent 65%);pointer-events:none;z-index:0;opacity:0;transition:opacity .6s}
+.blob.on{opacity:1}
+
+/* hero */
+.hero{position:relative;min-height:100svh;display:grid;align-items:center;overflow:hidden}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-top:96px;padding-bottom:96px}
+.steps{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.steps > g{opacity:0;animation:step 10s infinite}
+@keyframes step{0%{opacity:0}3%{opacity:1}45%{opacity:1}62%{opacity:0}100%{opacity:0}}
+.hero-meta{display:flex;justify-content:space-between;font-size:13px;font-weight:600;letter-spacing:.12em;color:var(--ink-2);margin-bottom:6vh}
+.hero h1{margin:0;font-size:clamp(64px,15.5vw,236px);font-weight:800;letter-spacing:-.06em;line-height:.95;display:flex;flex-wrap:wrap}
+.hero h1 .ch{display:inline-block;overflow:hidden;padding:0 .01em .06em}
+.hero h1 .ch span{display:inline-block;transform:translateY(110%);transition:transform 1.1s var(--ease)}
+.hero.ready h1 .ch span{transform:none}
+.hero h1 .ch:nth-child(4) span,.hero h1 .ch:nth-child(5) span{color:var(--green)}
+.hero-sub{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-top:6vh}
+.hero-sub p{margin:0;font-size:clamp(18px,2.2vw,26px);font-weight:600;letter-spacing:-.02em;max-width:560px;opacity:0;transform:translateY(20px);transition:1s var(--ease) .7s}
+.hero.ready .hero-sub p{opacity:1;transform:none}
+.hero-sub p b{color:var(--green-text)}
+.scroll-cue{display:flex;align-items:center;gap:12px;font-size:12px;font-weight:700;letter-spacing:.16em;color:var(--ink-3)}
+.scroll-cue i{width:1px;height:56px;background:var(--hair);position:relative;overflow:hidden}
+.scroll-cue i::after{content:"";position:absolute;left:0;top:-50%;width:1px;height:50%;background:var(--green);animation:drip 1.8s var(--ease) infinite}
+@keyframes drip{to{top:100%}}
+
+/* marquee */
+.marquee{background:var(--green);color:var(--on-green);overflow:hidden;padding:22px 0;position:relative;z-index:2}
+.marquee .track{display:flex;white-space:nowrap;will-change:transform;width:max-content}
+.marquee span{font-size:clamp(28px,4.4vw,56px);font-weight:800;letter-spacing:-.03em;padding-right:.6em;display:flex;align-items:center;gap:.6em}
+.marquee span::after{content:"";width:.42em;height:.42em;border-radius:50%;background:var(--on-green);display:inline-block}
+
+/* sections */
+section{position:relative;z-index:2;scroll-margin-top:72px}
+.sec{padding:clamp(96px,14vw,180px) 0}
+.sec-title{display:grid;gap:18px;margin-bottom:clamp(48px,7vw,88px)}
+.sec-title h2{margin:0;font-size:clamp(34px,5.6vw,76px);line-height:1.08;letter-spacing:-.05em;font-weight:800}
+.sec-title h2 em{font-style:normal;color:var(--green)}
+.sec-title p{margin:0;max-width:560px;color:var(--ink-2);font-size:17px}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(36px);transition:opacity 1s var(--ease),transform 1s var(--ease);transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+.mask{display:block;overflow:hidden;padding-bottom:.06em}
+.mask > span{display:block;transform:translateY(110%);transition:transform 1.1s var(--ease);transition-delay:var(--d,0s)}
+.in .mask > span,.mask.in > span{transform:none}
+
+/* about */
+.statement{font-size:clamp(28px,4.6vw,62px);line-height:1.3;letter-spacing:-.045em;font-weight:700;margin:0}
+.statement .w{color:color-mix(in srgb,var(--ink) 16%,transparent);transition:color .25s}
+.statement .w.lit{color:var(--ink)}
+.statement .w.g.lit{color:var(--green)}
+.about-meta{display:grid;gap:16px;margin-top:clamp(56px,8vw,96px)}
+@media (min-width:860px){.about-meta{grid-template-columns:repeat(3,1fr);gap:24px}}
+.chip{border-top:1px solid var(--ink);padding-top:16px}
+.chip b{display:block;font-size:clamp(26px,3vw,36px);letter-spacing:-.04em;line-height:1.2;margin-bottom:6px}
+.chip span{font-size:14.5px;color:var(--ink-2)}
+.vision{margin-top:clamp(80px,12vw,150px);display:grid;gap:40px}
+@media (min-width:960px){.vision{grid-template-columns:.8fr 1.2fr;gap:64px}}
+.vision h3{margin:12px 0 0;font-size:clamp(26px,3.2vw,40px);line-height:1.3;letter-spacing:-.04em}
+.vision h3 em{font-style:normal;color:var(--green)}
+.vision > div > p{color:var(--ink-2);margin:16px 0 0}
+.values{list-style:none;margin:20px 0 0;padding:0;counter-reset:v}
+.values li{counter-increment:v;position:relative;display:grid;grid-template-columns:56px 1fr;gap:8px;padding:24px 8px;border-top:1px solid var(--hair);font-size:clamp(17px,1.7vw,20px);font-weight:600;letter-spacing:-.02em;overflow:hidden;isolation:isolate;transition:opacity 1s var(--ease),transform 1s var(--ease),color .4s,padding .4s var(--ease)}
+.values li:last-child{border-bottom:1px solid var(--hair)}
+.values li::before{content:"0" counter(v);font-size:14px;font-weight:800;color:var(--green-text);padding-top:4px;transition:color .4s}
+.values li::after{content:"";position:absolute;inset:0;background:var(--green);transform:scaleY(0);transform-origin:bottom;transition:transform .45s var(--ease);z-index:-1}
+@media (hover:hover){
+  .values li:hover{color:var(--on-green);padding-left:20px}
+  .values li:hover::before{color:var(--on-green)}
+  .values li:hover::after{transform:scaleY(1)}
+}
+
+/* numbers */
+.numbers{background:var(--ink);color:var(--bg);overflow:hidden}
+.numbers .label{color:var(--green)}
+.numbers .sec-title p{color:color-mix(in srgb,var(--bg) 65%,transparent)}
+.mega{display:grid;gap:8px;padding-bottom:clamp(48px,7vw,80px);border-bottom:1px solid color-mix(in srgb,var(--bg) 18%,transparent)}
+.mega .k{font-size:16px;color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.mega .v{font-size:clamp(60px,14.5vw,200px);font-weight:800;letter-spacing:-.06em;line-height:.95;color:var(--green);white-space:nowrap}
+.mega .v small{font-size:.2em;letter-spacing:0;color:var(--bg);margin-left:.15em}
+.mega .f{font-size:13px;color:color-mix(in srgb,var(--bg) 55%,transparent)}
+.who{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.who span{font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--bg) 25%,transparent);transition:background .3s,color .3s,border-color .3s}
+.who span:hover{background:var(--green);color:var(--on-green);border-color:var(--green)}
+.goal{padding:clamp(48px,7vw,80px) 0;border-bottom:1px solid color-mix(in srgb,var(--bg) 18%,transparent)}
+.goal-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.goal-top .k{font-size:16px;color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.goal-top .v{font-size:clamp(40px,6vw,80px);font-weight:800;letter-spacing:-.05em;line-height:1.1}
+.goal-top .v small{font-size:.32em;margin-left:.15em;letter-spacing:0}
+.goal-top .t{margin-left:auto;text-align:right;font-size:14px;color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.goal-top .t b{display:block;font-size:clamp(24px,3vw,36px);color:var(--bg);letter-spacing:-.03em}
+.bar{position:relative;height:14px;border-radius:999px;background:color-mix(in srgb,var(--bg) 14%,transparent);overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;width:0;border-radius:999px;background:var(--green);transition:width 2.2s var(--ease)}
+.bar-legend{display:flex;justify-content:space-between;font-size:13px;margin-top:10px;color:color-mix(in srgb,var(--bg) 60%,transparent)}
+.bar-legend span:first-child{color:var(--bg);font-weight:700}
+.tiles{display:grid;grid-template-columns:1fr 1fr}
+@media (min-width:960px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{padding:clamp(28px,4vw,48px) 16px clamp(28px,4vw,48px) 0;border-bottom:1px solid color-mix(in srgb,var(--bg) 18%,transparent);transition:opacity 1s var(--ease),transform .6s var(--ease)}
+.tile .v{font-size:clamp(40px,5.4vw,76px);font-weight:800;letter-spacing:-.05em;line-height:1;transition:color .3s}
+.tile .v small{font-size:.3em;margin-left:.12em;letter-spacing:0}
+.tile .k{font-size:14px;margin-top:10px;color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.tile.in:hover{transform:translateY(-6px)}
+.tile:hover .v{color:var(--green)}
+
+/* greeting */
+.greet{display:grid;gap:48px}
+@media (min-width:960px){.greet{grid-template-columns:.85fr 1.15fr;gap:80px;align-items:start}}
+.portrait{position:relative;margin:0;max-width:460px}
+@media (min-width:960px){.portrait{position:sticky;top:110px}}
+.portrait .ph{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--bg-2);clip-path:inset(100% 0 0 0);transition:clip-path 1.4s var(--ease)}
+.portrait.in .ph{clip-path:inset(0 0 0 0)}
+.portrait img{width:100%;height:100%;object-fit:cover;transform:scale(1.25);transition:transform 1.8s var(--ease)}
+.portrait.in img{transform:scale(1)}
+.phwrap{position:relative}
+.ring{position:absolute;right:-18px;bottom:-18px;transform:scale(0) rotate(-90deg);transition:transform 1s var(--ease) .9s;width:120px;height:120px;border-radius:50%;background:var(--green);color:var(--on-green);display:grid;place-items:center}
+.ring svg{width:100%;height:100%;position:absolute;inset:0;animation:spin 18s linear infinite}
+.ring b{font-size:28px;letter-spacing:-.04em;line-height:1}
+.ring b small{font-size:.5em}
+.portrait.in .ring{transform:none}
+@media (max-width:520px){.ring{right:8px}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.portrait figcaption{margin-top:20px;font-weight:800;font-size:18px}
+.portrait figcaption span{display:block;font-weight:500;font-size:14px;color:var(--ink-3)}
+.letter p{margin:0 0 24px;font-size:clamp(16.5px,1.5vw,18.5px);line-height:1.85;color:var(--ink-2)}
+.letter .pull{margin:16px 0 40px;font-size:clamp(28px,3.6vw,48px);line-height:1.3;letter-spacing:-.045em;font-weight:800;color:var(--ink)}
+.letter .pull em{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-repeat 0 88%/0 .32em;transition:background-size 1.2s var(--ease) .4s}
+.letter .pull.in em{background-size:100% .32em}
+.board{margin-top:clamp(80px,10vw,130px)}
+.board h3{font-size:clamp(22px,2.4vw,30px);letter-spacing:-.03em;margin:12px 0 28px}
+.board-grid{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
+@media (min-width:720px){.board-grid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:1080px){.board-grid{grid-template-columns:repeat(5,1fr)}}
+.person{background:var(--bg);border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:18px 16px;display:grid;gap:2px;align-content:start;transition:opacity 1s var(--ease),transform 1s var(--ease),background .35s;transition-delay:var(--d,0s),var(--d,0s),0s}
+.person b{font-size:16px;transition:color .35s}
+.person span{font-size:12.5px;color:var(--ink-3);line-height:1.45;transition:color .35s}
+.person em{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--green-text);transition:color .35s}
+@media (hover:hover){.person:hover{background:var(--green)}.person:hover span,.person:hover em,.person:hover b{color:var(--on-green)}}
+
+/* history */
+.history{padding-top:clamp(96px,14vw,180px)}
+.pin{position:relative}
+.pin-inner{overflow:hidden}
+.htrack{display:flex;gap:16px;padding:8px 16px 32px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.htrack::-webkit-scrollbar{display:none}
+.yr{flex:none;width:min(78vw,340px);scroll-snap-align:center;border-top:1px solid var(--ink);padding-top:18px;transition:opacity .5s}
+.yr .y{font-size:clamp(64px,9vw,120px);font-weight:800;letter-spacing:-.06em;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--ink);transition:color .5s,-webkit-text-stroke-color .5s}
+.yr.on .y{color:var(--green);-webkit-text-stroke-color:var(--green)}
+.yr ul{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:8px;font-size:16px;min-height:7.5em;color:var(--ink-2)}
+.yr li{padding-left:16px;position:relative}
+.yr li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:6px;border-radius:50%;background:var(--green)}
+.pin-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.counter{font-size:14px;font-weight:700;color:var(--ink-3);display:flex;align-items:center;gap:12px}
+.counter #yrNow{color:var(--ink);font-size:18px}
+.counter .rail{width:140px;height:2px;background:var(--hair);position:relative;overflow:hidden}
+.counter .rail i{position:absolute;inset:0;background:var(--green);transform-origin:left;transform:scaleX(0);transition:transform .3s}
+@media (min-width:900px){
+  .pin.active .pin-inner{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center}
+  .pin.active .htrack{overflow:visible;scroll-snap-type:none;padding-left:max(40px,calc((100vw - 1240px)/2 + 40px));padding-right:40vw;gap:48px;will-change:transform}
+  .pin.active .yr{width:340px;opacity:.35}
+  .pin.active .yr.on{opacity:1}
+}
+.archive{margin-top:clamp(32px,4vw,48px);overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.archive .row{display:flex;gap:12px;width:max-content;animation:slide 60s linear infinite}
+.archive:hover .row{animation-play-state:paused}
+.archive img{height:clamp(120px,14vw,180px);width:auto;filter:grayscale(1) contrast(1.05);transition:filter .5s,transform .5s var(--ease);border-radius:4px}
+.archive img:hover{filter:none;transform:scale(1.04)}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* 2025 */
+.seg{position:relative;display:inline-flex;flex-wrap:wrap;gap:4px;padding:5px;border-radius:28px;background:var(--bg-2);margin-bottom:48px;max-width:100%}
+.seg button{position:relative;z-index:1;font:inherit;font-size:14.5px;font-weight:700;border:0;background:none;color:var(--ink-2);padding:10px 18px;border-radius:999px;cursor:pointer;transition:color .3s}
+.seg button[aria-selected="true"]{color:var(--on-green)}
+.seg .pill{position:absolute;z-index:0;border-radius:999px;background:var(--green);transition:left .5s var(--ease),width .5s var(--ease),top .5s var(--ease)}
+.month{display:grid;gap:32px}
+@media (min-width:960px){.month{grid-template-columns:.7fr 1.3fr;gap:64px;align-items:start}}
+.month-big{font-size:clamp(76px,10vw,150px);font-weight:800;letter-spacing:-.07em;line-height:.9;white-space:nowrap}
+.month-big span{display:inline-block;color:var(--green)}
+.month-big small{display:block;font-size:15px;font-weight:600;letter-spacing:0;color:var(--ink-3);margin-top:16px}
+.mlist{list-style:none;margin:0;padding:0;columns:2 250px;column-gap:32px}
+.mlist li{break-inside:avoid;padding:13px 0;border-bottom:1px solid var(--hair);font-size:16px;opacity:0;transform:translateX(-14px);animation:mi .6s var(--ease) forwards;animation-delay:calc(var(--i) * 35ms)}
+@keyframes mi{to{opacity:1;transform:none}}
+.gallery{margin-top:clamp(64px,9vw,110px);overflow:hidden}
+.gallery .row{display:flex;gap:16px;width:max-content;animation:slide 70s linear infinite}
+.gallery:hover .row{animation-play-state:paused}
+.shot{margin:0;width:clamp(240px,26vw,360px);flex:none}
+.shot .im{aspect-ratio:4/3;overflow:hidden;border-radius:6px;background:var(--bg-2)}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.shot:hover img{transform:scale(1.08)}
+.shot figcaption{font-size:13.5px;font-weight:600;margin-top:10px;display:flex;align-items:center;gap:8px}
+.shot figcaption::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
+
+/* voices */
+.voices{display:grid;gap:40px}
+@media (min-width:960px){.voices{grid-template-columns:.75fr 1.25fr;gap:72px;align-items:start}}
+.names{list-style:none;margin:0;padding:0 0 4px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.names::-webkit-scrollbar{display:none}
+.names button{font:inherit;text-align:left;border:1px solid var(--hair);background:none;color:var(--ink-3);cursor:pointer;padding:10px 16px;border-radius:999px;white-space:nowrap;font-weight:700;font-size:15px;position:relative;transition:color .3s,background .3s,border-color .3s}
+@media (min-width:960px){
+  .names{display:grid;gap:0;overflow:visible}
+  .names button{border:0;border-top:1px solid var(--hair);border-radius:0;padding:18px 0;font-size:clamp(20px,2vw,26px);letter-spacing:-.03em;width:100%;display:flex;justify-content:space-between;align-items:center}
+  .names li:last-child button{border-bottom:1px solid var(--hair)}
+  .names button small{font-size:13px;font-weight:500;letter-spacing:0}
+  .names button i{position:absolute;left:0;top:-1px;height:2px;width:100%;background:var(--green);transform:scaleX(0);transform-origin:left}
+  .names button[aria-selected="true"] i{animation:fill var(--dur,9s) linear forwards}
+  .names button:hover{color:var(--ink)}
+}
+@media (max-width:959px){.names button small,.names button i{display:none}.names button[aria-selected="true"]{background:var(--green);color:var(--on-green);border-color:var(--green)}}
+.names button[aria-selected="true"]{color:var(--ink)}
+@media (max-width:959px){.names button[aria-selected="true"]{color:var(--on-green)}}
+@keyframes fill{to{transform:scaleX(1)}}
+.quote{position:relative;min-height:360px}
+.quote .mark{font-size:120px;line-height:.7;font-weight:800;color:var(--green);display:block;height:60px}
+.quote blockquote{margin:0;font-size:clamp(21px,2.5vw,32px);line-height:1.55;letter-spacing:-.035em;font-weight:600}
+.quote blockquote .w{display:inline-block;opacity:0;transform:translateY(.5em);filter:blur(4px);animation:wi .7s var(--ease) forwards;animation-delay:calc(var(--i) * 22ms)}
+@keyframes wi{to{opacity:1;transform:none;filter:none}}
+.quote cite{display:block;font-style:normal;margin-top:32px;font-size:15px;color:var(--ink-3)}
+.quote cite b{color:var(--ink);font-size:18px;margin-right:8px}
+
+/* footer */
+footer{position:relative;z-index:2;background:var(--green);color:var(--on-green);padding:clamp(80px,12vw,150px) 0 40px;overflow:hidden}
+.foot-big{font-size:clamp(44px,8.6vw,128px);font-weight:800;letter-spacing:-.06em;line-height:1.02;margin:0}
+.foot-grid{display:grid;gap:32px;margin-top:clamp(56px,8vw,96px);font-size:14.5px}
+@media (min-width:860px){.foot-grid{grid-template-columns:1.2fr 1fr 1fr}}
+.foot-grid h3{font-size:12px;letter-spacing:.14em;margin:0 0 12px}
+.foot-grid dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0}
+.foot-grid dt{font-weight:700}
+.foot-grid dd{margin:0}
+.foot-grid a{text-decoration:none;background:linear-gradient(currentColor,currentColor) no-repeat 0 100%/0 1px;transition:background-size .4s var(--ease)}
+.foot-grid a:hover{background-size:100% 1px}
+.cta{display:inline-flex;align-items:center;gap:10px;margin-top:28px;padding:14px 22px;border-radius:999px;background:var(--on-green);color:var(--green);font-weight:800;text-decoration:none;transition:transform .4s var(--ease),gap .4s var(--ease)}
+.cta:hover{transform:translateY(-3px);gap:16px}
+.fine{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:64px;padding-top:20px;border-top:1px solid color-mix(in srgb,var(--on-green) 30%,transparent);font-size:12.5px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}
+  .rv,.mask > span,.hero h1 .ch span,.hero-sub p,.mlist li,.quote blockquote .w{opacity:1!important;transform:none!important;filter:none!important}
+  .steps > g{opacity:.6}
+  .archive .row,.gallery .row{animation:none}
+  .archive,.gallery{overflow-x:auto}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="blob" id="blob" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="#top"><i></i>푸른발자국</a>
+    <nav class="links" aria-label="목차">
+      <a href="#about">재단소개</a>
+      <a href="#numbers">숫자로 본 2025</a>
+      <a href="#greeting">인사말</a>
+      <a href="#history">발자취</a>
+      <a href="#y2025">2025</a>
+      <a href="#people">함께하는 사람들</a>
+    </nav>
+    <button class="theme" id="themeBtn" aria-label="밝게/어둡게 전환"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero" id="hero" aria-label="표지">
+  <svg class="steps" id="steps" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+  <div class="wrap" id="heroInner">
+    <div class="hero-meta"><span>GREEN STEP</span><span>VOL. 23 — 2025</span></div>
+    <h1 aria-label="푸른발자국"><span class="ch"><span>푸</span></span><span class="ch"><span>른</span></span><span class="ch"><span>발</span></span><span class="ch"><span>자</span></span><span class="ch"><span>국</span></span></h1>
+    <div class="hero-sub">
+      <p>2025년, <b>1,541,298명</b>의 그린리더가<br>환경재단과 함께 걸었습니다.</p>
+      <div class="scroll-cue"><i></i>SCROLL</div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="track" id="marquee"></div></div>
+
+<!-- ABOUT -->
+<section class="sec" id="about">
+  <div class="wrap">
+    <div class="sec-title"><span class="label rv">About</span></div>
+    <p class="statement" id="statement">환경재단은 우리 사회의 *지속가능성*을 위해 정부·기업·시민사회와 협력하는 *실천공동체*입니다.</p>
+    <div class="about-meta">
+      <div class="chip rv"><b class="num">2002</b><span>대한민국 최초의 환경 전문 공익재단 설립</span></div>
+      <div class="chip rv" style="--d:.1s"><b>그린리더가 세상을 바꿉니다!</b><span>환경재단의 슬로건</span></div>
+      <div class="chip rv" style="--d:.2s"><b class="num">2006~</b><span>시민단체 최초 유료 외부감사로 투명하게 공개합니다</span></div>
+    </div>
+
+    <div class="vision">
+      <div>
+        <span class="label rv">Vision</span>
+        <h3 class="rv"><span class="mask"><span>2030년까지</span></span><span class="mask"><span style="--d:.08s"><em>1000만 명</em>의 그린리더와</span></span><span class="mask"><span style="--d:.16s">함께 하겠습니다.</span></span></h3>
+        <p class="rv" style="--d:.2s">이를 위해 그린디지털 전환으로 혁신하며, 국내외 정부·기업·시민사회와 협력하고 연대하겠습니다.</p>
+      </div>
+      <div>
+        <span class="label rv">Values</span>
+        <ol class="values">
+          <li class="rv">장벽을 뛰어넘고 문제를 돌파하는 그린리더를 육성합니다.</li>
+          <li class="rv" style="--d:.06s">객관적 사실에 근거하며 현장에서 함께 행동합니다.</li>
+          <li class="rv" style="--d:.12s">다양한 목소리에 귀기울이고 세대와 지역을 포용합니다.</li>
+          <li class="rv" style="--d:.18s">창의와 혁신으로 문제를 같이 해결해 나갑니다.</li>
+          <li class="rv" style="--d:.24s">협력과 시너지로 지속가능한 삶의 방식을 현실로 만듭니다.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="sec numbers" id="numbers">
+  <div class="wrap">
+    <div class="sec-title">
+      <span class="label rv">2025 in numbers</span>
+      <h2 class="rv"><span class="mask"><span>숫자로 본 2025</span></span></h2>
+      <p class="rv" style="--d:.1s">정부·기업·시민사회가 함께하면 기후난제를 풀 수 있다는 희망으로, 올해도 다양한 활동을 이어갔습니다.</p>
+    </div>
+    <div class="mega rv">
+      <span class="k">올해 환경재단과 함께한 그린리더</span>
+      <span class="v num"><span data-count="1541298">0</span><small>명</small></span>
+      <span class="f">*2025년 8월 기준</span>
+      <div class="who"><span>어린이 환경교육 참가자</span><span>청년 서포터즈·자원봉사자</span><span>ESG 리더십 과정 원우</span><span>서울국제환경영화제 관객</span><span>환경포럼 참가자</span><span>시민단체 활동가</span><span>환경재단 후원자</span><span>뉴스레터 ‘지;구하다’ 구독자</span></div>
+    </div>
+    <div class="goal rv" id="goal">
+      <div class="goal-top">
+        <div><div class="k">2002 – 2025 누적 그린리더</div><div class="v num"><span data-count="5937180">0</span><small>명</small></div></div>
+        <div class="t">2030년 목표<b class="num">10,000,000명</b></div>
+      </div>
+      <div class="bar" role="img" aria-label="2030년 목표 1000만 명 중 593만 7,180명, 59.4% 달성"><i id="goalBar"></i></div>
+      <div class="bar-legend"><span class="num" id="goalPct">0% 달성</span><span>목표까지 4,062,820명</span></div>
+    </div>
+    <div class="tiles">
+      <div class="tile rv"><div class="v num"><span data-count="1930">0</span><small>곳</small></div><div class="k">함께한 기업·기관 (누적)</div></div>
+      <div class="tile rv" style="--d:.08s"><div class="v num"><span data-count="931">0</span><small>곳</small></div><div class="k">함께한 NGO 단체 (누적)</div></div>
+      <div class="tile rv" style="--d:.16s"><div class="v num"><span data-count="169">0</span><small>곳</small></div><div class="k">2025년 함께한 기업·기관</div></div>
+      <div class="tile rv" style="--d:.24s"><div class="v num"><span data-count="112">0</span><small>명</small></div><div class="k">지원한 NGO 석·박사 활동가 (누적)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GREETING -->
+<section class="sec" id="greeting">
+  <div class="wrap">
+    <div class="greet">
+      <figure class="portrait rv">
+        <div class="phwrap"><div class="ph"><img src="img/chair.webp" alt="최열 환경재단 이사장" loading="lazy"></div>
+        <div class="ring" aria-hidden="true">
+          <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text font-size="10" font-weight="800" letter-spacing="2.2" fill="currentColor"><textPath href="#circ">GREEN LEADERS · CHANGE THE WORLD ·</textPath></text></svg>
+          <b>50<small>년</small></b>
+        </div></div>
+        <figcaption>최 열<span>환경재단 이사장</span></figcaption>
+      </figure>
+      <div class="letter">
+        <div class="sec-title" style="margin-bottom:32px"><span class="label rv">Greeting</span></div>
+        <p class="rv">50년 전, 저는 거리에서 환경운동을 시작했습니다. 공장 굴뚝에서 뿜어져 나오던 매연, 오염된 강물, 중금속에 오염된 농촌의 아이들. 그때의 환경문제는 눈앞의 생존과 직결된 것이었습니다. 반세기가 흐른 지금, 세상은 달라졌지만 문제의 본질은 여전합니다. 기후위기라는 더 거대한 파도가 우리 앞에 놓여 있습니다.</p>
+        <p class="pull rv">절망에 머물 것이냐,<br><em>희망을 선택할 것이냐.</em></p>
+        <p class="rv">돌이켜보면 환경운동은 늘 두 갈래 길 위에 서 있었습니다. 저는 언제나 후자를 선택했습니다. 싸움과 저항에서 시작했지만, 이제는 연대와 협력, 그리고 대안을 만드는 일로 이어져야 합니다. 그것이 제가 오랜 세월 얻은 교훈입니다.</p>
+        <p class="rv">환경재단은 그 길 위에서 새로운 세대와 손을 맞잡고 있습니다. 기업과 정부, 시민이 서로 다른 언어를 쓰던 시절을 지나, 이제는 함께 길을 내고 있습니다. 특히 젊은 그린리더들이 삶의 터전에서 스스로 실천하며 변화를 이끌어가는 모습을 볼 때마다, 환경운동의 미래를 다시 확신합니다.</p>
+        <p class="rv">앞으로 우리가 맞이할 10년은 지난 50년보다 더 치열할 것입니다. 그러나 저는 믿습니다. 우리가 서로의 손을 놓지 않는다면, 기후위기를 넘어서 인류의 새로운 길을 열 수 있을 것입니다. 환경재단이 그 길의 맨 앞에서 여러분과 함께하겠습니다. 감사합니다.</p>
+      </div>
+    </div>
+
+    <div class="board">
+      <span class="label rv">Board</span>
+      <h3 class="rv">환경재단 이사회</h3>
+      <div class="board-grid" id="board"></div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section class="history" id="history">
+  <div class="pin" id="pin">
+    <div class="pin-inner">
+      <div class="wrap">
+        <div class="sec-title" style="margin-bottom:40px">
+          <span class="label rv">History</span>
+          <div class="pin-head">
+            <h2 class="rv"><span class="mask"><span>23년의 <em>푸른발자국</em></span></span></h2>
+            <div class="counter"><span class="num" id="yrNow">2002</span><span class="rail"><i id="yrRail"></i></span><span>2025</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="htrack" id="htrack"></div>
+      <div class="archive" aria-label="2002–2024 활동 사진"><div class="row" id="archive"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2025 -->
+<section class="sec" id="y2025">
+  <div class="wrap">
+    <div class="sec-title">
+      <span class="label rv">2025</span>
+      <h2 class="rv"><span class="mask"><span>2025년의 발자국</span></span></h2>
+    </div>
+    <div class="seg" role="tablist" aria-label="2025년 활동 기간" id="seg"><span class="pill" id="pill"></span></div>
+    <div class="month">
+      <div class="month-big num" aria-live="polite"><span id="mBig">1–2</span>월<small id="mCount"></small></div>
+      <ul class="mlist" id="mlist" role="tabpanel"></ul>
+    </div>
+  </div>
+  <div class="gallery" aria-label="2025 활동 사진"><div class="row" id="gallery"></div></div>
+</section>
+
+<!-- PEOPLE -->
+<section class="sec" id="people">
+  <div class="wrap">
+    <div class="sec-title">
+      <span class="label rv">Voices</span>
+      <h2 class="rv"><span class="mask"><span>함께하는 사람들</span></span></h2>
+      <p class="rv" style="--d:.1s">올해 환경재단과 함께한 그린리더들이 전하는 이야기입니다.</p>
+    </div>
+    <div class="voices">
+      <ul class="names rv" role="tablist" id="names"></ul>
+      <div class="quote" id="quote" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="foot-big rv"><span class="mask"><span>그린리더가</span></span><span class="mask"><span style="--d:.1s">세상을 바꿉니다!</span></span></p>
+    <a class="cta" href="https://www.greenfund.org" target="_blank" rel="noopener">환경재단과 함께하기 <span aria-hidden="true">→</span></a>
+    <div class="foot-grid">
+      <div>
+        <h3>CONTACT</h3>
+        <dl>
+          <dt>후원문의</dt><dd><a href="tel:02-2011-4323">02-2011-4323</a>, 4364</dd>
+          <dt>대표전화</dt><dd><a href="tel:02-2011-4300">02-2011-4300</a></dd>
+          <dt>전자메일</dt><dd><a href="mailto:greenfund@greenfund.org">greenfund@greenfund.org</a></dd>
+          <dt>주소</dt><dd>서울특별시 중구 을지로 16 백남빌딩 7층</dd>
+        </dl>
+      </div>
+      <div>
+        <h3>FOLLOW</h3>
+        <dl>
+          <dt>웹사이트</dt><dd><a href="https://www.greenfund.org" target="_blank" rel="noopener">greenfund.org</a></dd>
+          <dt>인스타그램</dt><dd>@koreagreenfund</dd>
+          <dt>블로그</dt><dd>blog.naver.com/greenfu</dd>
+          <dt>뉴스레터</dt><dd>‘지;구하다’ 매월 2회</dd>
+        </dl>
+      </div>
+      <div>
+        <h3>GREEN STEP VOL.23</h3>
+        <dl>
+          <dt>발행일</dt><dd>2025.11.11</dd>
+          <dt>발행인</dt><dd>최열</dd>
+          <dt>편집</dt><dd>환경재단 그린리더십센터</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="fine"><span>STOP CO₂, GO ACTION!</span><span>환경재단 「푸른발자국 Vol.23」을 웹으로 옮긴 페이지입니다.</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function $(id){return document.getElementById(id)}
+
+  /* theme */
+  try{var saved=localStorage.getItem('gs-theme'); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
+  $('themeBtn').addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    var next=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem('gs-theme',next);}catch(e){}
+  });
+
+  /* hero: footprints walking across */
+  (function(){
+    var n=18, out='';
+    var foot='<ellipse cx="0" cy="6" rx="9" ry="15"/><circle cx="-6" cy="-14" r="3.4"/><circle cx="0" cy="-16.5" r="3.6"/><circle cx="6" cy="-14.5" r="3.2"/><circle cx="10.5" cy="-10" r="2.6"/>';
+    for(var i=0;i<n;i++){
+      var t=i/(n-1), x=40+t*920, y=585-t*90+Math.sin(t*Math.PI*2)*22;
+      var dx=920, dy=-90+Math.cos(t*Math.PI*2)*22*Math.PI*2;
+      var ang=Math.atan2(dy,dx)*180/Math.PI+90;
+      var side=i%2?1:-1, rad=ang*Math.PI/180, px=Math.cos(rad)*side*16, py=Math.sin(rad)*side*16;
+      out+='<g style="animation-delay:'+(i*0.32).toFixed(2)+'s"><g transform="translate('+(x+px).toFixed(1)+' '+(y+py).toFixed(1)+') rotate('+ang.toFixed(1)+') scale('+(side>0?-1:1)+',1)" fill="#00b969" opacity=".38">'+foot+'</g></g>';
+    }
+    $('steps').innerHTML=out;
+    $('hero').querySelectorAll('.ch span').forEach(function(s,i){s.style.transitionDelay=(0.08*i+0.1)+'s'});
+    requestAnimationFrame(function(){setTimeout(function(){$('hero').classList.add('ready')},80)});
+  })();
+
+  /* marquee words */
+  var mq=$('marquee'), phrase=['그린리더가 세상을 바꿉니다','GREEN STEP VOL.23','GREEN LEADERS CHANGE THE WORLD','STOP CO₂, GO ACTION'];
+  var chunk=phrase.map(function(p){return '<span>'+esc(p)+'</span>'}).join('');
+  mq.innerHTML=chunk+chunk+chunk;
+
+  /* statement words */
+  (function(){
+    var el=$('statement'), parts=el.textContent.split(/(\*[^*]+\*)/), html='';
+    parts.forEach(function(p){
+      var g=/^\*/.test(p); p=p.replace(/\*/g,'');
+      p.split(/(\s+)/).forEach(function(w){ if(!w) return; html+= /^\s+$/.test(w)? w : '<span class="w'+(g?' g':'')+'">'+esc(w)+'</span>'; });
+    });
+    el.innerHTML=html;
+  })();
+  var words=[].slice.call(document.querySelectorAll('#statement .w'));
+
+  /* board */
+  var board=[['최 열','이사장','CHAIR'],['이미경','환경재단 대표','CEO'],
+    ['고현숙','국민대학교 경영학부 교수','이사'],['김문수','CEO비즈니스스쿨 의장','이사'],['김종성','서울대학교 지구환경과학부 교수','이사'],['노동영','강남차병원 원장','이사'],['노소라','노소라법률사무소 변호사','이사'],['문국현','뉴패러다임 인스티튜트 대표','이사'],['승효상','건축사무소 이로재 대표','이사'],['엄기영','한반도발전전략연구원 이사장','이사'],['육현표','삼성글로벌리서치 사장','이사'],['은희경','소설가','이사'],['이강만','한화 커뮤니케이션위원회 사장','이사'],['이동우','롯데지주 부회장','이사'],['이형희','SK 부회장','이사'],['정영채','메리츠증권 상임고문','이사'],['정재승','KAIST 뇌인지과학과 교수','이사'],['조선혜','지오영 대표이사 회장','이사'],['최기영','환경재단 어린이환경센터 이사장','이사'],['최병오','패션그룹 형지 회장','이사'],
+    ['신경섭','삼정KPMG 부회장','감사'],['안병덕','코오롱그룹 부회장','감사'],
+    ['박재갑','한국세포주연구재단 이사장','고문'],['이선종','은덕문화원 원장','고문'],['최학래','전국재해구호협회 명예회장','고문']];
+  $('board').innerHTML=board.map(function(p,i){return '<div class="person rv" style="--d:'+((i%5)*0.06)+'s"><em>'+esc(p[2])+'</em><b>'+esc(p[0])+'</b><span>'+esc(p[1])+'</span></div>'}).join('');
+
+  /* history */
+  var hist=[
+    [2002,['대한민국 최초 환경 전문 공익재단 ‘환경재단’ 설립']],
+    [2003,['만분(萬分) 클럽 발족','136 포럼 발족','세계환경위기시계 첫 발표']],
+    [2004,['시민단체 상근자 장학사업 시작','제1회 서울환경영화제 개최']],
+    [2005,['제1회 피스&그린보트 출항','‘세상을 밝게 만든 사람들’ 시상식 개최']],
+    [2006,['‘생명의 우물’ 캠페인 시작','임길진 NGO 스쿨 출범','‘쿨비즈 코리아’ 캠페인']],
+    [2007,['STOP CO₂ 캠페인','그린아시아 연수']],
+    [2008,['기후변화 리더십 과정 1기 개강']],
+    [2009,['뉴욕자연사박물관 기후변화체험전 개최']],
+    [2010,['그린아시아그랜트 모집']],
+    [2011,['<기후변화교과서> 발간']],
+    [2012,['제1회 세계 청소년 지구환경포럼 개최','아시아 태양광 지원 ‘1만 개의 태양을 나누다’','한국 환경운동 30주년 그린아시아포럼 개최','어린이환경센터 창립']],
+    [2013,['최열 대표 ‘치코멘데스상’ 수상']],
+    [2014,['제1회 에코브릿지 페스티벌 개최']],
+    [2015,['에코빌리지 프로젝트 착수']],
+    [2016,['2030 에코포럼 발족']],
+    [2017,['4차 산업혁명 리더십 과정 1기 개강','한·중 정부 대상 미세먼지 소송']],
+    [2018,['미세먼지센터 창립','그린보트 첫 단독 출항','CBS라디오 1분캠페인 ‘이제는 환경이다’']],
+    [2019,['글로벌 에코캠퍼스 준비위원회 발족','기후위기비상행동 참여']],
+    [2020,['후쿠시마 오염수 방류 반대 100인 서명','제1회 ESG 어워드 개최','‘지구쓰담’ ‘숨을 위한 숲’ 캠페인 론칭']],
+    [2021,['그린수소포럼 발족','ESG 리더십과정 1기 개강','‘기후위기 대응 헌법 1조’ 기자회견']],
+    [2022,['환경재단 창립 20주년','한·미 청년 기후활동가 국제교류','COP27 기후위기 해결 촉구 전시 퍼포먼스']],
+    [2023,['맹그로브 프로젝트 조성식','제20회 서울국제환경영화제','런던자연사박물관 기후변화체험전']],
+    [2024,['제1회 기후수학능력시험 개최','잘피 서식지 복원 및 연구']],
+    [2025,['제15회 그린보트 · 제22회 서울국제환경영화제','‘생물다양성 정원’ 1호 조성','AI 리더십 과정 1기 개강']]
+  ];
+  var track=$('htrack');
+  track.innerHTML=hist.map(function(h){return '<article class="yr"><div class="y num">'+h[0]+'</div><ul>'+h[1].map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ul></article>'}).join('');
+  var yrs=[].slice.call(track.children), curYear=-1;
+  var arch='';for(var a=1;a<=15;a++){arch+='<img src="img/h'+(a<10?'0':'')+a+'.webp" alt="" loading="lazy">';}
+  $('archive').innerHTML=arch+arch;
+  function setYear(i){
+    if(i===curYear) return; curYear=i;
+    yrs.forEach(function(y,k){y.classList.toggle('on',k===i)});
+    $('yrNow').textContent=hist[i][0];
+    $('yrRail').style.transform='scaleX('+(i/(hist.length-1))+')';
+  }
+  setYear(0);
+  var pin=$('pin'), pinMode=false, travel=0;
+  function layoutPin(){
+    pinMode=!reduce && innerWidth>=900;
+    pin.classList.toggle('active',pinMode);
+    track.style.transform='';
+    if(pinMode){
+      travel=Math.max(0,track.scrollWidth-innerWidth);
+      pin.style.height=(travel+innerHeight)+'px';
+    } else pin.style.height='';
+  }
+  if('IntersectionObserver' in window){
+    var yio=new IntersectionObserver(function(es){ if(pinMode) return; es.forEach(function(e){ if(e.isIntersecting) setYear(yrs.indexOf(e.target)); }); },{root:track,threshold:.6});
+    yrs.forEach(function(y){yio.observe(y)});
+  }
+
+  /* 2025 */
+  var months=[
+    ['1–2',['제15회 그린보트','리얼스 업사이클링 프로젝트 ‘설날’편','새새각각 중랑천/천수만 버드쓰담','DB클린어스 어린이 캠프']],
+    ['3–4',['에쓰오일 임직원 가족 나무심기 봉사활동','맑은학교 4차년도 지원 완공식','꿀숲벌숲 노을공원 식재','함께, 약속 페스티벌 : 프로미 안전 체험','제17차 ESG포럼','여수시·롯데마트·환경재단 업무협약','바다愛진심 시즌2 여수시 해양정화활동','ESG리더십 과정 9기 개강']],
+    ['5–6',['제22회 서울국제환경영화제 개막','바다쓰담 울릉도 해양정화활동','숨;편한 포레스트 13호숲 서울정민학교 완공','시드볼트 NFT 컬렉션 시즌3 캠페인 부스 운영','2025 환경위기시계 설문조사','PlasticEcoCycle 캠페인 오픈','그린리턴 캠페인 부스 운영','GALLERIA FIRST CLASS 그린토크콘서트','‘생물다양성 정원’ 1호 조성','내추럴뷰티크리에이터 7기 발대식','2025 리얼스 캠페인','홈앤그리너 5기 발대식','그린리더즈 프로그램 : 꿀숲벌숲','소아천식 8차년도 가족캠프','소아천식 8차년도 사후평가회','유스그린리더 장학생 선발 및 장학금 수여식','맑은학교 ‘환경운동회 in 대전’ 개최','제18차 ESG포럼']],
+    ['7–8',['2025 제2회 기후수학능력시험','제19차 ESG 포럼','GS리테일 에코크리에이터 7기 발대식','숨;편한 포레스트 14호숲 지품초등학교 완공','숨;편한 포레스트 15호숲 청송여자중고·등학교 완공','대학생 천연기념물지킴이단 13기 발대식&하계캠프','천연기념물지킴이단-황쏘가리 치어 방류 활동','청소년 기후기술 아이디어캠프 – 2025 기후과학클래스','유스그린리더 장학사업 네트워킹 데이']],
+    ['9–10',['다다익선 캠페인','‘지구처방전 in 여의도’','맹그로브 100만 캠페인 식재','홈앤그리너 5기 Play Green Festival','함께, 약속 페스티벌 : 환경콘서트','2025 환경위기시계 발표','ESG리더십 과정 10기 개강','제20차 ESG 포럼','청소년 해양보호활동 in 부산','천연기념물지킴이단-유해식물 제거 활동','바다쓰담 연합 플로깅','천연기념물지킴이단-수달&장수하늘소 보호 활동','CJ대한통운 비치코밍 캠페인','숨;편한 포레스트 16호숲 인천백석초등학교 완공','숨;편한 포레스트 17호숲 서울청원초등학교 완공','숨;편한 포레스트 18호숲 경기안성초등학교 완공','IUCN 세계자연보전총회 포럼 개최']],
+    ['11–12',['환경재단 창립 23주년 후원의 밤','한국에너지공단 에너지 RE:TOUR','교통환경챌린지 7기 IR 컨퍼런스','그린리더스보이스 아카이브 공개','AI리더십 과정 1기 개강','제21차 ESG 포럼','대학생 천연기념물지킴이단 13기 동계캠프&수료식']]
+  ];
+  var seg=$('seg');
+  months.forEach(function(m,i){
+    var b=document.createElement('button'); b.setAttribute('role','tab'); b.textContent=m[0]+'월';
+    b.addEventListener('click',function(){showMonth(i)}); seg.appendChild(b);
+  });
+  var segBtns=[].slice.call(seg.querySelectorAll('button')), curMonth=0;
+  function movePill(){var b=segBtns[curMonth],p=$('pill');p.style.left=b.offsetLeft+'px';p.style.width=b.offsetWidth+'px';p.style.top=b.offsetTop+'px';p.style.height=b.offsetHeight+'px';}
+  function showMonth(i){
+    curMonth=i;
+    segBtns.forEach(function(b,k){b.setAttribute('aria-selected',String(k===i))});
+    movePill();
+    $('mBig').textContent=months[i][0];
+    $('mCount').textContent=months[i][1].length+'개의 발자국';
+    $('mlist').innerHTML=months[i][1].map(function(t,k){return '<li style="--i:'+k+'">'+esc(t)+'</li>'}).join('');
+  }
+  showMonth(0);
+  var shots=[['y-greenboat','제15회 그린보트'],['y-filmfest','제22회 서울국제환경영화제'],['y-mangrove','맹그로브 식목 프로젝트'],['y-birds','새새각각'],['y-medicine','지구처방전 폐의약품 분리배출'],['y-exam','2025 기후수학능력시험'],['y-esg','ESG 리더십 과정'],['y-indonesia','PlasticEcoCycle Indonesia'],['y-earthssdam','지구쓰담 캠페인'],['y-monument','천연기념물지킴이단']];
+  function shotsHTML(withAlt){return shots.map(function(s){return '<figure class="shot"><div class="im"><img src="img/'+s[0]+'.webp" alt="'+(withAlt?esc(s[1]):'')+'" loading="lazy"></div><figcaption>'+esc(s[1])+'</figcaption></figure>'}).join('')}
+  $('gallery').innerHTML=shotsHTML(true)+shotsHTML(false);
+
+  /* voices */
+  var voices=[
+    ['은희경','작가','올해는 끝날 것 같지 않게 덥고 길었던 여름이 끝나자마자 패딩을 꺼내 입었습니다. 제15회 그린보트에 참여하면서, 잘못된 세상을 바꾸는 힘은 수많은 개인의 관심으로부터 시작된다고 느꼈습니다. 우리가 사는 세상을 사랑하는 방법을 알게 해주세요. 세상은 좀 더 따뜻하게, 지구는 조금 차갑게.'],
+    ['이미경','환경재단 대표','이 거대한 전환을 움직이는 진정한 동력은 바로 깨어 있는 시민들, 즉 우리의 그린리더입니다. 절망 대신 희망을, 비난보다 협력을, 소모적 대립이 아닌 창의적 해법을 ‘선택’하겠습니다. 그린리더가 세상을 바꿉니다!'],
+    ['노동영','강남차병원장 · 13년차 정기후원자','어린이환경센터와 함께하면서, 어린 시절부터 기후변화와 자연의 가치를 배우고 실천하는 일이 얼마나 중요한지 깊이 공감했습니다. 환경재단이 글로벌 환경운동을 선도하는 허브가 되기를 진심으로 응원하고 기대합니다.'],
+    ['Prigi Arisandi','2011 골드만 환경상 수상자','Recognizing the urgency of these issues, the KGF has been actively mobilizing Generation Z to promote intergenerational climate justice. I hope KGF continues to amplify these efforts, strengthening youth engagement and international cooperation.','en'],
+    ['박강민','경남과학고 3학년 · 제2회 기후수능 1등','환경재단이 단순히 위기를 알리는 데 그치지 않고, 많은 이들이 직접 행동할 수 있는 장을 마련해주신 점에 깊이 감사드립니다. 환경 보호가 선택이 아닌 필수인 시대인 만큼, 실제 변화를 이끌어내길 기대합니다.'],
+    ['박경랑','GS리테일 ESG파트 파트장','기후위기는 더 이상 먼 미래의 이야기가 아니라, 우리의 일상과 식량 안보를 위협하는 현실이 되었습니다. 참여자들이 제작한 환경 영상이 시민들의 공감을 이끌어내고 행동 변화를 유도하는 데 기여한 점을 의미 있게 생각합니다.'],
+    ['박대희','페이퍼팝 대표 · 교통환경 챌린지 7기','멘토링과 동료 창업자들과의 대화를 통해 소셜 임팩트를 만들기 위해 무엇에 집중해야 할지 깊이 고민할 수 있었습니다. 더 많은 분들이 참여할 수 있도록 알려지길 바라며, PAPER POP 또한 그 여정에 적극 동참하겠습니다.']
+  ];
+  var DUR=9000, vi=0, vtimer=null, paused=false, names=$('names');
+  names.innerHTML=voices.map(function(v,i){return '<li><button role="tab" data-i="'+i+'" style="--dur:'+DUR+'ms"><span>'+esc(v[0])+'</span><small>'+esc(v[1].split(' · ')[0])+'</small><i></i></button></li>'}).join('');
+  var nbtn=[].slice.call(names.querySelectorAll('button'));
+  function showVoice(i,user){
+    vi=i;
+    nbtn.forEach(function(b){b.setAttribute('aria-selected','false')});
+    void nbtn[i].offsetWidth; nbtn[i].setAttribute('aria-selected','true');
+    var v=voices[i], k=0;
+    var q=v[2].split(/(\s+)/).map(function(w){return /^\s+$/.test(w)?w:'<span class="w" style="--i:'+(k++)+'">'+esc(w)+'</span>'}).join('');
+    $('quote').innerHTML='<span class="mark" aria-hidden="true">“</span><blockquote'+(v[3]?' lang="en"':'')+'>'+q+'</blockquote><cite><b>'+esc(v[0])+'</b>'+esc(v[1])+'</cite>';
+    if(user && innerWidth<960) names.scrollTo({left:nbtn[i].parentNode.offsetLeft-16,behavior:'smooth'});
+    clearTimeout(vtimer);
+    if(!reduce && !paused) vtimer=setTimeout(function(){showVoice((vi+1)%voices.length)},DUR);
+  }
+  nbtn.forEach(function(b){b.addEventListener('click',function(){showVoice(+b.dataset.i,true)})});
+  $('quote').addEventListener('mouseenter',function(){paused=true;clearTimeout(vtimer);var bar=nbtn[vi].querySelector('i');if(bar)bar.style.animationPlayState='paused'});
+  $('quote').addEventListener('mouseleave',function(){paused=false;var bar=nbtn[vi].querySelector('i');if(bar)bar.style.animationPlayState='';clearTimeout(vtimer);vtimer=setTimeout(function(){showVoice((vi+1)%voices.length)},DUR/2)});
+
+  /* counters */
+  function count(el){
+    var to=+el.dataset.count;
+    if(reduce){el.textContent=to.toLocaleString('ko-KR');return}
+    var t0=null,d=1800;
+    function step(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,4);el.textContent=Math.round(to*e).toLocaleString('ko-KR');if(p<1)requestAnimationFrame(step)}
+    requestAnimationFrame(step);
+  }
+
+  /* reveal */
+  var voicesStarted=false;
+  function onIn(el){
+    el.classList.add('in');
+    el.querySelectorAll('[data-count]').forEach(count);
+    if(el.id==='goal'){
+      $('goalBar').style.width='59.37%';
+      if(reduce){$('goalPct').textContent='59.4% 달성'}
+      else{var t0=null;(function s(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/2200),e=1-Math.pow(1-p,3);$('goalPct').textContent=(59.4*e).toFixed(1)+'% 달성';if(p<1)requestAnimationFrame(s)})(performance.now())}
+    }
+    if(el.id==='names' && !voicesStarted){voicesStarted=true;showVoice(0)}
+  }
+  var targets=document.querySelectorAll('.rv,.mask');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){onIn(e.target);io.unobserve(e.target)}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
+    targets.forEach(function(el){io.observe(el)});
+  } else targets.forEach(onIn);
+
+  /* blob follows cursor */
+  var blob=$('blob'), bx=innerWidth/2, by=innerHeight/2, tx=bx, ty=by, fine=matchMedia('(pointer:fine)').matches;
+  if(fine && !reduce){
+    addEventListener('pointermove',function(e){tx=e.clientX;ty=e.clientY;blob.classList.add('on')},{passive:true});
+    document.addEventListener('pointerleave',function(){blob.classList.remove('on')});
+  }
+
+  /* scroll loop: progress, nav, hero parallax, statement highlight, pinned history, marquee */
+  var lastY=scrollY, vel=0, mx=0, nav=$('nav'), heroInner=$('heroInner'), links=[].slice.call(document.querySelectorAll('.links a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  function frame(){
+    var y=scrollY, H=document.documentElement.scrollHeight-innerHeight;
+    $('progress').style.transform='scaleX('+(H>0?y/H:0)+')';
+    var dy=y-lastY; vel+=(dy-vel)*0.12;
+    if(Math.abs(dy)>2) nav.classList.toggle('hide',dy>0&&y>innerHeight*.6);
+    nav.classList.toggle('solid',y>40);
+    lastY=y;
+
+    if(!reduce && y<innerHeight*1.3){
+      var p=y/innerHeight;
+      heroInner.style.transform='translate3d(0,'+(p*120)+'px,0)';
+      heroInner.style.opacity=String(Math.max(0,1-p*1.1));
+    }
+
+    var r=$('statement').getBoundingClientRect();
+    var sp=Math.min(1,Math.max(0,(innerHeight*0.85-r.top)/(r.height+innerHeight*0.35)));
+    var lit=reduce?words.length:Math.round(sp*words.length);
+    for(var i=0;i<words.length;i++) words[i].classList.toggle('lit',i<lit);
+
+    if(pinMode){
+      var pr=pin.getBoundingClientRect(), prog=Math.min(1,Math.max(0,-pr.top/Math.max(1,travel)));
+      track.style.transform='translate3d('+(-prog*travel)+'px,0,0)';
+      setYear(Math.round(prog*(hist.length-1)));
+    }
+
+    if(!reduce){
+      mx-=0.6+Math.min(18,Math.abs(vel))*0.5;
+      var w=mq.scrollWidth/3; if(w>0 && -mx>=w) mx+=w;
+      mq.style.transform='translate3d('+mx+'px,0,0)';
+    }
+
+    if(fine && !reduce){bx+=(tx-bx)*0.08;by+=(ty-by)*0.08;blob.style.transform='translate3d('+bx+'px,'+by+'px,0)';}
+
+    var cur=null; secs.forEach(function(s){if(s && s.getBoundingClientRect().top<innerHeight*0.4)cur=s.id});
+    links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+cur)});
+
+    requestAnimationFrame(frame);
+  }
+  function relayout(){layoutPin();movePill();}
+  relayout();
+  addEventListener('resize',relayout);
+  addEventListener('load',relayout);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
