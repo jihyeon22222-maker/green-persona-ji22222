@@ -23,3 +23,8 @@ HEAD
   printf '\n</body>\n</html>\n'
 } > "$out/index.html"
 echo "built $out/index.html"
+
+# 성과 보고서 페이지는 완성된 HTML 문서라 그대로 복사해요. → /reports/
+rm -rf "$out/reports"
+cp -R reports "$out/reports"
+echo "built $out/reports/index.html"

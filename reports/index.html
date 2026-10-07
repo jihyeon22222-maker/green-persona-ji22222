@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>환경재단 성과</title>
+<meta name="description" content="환경재단이 그린리더와 함께 걸어온 성과와 연간 보고서 '푸른발자국'을 책장 넘기듯 볼 수 있는 페이지.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="환경재단 성과 · 푸른발자국">
+<meta property="og:description" content="표지를 누르면 보고서가 펼쳐져요. 한 장씩 넘기며 읽어 보세요.">
+<meta property="og:image" content="green-step-vol23/pages/01.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+  :root {
+    --paper: #FAF8F2;
+    --card: #FFFFFF;
+    --ink: #1B1B1B;
+    --ink-soft: #55534D;
+    --line: #E4E0D5;
+    --brand: #FFD701;
+    --brand-deep: #E0BC00;
+    --viewer-bg: #1E1D1A;
+    --viewer-ink: #F4F1E8;
+    --viewer-soft: #A9A59A;
+    --gutter: 16px;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Noto Sans KR", system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif;
+    line-height: 1.6;
+    word-break: keep-all;
+  }
+  body.viewer-open { overflow: hidden; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* ---------- 머리 ---------- */
+  .top {
+    border-bottom: 1px solid var(--line);
+    background: var(--card);
+  }
+  .top .wrap {
+    display: flex; justify-content: space-between; align-items: center;
+    height: 56px; font-size: 14px; letter-spacing: .02em;
+  }
+  .top strong { font-weight: 900; font-size: 17px; letter-spacing: -.01em; }
+  .top span { color: var(--ink-soft); }
+
+  .hero { padding: 64px 0 40px; }
+  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--ink-soft); margin: 0 0 12px; }
+  .hero h1 {
+    margin: 0; font-size: clamp(34px, 6vw, 60px); line-height: 1.15; font-weight: 900; letter-spacing: -.03em;
+  }
+  .hero h1 mark { background: linear-gradient(transparent 58%, var(--brand) 58%); color: inherit; padding: 0 .05em; }
+  .hero p { margin: 20px 0 0; max-width: 560px; font-size: 17px; color: var(--ink-soft); }
+
+  /* ---------- 숫자 ---------- */
+  .stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 2px solid var(--ink); margin: 16px 0 0;
+  }
+  .stat { padding: 20px 16px 22px 0; border-bottom: 1px solid var(--line); }
+  .stat b { display: block; font-size: clamp(28px, 4.4vw, 40px); font-weight: 900; letter-spacing: -.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat b small { font-size: .5em; font-weight: 700; margin-left: 2px; }
+  .stat span { display: block; margin-top: 6px; font-size: 14px; color: var(--ink-soft); }
+
+  section { padding: 56px 0; }
+  .section-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 28px; }
+  .section-head h2 { margin: 0; font-size: 26px; font-weight: 900; letter-spacing: -.02em; }
+  .section-head p { margin: 4px 0 0; color: var(--ink-soft); font-size: 15px; }
+
+  /* ---------- 보고서 책장 ---------- */
+  .shelf {
+    background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+    padding: 40px 32px 0; overflow: hidden;
+  }
+  .shelf-row {
+    display: flex; flex-wrap: wrap; gap: 40px 48px; align-items: flex-end;
+    padding-bottom: 22px; border-bottom: 14px solid #D9D2BF; position: relative;
+  }
+  .shelf-row::after {
+    content: ""; position: absolute; left: -32px; right: -32px; bottom: -28px; height: 14px;
+    background: linear-gradient(#CFC7B1, #BEB59B);
+  }
+  .report { display: flex; gap: 28px; align-items: flex-end; flex-wrap: wrap; }
+  .book {
+    position: relative; display: block; width: 190px; aspect-ratio: 1000 / 1414;
+    padding: 0; border: 0; background: none; cursor: pointer;
+    perspective: 1200px;
+  }
+  .book-inner {
+    position: absolute; inset: 0; transform-style: preserve-3d;
+    transform: rotateY(-18deg); transform-origin: left center;
+    transition: transform .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .book img {
+    position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+    border-radius: 2px 5px 5px 2px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.06), 10px 14px 26px rgba(40,30,0,.28);
+  }
+  .book-inner::before { /* 책등 */
+    content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 14px;
+    background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.04) 60%, rgba(255,255,255,.25));
+    z-index: 1; border-radius: 2px 0 0 2px; pointer-events: none;
+  }
+  .book-inner::after { /* 종이 두께 */
+    content: ""; position: absolute; top: 3px; bottom: 3px; right: -9px; width: 10px;
+    background: repeating-linear-gradient(90deg, #fff 0 1px, #E8E3D6 1px 2px);
+    transform: rotateY(60deg); transform-origin: left center; border-radius: 0 2px 2px 0;
+  }
+  .book:hover .book-inner, .book:focus-visible .book-inner { transform: rotateY(-30deg) translateY(-6px); }
+  .book:focus-visible { outline: 3px solid var(--ink); outline-offset: 8px; border-radius: 4px; }
+  .book-tag {
+    position: absolute; left: 50%; bottom: -14px; transform: translate(-50%, 6px); white-space: nowrap;
+    background: var(--ink); color: #fff; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 99px;
+    opacity: 0; transition: opacity .25s, transform .25s; pointer-events: none; z-index: 2;
+  }
+  .book:hover .book-tag, .book:focus-visible .book-tag { opacity: 1; transform: translate(-50%, 0); }
+
+  .report-meta { max-width: 360px; padding-bottom: 6px; }
+  .report-meta .vol { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .1em; background: var(--brand); padding: 2px 10px; border-radius: 99px; }
+  .report-meta h3 { margin: 10px 0 4px; font-size: 24px; font-weight: 900; letter-spacing: -.02em; }
+  .report-meta p { margin: 0; color: var(--ink-soft); font-size: 15px; }
+  .report-meta ul { margin: 12px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--ink-soft); }
+  .report-meta li::before { content: "· "; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    height: 44px; padding: 0 18px; border-radius: 99px; font-size: 15px; font-weight: 700;
+    text-decoration: none; cursor: pointer; border: 1.5px solid var(--ink); background: var(--card);
+  }
+  .btn.primary { background: var(--ink); color: #fff; }
+  .btn:hover { filter: brightness(.94); }
+  .btn:focus-visible { outline: 3px solid var(--brand-deep); outline-offset: 2px; }
+  .shelf-note { margin: 44px 0 0; padding: 14px 0 18px; font-size: 13px; color: var(--ink-soft); text-align: center; position: relative; z-index: 1; }
+
+  /* ---------- 연혁 ---------- */
+  .timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 24px; }
+  .timeline li { border-top: 1px solid var(--ink); padding: 14px 0 26px; }
+  .timeline b { display: block; font-size: 22px; font-weight: 900; font-variant-numeric: tabular-nums; }
+  .timeline span { font-size: 15px; color: var(--ink-soft); }
+  .source { margin-top: 8px; font-size: 13px; color: var(--ink-soft); }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 48px; font-size: 13px; color: var(--ink-soft); }
+
+  @media (max-width: 720px) {
+    .hero { padding: 40px 0 28px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .shelf { padding: 32px 20px 0; border-radius: 16px; }
+    .shelf-row::after { left: -20px; right: -20px; }
+    .report { justify-content: center; }
+    .book { width: 168px; }
+    .timeline { grid-template-columns: 1fr 1fr; }
+    .section-head { display: block; }
+  }
+
+  /* ---------- 보고서 뷰어 ---------- */
+  .viewer {
+    position: fixed; inset: 0; z-index: 100;
+    display: grid; grid-template-rows: auto 1fr auto;
+    background: radial-gradient(ellipse at 50% 45%, #34322C 0%, var(--viewer-bg) 70%);
+    color: var(--viewer-ink);
+    opacity: 0; transition: opacity .35s ease;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .viewer[hidden] { display: none; }
+  .viewer.is-open { opacity: 1; }
+  .viewer-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    height: 56px; padding: 0 var(--gutter);
+  }
+  .viewer-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .viewer-title small { font-weight: 400; color: var(--viewer-soft); margin-left: 8px; }
+  .icon-btn {
+    flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0; cursor: pointer;
+    background: rgba(255,255,255,.08); display: grid; place-items: center;
+  }
+  .icon-btn:hover { background: rgba(255,255,255,.16); }
+  .icon-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .icon-btn:disabled { opacity: .3; cursor: default; }
+  .icon-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .stage { position: relative; min-height: 0; padding: 8px var(--gutter); }
+  .stage-inner { position: relative; width: 100%; height: 100%; }
+  .book-shift {
+    position: absolute; inset: 0;
+    transition: transform .8s cubic-bezier(.4,.1,.2,1), opacity .2s;
+  }
+  .book-shift.no-anim { transition: none; }
+  .flipbook { width: 100%; height: 100%; }
+  .flipbook .stf__wrapper { position: relative; width: 100%; height: 100%; padding: 0 !important; }
+  .fb-page { background: #fff; overflow: hidden; }
+  .fb-page img { width: 100%; height: 100%; display: block; object-fit: cover; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+  .fb-page::after { /* 가운데 접힘 그늘 */
+    content: ""; position: absolute; top: 0; bottom: 0; width: 7%; pointer-events: none;
+  }
+  .fb-page.--left::after { right: 0; background: linear-gradient(90deg, transparent, rgba(0,0,0,.12)); }
+  .fb-page.--right::after { left: 0; background: linear-gradient(270deg, transparent, rgba(0,0,0,.12)); }
+  .fb-page[data-density="hard"]::after { display: none; }
+
+  .flying-cover {
+    position: fixed; z-index: 101; margin: 0; pointer-events: none;
+    transform-origin: 0 0; border-radius: 2px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.45);
+    transition: transform .65s cubic-bezier(.3,.1,.2,1);
+  }
+
+  .viewer-controls {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    padding: 8px var(--gutter) 14px;
+  }
+  .pager { flex: 1; max-width: 520px; display: flex; align-items: center; gap: 12px; }
+  .pager input[type=range] { flex: 1; accent-color: var(--brand); min-width: 0; height: 28px; }
+  .page-no { min-width: 86px; text-align: center; font-size: 14px; font-variant-numeric: tabular-nums; color: var(--viewer-soft); }
+  .page-no b { color: var(--viewer-ink); font-weight: 700; }
+  .hint {
+    position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
+    font-size: 13px; color: var(--viewer-soft); background: rgba(0,0,0,.45); padding: 6px 14px; border-radius: 99px;
+    white-space: nowrap; pointer-events: none; transition: opacity .6s; z-index: 5;
+  }
+  .hint.is-gone { opacity: 0; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  @media (max-width: 560px) {
+    .viewer-title small { display: none; }
+    .viewer-controls { gap: 8px; }
+    .page-no { min-width: 70px; font-size: 13px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .book-inner, .book-shift, .viewer, .flying-cover { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <strong>환경재단</strong>
+    <span>GREEN STEP</span>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <p class="eyebrow">ACHIEVEMENTS</p>
+    <h1>그린리더와 함께 걸어온<br><mark>푸른 발자국</mark></h1>
+    <p>2002년 설립한 대한민국 최초의 환경 전문 공익재단, 환경재단의 한 해 성과를 보고서로 정리했어요. 아래 표지를 누르면 보고서가 펼쳐집니다.</p>
+
+    <div class="stats" aria-label="2025년 주요 성과">
+      <div class="stat"><b>23<small>주년</small></b><span>2002년 설립, 2025년 창립 23주년</span></div>
+      <div class="stat"><b>22<small>회</small></b><span>서울국제환경영화제 개최</span></div>
+      <div class="stat"><b>15<small>회</small></b><span>그린보트 출항</span></div>
+      <div class="stat"><b>18<small>호숲</small></b><span>숲;편한 포레스트 학교숲 완공</span></div>
+      <div class="stat"><b>10<small>기</small></b><span>ESG 리더십 과정 개강</span></div>
+      <div class="stat"><b>21<small>차</small></b><span>ESG 포럼 개최</span></div>
+    </div>
+  </div>
+
+  <section id="reports">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>성과 보고서</h2>
+          <p>표지를 누르면 책처럼 펼쳐져요. 한 장씩 넘기며 읽어 보세요.</p>
+        </div>
+      </div>
+      <div class="shelf">
+        <div class="shelf-row" id="shelf"></div>
+        <p class="shelf-note">← → 방향키, 화면 넘기기, 모서리 끌기로 책장을 넘길 수 있어요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>푸른발자국 2002–2024</h2>
+          <p>환경재단이 지나온 주요 장면</p>
+        </div>
+      </div>
+      <ol class="timeline">
+        <li><b>2002</b><span>대한민국 최초 환경 전문 공익재단 ‘환경재단’ 설립</span></li>
+        <li><b>2004</b><span>제1회 서울환경영화제 개최</span></li>
+        <li><b>2005</b><span>제1회 피스&amp;그린보트 출항</span></li>
+        <li><b>2012</b><span>제1회 세계 청소년 지구환경포럼, 어린이환경센터 창립</span></li>
+        <li><b>2021</b><span>ESG 리더십 과정 1기 개강, 그린수소포럼 발족</span></li>
+        <li><b>2024</b><span>제1회 기후수학능력시험 개최</span></li>
+      </ol>
+      <p class="source">출처: 환경재단 「푸른발자국 VOL.23」(2025.11.11 발행)</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">환경재단 · 서울특별시 중구 을지로 16 백남빌딩 7층 · greenfund.org</div>
+</footer>
+
+<!-- 보고서 뷰어 -->
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="viewerTitle" hidden>
+  <div class="viewer-bar">
+    <div class="viewer-title" id="viewerTitle"></div>
+    <div style="display:flex; gap:8px">
+      <a class="icon-btn" id="viewerPdf" href="#" download aria-label="PDF 내려받기" title="PDF 내려받기">
+        <svg viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>
+      </a>
+      <button class="icon-btn" id="viewerClose" type="button" aria-label="닫기" title="닫기 (Esc)">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="stage" id="stage">
+    <div class="stage-inner" id="stageInner">
+      <div class="book-shift" id="bookShift"></div>
+    </div>
+    <div class="hint" id="hint">모서리를 끌거나 화면을 눌러 넘겨 보세요</div>
+  </div>
+  <div class="viewer-controls">
+    <button class="icon-btn" id="prevBtn" type="button" aria-label="이전 쪽">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <div class="pager">
+      <label class="sr-only" for="pageRange">쪽 이동</label>
+      <input type="range" id="pageRange" min="1" value="1">
+      <div class="page-no" id="pageNo" aria-live="polite"></div>
+    </div>
+    <button class="icon-btn" id="nextBtn" type="button" aria-label="다음 쪽">
+      <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<script src="vendor/page-flip.browser.js"></script>
+<script>
+(() => {
+  // 보고서를 더 올리려면 이 목록에 추가하세요. 쪽 이미지는 pages/01.webp 부터 차례대로.
+  const REPORTS = [
+    {
+      id: "green-step-vol23",
+      vol: "VOL. 23",
+      title: "푸른발자국",
+      subtitle: "2025 환경재단 활동 보고서",
+      date: "2025.11.11 발행",
+      pageCount: 60,
+      ext: "webp",
+      pdf: "green-step-vol23/green-step-vol23.pdf",
+      points: ["푸른발자국 2002–2025 연혁", "그린 컬처 · 리더십 · CSR · 칠드런 · 캠페인", "그린리더스보이스와 함께하는 기업"],
+    },
+  ];
+
+  const PAGE_RATIO = 1414 / 1000; // 높이 / 너비
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $ = (id) => document.getElementById(id);
+  const pageSrc = (r, i) => `${r.id}/pages/${String(i + 1).padStart(2, "0")}.${r.ext}`;
+
+  // ---------- 책장 ----------
+  const shelf = $("shelf");
+  REPORTS.forEach((r) => {
+    const el = document.createElement("div");
+    el.className = "report";
+    el.innerHTML = `
+      <button class="book" type="button" aria-label="${r.title} ${r.vol} 펼쳐 보기">
+        <span class="book-inner"><img src="${pageSrc(r, 0)}" alt="" width="1000" height="1414"></span>
+        <span class="book-tag">눌러서 펼치기</span>
+      </button>
+      <div class="report-meta">
+        <span class="vol">${r.vol}</span>
+        <h3>${r.title}</h3>
+        <p>${r.subtitle} · ${r.date} · ${r.pageCount}쪽</p>
+        <ul>${r.points.map((p) => `<li>${p}</li>`).join("")}</ul>
+        <div class="actions">
+          <button class="btn primary" type="button" data-open>펼쳐 보기</button>
+          <a class="btn" href="${r.pdf}" download>PDF 받기</a>
+        </div>
+      </div>`;
+    const book = el.querySelector(".book");
+    const open = () => openViewer(r, book.querySelector("img"), book);
+    book.addEventListener("click", open);
+    el.querySelector("[data-open]").addEventListener("click", open);
+    shelf.appendChild(el);
+  });
+
+  // ---------- 뷰어 ----------
+  const viewer = $("viewer"), stageInner = $("stageInner"), bookShift = $("bookShift");
+  const range = $("pageRange"), pageNo = $("pageNo"), prevBtn = $("prevBtn"), nextBtn = $("nextBtn"), hint = $("hint");
+  let report = null, flip = null, layout = null, opener = null, imgs = [], loadQueue = [];
+
+  function computeLayout() {
+    const W = stageInner.clientWidth, H = stageInner.clientHeight;
+    const landscape = W / H > 1.05;
+    const pageW = Math.floor(landscape ? Math.min(W / 2, H / PAGE_RATIO) : Math.min(W, H / PAGE_RATIO));
+    return { W, H, landscape, pageW, pageH: Math.floor(pageW * PAGE_RATIO) };
+  }
+
+  // 표지·뒤표지는 한 쪽만 보이므로, 펼친 화면에서 책을 가운데로 옮겨 줘요.
+  function shiftFor(idx) {
+    if (!layout || !layout.landscape) return 0;
+    if (idx === 0) return -layout.pageW / 2;
+    if (idx === report.pageCount - 1) return layout.pageW / 2;
+    return 0;
+  }
+  function applyShift(px, animate = true) {
+    bookShift.classList.toggle("no-anim", !animate || reduceMotion);
+    bookShift.style.transform = `translateX(${px}px)`;
+  }
+
+  function ensureLoaded(center) {
+    for (let d = -3; d <= 5; d++) {
+      const img = imgs[center + d];
+      if (img && !img.src) img.src = img.dataset.src;
+    }
+  }
+  function loadRestInBackground() {
+    // 가까운 쪽부터 다 불러오면 나머지는 한가할 때 하나씩
+    const next = () => {
+      if (!flip) return;
+      const img = imgs.find((im) => !im.src);
+      if (!img) return;
+      img.src = img.dataset.src;
+      img.decode?.().catch(() => {}).finally(() => setTimeout(next, 60));
+    };
+    setTimeout(next, 800);
+  }
+
+  function buildFlip(startPage) {
+    layout = computeLayout();
+    const el = document.createElement("div");
+    el.className = "flipbook";
+    bookShift.replaceChildren(el);
+
+    imgs = [];
+    const pages = [];
+    for (let i = 0; i < report.pageCount; i++) {
+      const p = document.createElement("div");
+      p.className = "fb-page";
+      if (i === 0 || i === report.pageCount - 1) p.dataset.density = "hard";
+      const img = new Image(1000, 1414);
+      img.alt = `${i + 1}쪽`;
+      img.decoding = "async";
+      img.dataset.src = pageSrc(report, i);
+      p.appendChild(img);
+      imgs.push(img);
+      pages.push(p);
+    }
+    ensureLoaded(startPage);
+
+    flip = new St.PageFlip(el, {
+      width: layout.pageW,
+      height: layout.pageH,
+      size: "fixed",
+      autoSize: false,
+      usePortrait: true,
+      showCover: true,
+      startPage,
+      flippingTime: reduceMotion ? 300 : 850,
+      maxShadowOpacity: 0.45,
+      mobileScrollSupport: false,
+      swipeDistance: 20,
+    });
+    flip.loadFromHTML(pages);
+
+    flip.on("flip", (e) => { onPage(e.data); applyShift(shiftFor(e.data)); });
+    flip.on("changeState", (e) => {
+      const idx = flip.getCurrentPageIndex();
+      if (e.data === "flipping" || e.data === "user_fold") {
+        hint.classList.add("is-gone");
+        if (idx === 0 || idx === report.pageCount - 1) applyShift(0);
+        ensureLoaded(idx);
+      } else if (e.data === "read") {
+        applyShift(shiftFor(idx));
+      }
+    });
+    applyShift(shiftFor(startPage), false);
+    onPage(startPage);
+  }
+
+  function onPage(idx) {
+    const n = report.pageCount;
+    ensureLoaded(idx);
+    let label;
+    if (layout.landscape && idx > 0 && idx < n - 1) {
+      const left = idx % 2 === 1 ? idx : idx - 1;
+      label = `<b>${left + 1}–${left + 2}</b> / ${n}`;
+    } else {
+      label = `<b>${idx + 1}</b> / ${n}`;
+    }
+    pageNo.innerHTML = label;
+    range.value = idx + 1;
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === n - 1;
+  }
+
+  function goNext() {
+    if (!flip) return;
+    const idx = flip.getCurrentPageIndex();
+    if (idx === 0 || idx === report.pageCount - 1) applyShift(0);
+    flip.flipNext();
+  }
+  function goPrev() {
+    if (!flip) return;
+    const idx = flip.getCurrentPageIndex();
+    if (idx === report.pageCount - 1 || idx === 0) applyShift(0);
+    flip.flipPrev();
+  }
+  function jumpTo(idx) {
+    if (!flip) return;
+    ensureLoaded(idx);
+    flip.turnToPage(idx);
+    const cur = flip.getCurrentPageIndex();
+    onPage(cur);
+    applyShift(shiftFor(cur), false);
+  }
+
+  async function openViewer(r, coverImg, openerEl) {
+    report = r;
+    opener = openerEl;
+    $("viewerTitle").innerHTML = `${r.title} ${r.vol}<small>${r.subtitle}</small>`;
+    $("viewerPdf").href = r.pdf;
+    range.max = r.pageCount;
+    hint.classList.remove("is-gone");
+
+    viewer.hidden = false;
+    document.body.classList.add("viewer-open");
+    await nextFrame();
+    viewer.classList.add("is-open");
+
+    buildFlip(0);
+    bookShift.style.opacity = "0";
+
+    // 책장 위의 표지가 날아와서 뷰어 속 표지 자리에 놓여요.
+    const from = coverImg.getBoundingClientRect();
+    const box = stageInner.getBoundingClientRect();
+    const to = {
+      left: box.left + (layout.W - layout.pageW) / 2,
+      top: box.top + (layout.H - layout.pageH) / 2,
+      width: layout.pageW,
+      height: layout.pageH,
+    };
+    if (!reduceMotion && from.width > 0) {
+      const fly = document.createElement("img");
+      fly.className = "flying-cover";
+      fly.src = coverImg.currentSrc || coverImg.src;
+      Object.assign(fly.style, { left: to.left + "px", top: to.top + "px", width: to.width + "px", height: to.height + "px" });
+      const sx = from.width / to.width, sy = from.height / to.height;
+      fly.style.transform = `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${sx}, ${sy})`;
+      document.body.appendChild(fly);
+      await nextFrame();
+      fly.style.transform = "none";
+      await waitTransition(fly, 750);
+      bookShift.style.opacity = "1";
+      await nextFrame();
+      fly.remove();
+    } else {
+      bookShift.style.opacity = "1";
+    }
+    $("viewerClose").focus({ preventScroll: true });
+    loadRestInBackground();
+
+    // 표지가 자리 잡으면 저절로 첫 장을 넘겨 책을 펼쳐요.
+    setTimeout(() => { if (flip && flip.getCurrentPageIndex() === 0) goNext(); }, reduceMotion ? 0 : 280);
+  }
+
+  function closeViewer() {
+    if (viewer.hidden) return;
+    viewer.classList.remove("is-open");
+    const done = () => {
+      viewer.hidden = true;
+      document.body.classList.remove("viewer-open");
+      if (flip) { flip.destroy(); flip = null; }
+      bookShift.replaceChildren();
+      opener?.focus({ preventScroll: true });
+    };
+    reduceMotion ? done() : setTimeout(done, 350);
+  }
+
+  const nextFrame = () => new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
+  const waitTransition = (el, ms) => new Promise((res) => {
+    const t = setTimeout(res, ms);
+    el.addEventListener("transitionend", () => { clearTimeout(t); res(); }, { once: true });
+  });
+
+  prevBtn.addEventListener("click", goPrev);
+  nextBtn.addEventListener("click", goNext);
+  $("viewerClose").addEventListener("click", closeViewer);
+  range.addEventListener("input", () => {
+    pageNo.innerHTML = `<b>${range.value}</b> / ${report.pageCount}`;
+  });
+  range.addEventListener("change", () => jumpTo(Number(range.value) - 1));
+
+  document.addEventListener("keydown", (e) => {
+    if (viewer.hidden) return;
+    if (e.key === "Escape") { e.preventDefault(); closeViewer(); }
+    else if (e.target === range) return;
+    else if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); goNext(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); goPrev(); }
+    else if (e.key === "Home") { e.preventDefault(); jumpTo(0); }
+    else if (e.key === "End") { e.preventDefault(); jumpTo(report.pageCount - 1); }
+    else if (e.key === "Tab") { // 뷰어 안에서만 포커스가 돌도록
+      const f = [...viewer.querySelectorAll("a[href], button:not(:disabled), input")];
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  // 화면 크기가 바뀌면 지금 쪽을 유지한 채 책을 다시 짜요.
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    if (!flip) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (!flip) return;
+      const cur = flip.getCurrentPageIndex();
+      const next = computeLayout();
+      if (next.W === layout.W && next.H === layout.H) return;
+      flip.destroy();
+      buildFlip(cur);
+    }, 200);
+  });
+})();
+</script>
+</body>
+</html>
