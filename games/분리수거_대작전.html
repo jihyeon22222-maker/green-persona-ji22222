@@ -40,6 +40,7 @@
 
 [hidden] { display: none !important; }
 html, body { height: 100%; }
+body { margin: 0; }
 body {
   background: var(--bg); color: var(--ink);
   font-family: var(--font-body); font-size: 15px; line-height: 1.5;
@@ -550,6 +551,7 @@ body {
       mistakes: st.mistakes.filter((m, i, a) => a.findIndex(x => x.nm === m.nm) === i),
     };
     $('saveMsg').textContent = '';
+    resultBlobP = drawResult(lastResult).catch(() => null); // 공유 버튼을 누르는 즉시 공유 창을 띄우려고 미리 만들어 둬요
     $('overOv').hidden = false;
     $('againBtn').focus();
   }
@@ -571,7 +573,13 @@ body {
   drawLeft();
 
   // 결과 이미지 저장: 결과 카드를 캔버스에 다시 그려 PNG로 저장해요.
-  let lastResult = null;
+  let lastResult = null, resultBlobP = null;
+  // 일반 웹사이트(GitHub Pages)의 휴대폰에서는 공유 창으로 이미지를 바로 보내요. Claude 화면 안에서는 막혀 있어 저장만 해요.
+  const canShareFiles = (() => {
+    if (window.claude) return false;
+    try { return !!navigator.canShare && navigator.canShare({ files: [new File(['x'], 'x.png', { type: 'image/png' })] }); } catch { return false; }
+  })();
+  if (canShareFiles) $('saveBtn').textContent = '결과 공유';
   const downloadsP = window.claude?.use ? window.claude.use('downloads').catch(() => null) : Promise.resolve(null);
   const IMG_COL = {
     bg: '#e4ebe7', card: '#f5f8f6', ink: '#1b2822', muted: '#5a6962', line: '#c6d1cb', accent: '#1e8757', danger: '#c33f2c',
@@ -649,11 +657,27 @@ body {
   $('saveBtn').addEventListener('click', async () => {
     if (!lastResult) return;
     const btn = $('saveBtn'), msg = $('saveMsg');
-    btn.disabled = true; msg.textContent = '이미지를 만드는 중이에요…';
+    btn.disabled = true;
     try {
-      const blob = await drawResult(lastResult);
+      const blob = (await resultBlobP) || await drawResult(lastResult);
+      if (!blob) throw new Error('no image');
       const d = new Date();
       const filename = `분리수거대작전_${lastResult.score}점_${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}.png`;
+      if (canShareFiles) {
+        const file = new File([blob], filename, { type: 'image/png' });
+        try {
+          await navigator.share({
+            files: [file],
+            title: '분리수거 대작전',
+            text: `분리수거 대작전 ${lastResult.score}점! 헷갈리는 분리수거, 너도 도전해 봐 ${location.href}`,
+          });
+          msg.textContent = '결과를 공유했어요.';
+          return;
+        } catch (e) {
+          if (e?.name === 'AbortError') { msg.textContent = '공유를 취소했어요.'; return; }
+          // 공유가 안 되는 환경이면 아래에서 저장으로 대신해요.
+        }
+      }
       const downloads = await downloadsP;
       if (downloads) {
         try {
@@ -667,7 +691,7 @@ body {
         const a = document.createElement('a'); a.href = url; a.download = filename;
         document.body.appendChild(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(url), 4000);
-        msg.textContent = '이미지를 저장했어요. 저장되지 않았다면 브라우저의 다운로드 설정을 확인해 주세요.';
+        msg.textContent = '이미지를 저장했어요. SNS 앱에서 저장한 이미지를 올려 주세요.';
       }
     } catch {
       msg.textContent = '이미지를 만들지 못했어요. 다시 눌러 주세요.';
