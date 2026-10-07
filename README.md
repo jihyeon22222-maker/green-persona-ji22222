@@ -74,11 +74,10 @@ NVIDIA의 대규모 한국어 합성 페르소나 데이터셋(`Nemotron-Persona
 ## 성과 보고서 뷰어: 푸른발자국 VOL.23
 **파일**: `reports/index.html` (성과 페이지) · **주소 (GitHub Pages)**: https://jihyeon22222-maker.github.io/green-persona-ji22222/reports/
 
-- 성과 페이지의 책장에 놓인 보고서 표지를 누르면 표지가 화면 가운데로 날아와 책처럼 펼쳐지고, 한 장씩 넘기며 읽을 수 있다.
+- "환경재단 성과보고서" 제목 아래 푸른발자국 표지 한 권만 크게 보여 준다. 표지를 누르면 화면 가운데로 날아와 책처럼 펼쳐지고, 한 장씩 넘기며 읽을 수 있다.
 - 넘기는 법: 페이지 모서리 끌기, 페이지 누르기, 휴대폰에서는 옆으로 밀기, ← → 방향키, 아래 화살표 버튼과 슬라이더. 넓은 화면은 두 쪽 펼침, 휴대폰 세로 화면은 한 쪽씩 보여 준다.
 - 쪽 이미지: 원본 PDF(표지 1장 + 펼침면 29장 + 뒤표지)를 낱장 60쪽으로 잘라 `reports/green-step-vol23/pages/01.webp`~`60.webp`에 두었다. 원본 PDF도 같은 폴더에 있어 뷰어에서 내려받을 수 있다.
 - 책장 넘김은 [StPageFlip](https://github.com/Nodlik/StPageFlip)(MIT)을 `reports/vendor/`에 넣어 쓴다.
-- 새 보고서를 추가하려면 쪽 이미지를 `reports/<보고서-id>/pages/`에 같은 이름 규칙으로 넣고, `reports/index.html`의 `REPORTS` 목록에 한 줄 추가하면 책장에 표지가 하나 더 생긴다.
 
 ## 다음 단계 (TODO)
 - [ ] 후보 10명 외 추가 인물 확장 (다른 지역/연령대)
