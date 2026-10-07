@@ -23,3 +23,21 @@ HEAD
   printf '\n</body>\n</html>\n'
 } > "$out/index.html"
 echo "built $out/index.html"
+
+# 그린 디자인 데스크 (디자이너용 업무 도구)
+mkdir -p "$out/design-desk"
+{
+  cat <<'HEAD'
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+</head>
+<body>
+HEAD
+  cat "tools/그린_디자인_데스크.html"
+  printf '\n</body>\n</html>\n'
+} > "$out/design-desk/index.html"
+echo "built $out/design-desk/index.html"

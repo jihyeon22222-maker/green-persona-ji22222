@@ -1,0 +1,822 @@
+<title>그린 디자인 데스크</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a designer's desk — slim header with today's date, tab strip, one working panel at a time; data in mono like a spec sheet */
+:root {
+  --bg: #eef1ec;
+  --surface: #fbfcfa;
+  --sunk: #e4e9e3;
+  --ink: #18221c;
+  --muted: #5b6860;
+  --line: #d3dbd4;
+  --accent: #2f6b45;
+  --accent-ink: #ffffff;
+  --accent-soft: #dcebdf;
+  --warn: #9a5c00;
+  --warn-soft: #f5e6cc;
+  --danger: #b4372a;
+  --danger-soft: #f6dcd7;
+  --font-display: "Gothic A1", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111713; --surface: #18201b; --sunk: #0d120f; --ink: #e4ebe5; --muted: #96a49b; --line: #2a352e;
+    --accent: #6fc08d; --accent-ink: #0f1a13; --accent-soft: #1f3328;
+    --warn: #e6a952; --warn-soft: #3a2c15; --danger: #f07a68; --danger-soft: #3d1f1a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111713; --surface: #18201b; --sunk: #0d120f; --ink: #e4ebe5; --muted: #96a49b; --line: #2a352e;
+  --accent: #6fc08d; --accent-ink: #0f1a13; --accent-soft: #1f3328;
+  --warn: #e6a952; --warn-soft: #3a2c15; --danger: #f07a68; --danger-soft: #3d1f1a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.55;
+  padding-inline: 16px; padding-block: 20px 48px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 18px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; letter-spacing: -.01em; }
+h1 { font-size: 26px; font-weight: 800; }
+h2 { font-size: 19px; font-weight: 800; }
+h3 { font-size: 15px; font-weight: 700; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+
+/* header */
+header.top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brandmark { display: flex; align-items: center; gap: 12px; }
+.leaf { width: 38px; height: 38px; border-radius: 10px 2px 10px 2px; background: var(--accent); display: grid; place-items: center; color: var(--accent-ink); }
+.leaf svg { width: 22px; height: 22px; }
+.today { text-align: right; }
+.today b { font-family: var(--font-mono); font-weight: 500; font-size: 14px; display: block; }
+
+/* tabs */
+nav.tabs { display: flex; flex-wrap: wrap; gap: 6px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+.tab {
+  appearance: none; border: 1px solid transparent; background: transparent; color: var(--muted);
+  font: inherit; font-weight: 500; padding: 7px 14px; border-radius: 999px; cursor: pointer;
+}
+.tab:hover { color: var(--ink); border-color: var(--line); }
+.tab[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+.tab .count { font-family: var(--font-mono); font-size: 12px; margin-left: 4px; opacity: .75; }
+
+/* panels */
+.panel { display: grid; gap: 18px; }
+.panel-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.panel-head p { max-width: 60ch; }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.cols { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.cols > * { min-width: 0; }
+
+/* controls */
+label.field { display: grid; gap: 4px; font-size: 13px; color: var(--muted); min-width: 0; }
+input[type="text"], input[type="number"], input[type="date"], select, textarea {
+  font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 8px; padding: 8px 10px; width: 100%; min-width: 0;
+}
+textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+input[type="color"] { width: 42px; height: 38px; padding: 2px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); cursor: pointer; }
+:is(input, select, textarea, button, summary):focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+.row > .field { flex: 1 1 140px; }
+.btn {
+  appearance: none; font: inherit; font-weight: 500; cursor: pointer; border-radius: 8px;
+  padding: 8px 14px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+  white-space: nowrap;
+}
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--ink); }
+.btn.tiny { padding: 3px 9px; font-size: 12px; border-radius: 6px; }
+.btn.danger-text { background: transparent; border-color: transparent; color: var(--danger); }
+
+/* pills */
+.pill { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; padding: 2px 9px; border-radius: 999px; background: var(--sunk); color: var(--muted); white-space: nowrap; font-family: var(--font-mono); }
+.pill.ok { background: var(--accent-soft); color: var(--accent); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.bad { background: var(--danger-soft); color: var(--danger); }
+.pill.sample { font-family: var(--font-body); background: transparent; border: 1px dashed var(--line); }
+
+/* summary strip */
+.summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.summary > div { padding: 14px 16px; display: grid; gap: 2px; }
+.summary > div + div { border-left: 1px solid var(--line); }
+.summary b { font-family: var(--font-mono); font-size: 26px; font-weight: 500; line-height: 1.1; }
+.summary .bad b { color: var(--danger); }
+.summary .warn b { color: var(--warn); }
+@media (max-width: 560px) {
+  .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .summary > div:nth-child(3) { border-left: 0; }
+  .summary > div:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+
+/* request list */
+.filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { appearance: none; font: inherit; font-size: 13px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; }
+.chip[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.reqs { list-style: none; margin: 0; padding: 0; display: grid; }
+.req { display: grid; grid-template-columns: 76px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 12px 4px; border-top: 1px solid var(--line); }
+.req:first-child { border-top: 0; }
+.req .due { display: grid; gap: 2px; justify-items: start; }
+.req .due small { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.req .title { font-weight: 700; overflow-wrap: anywhere; }
+.req .meta { font-size: 13px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.req .act { display: flex; gap: 6px; align-items: center; }
+.req .act select { width: auto; padding: 5px 8px; font-size: 13px; }
+.req.done .title { text-decoration: line-through; color: var(--muted); }
+@media (max-width: 560px) {
+  .req { grid-template-columns: 64px minmax(0, 1fr); }
+  .req .act { grid-column: 2; }
+}
+details.add > summary { cursor: pointer; font-weight: 700; list-style: none; display: flex; align-items: center; gap: 8px; }
+details.add > summary::-webkit-details-marker { display: none; }
+details.add > summary::before { content: "+"; font-family: var(--font-mono); width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); }
+details.add[open] > summary::before { content: "−"; }
+details.add form { margin-top: 14px; display: grid; gap: 12px; }
+.empty { padding: 24px 4px; text-align: center; color: var(--muted); }
+
+/* tables */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-size: 12px; font-weight: 500; color: var(--muted); letter-spacing: .04em; padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td .note { display: block; font-size: 12px; color: var(--muted); }
+.ratio { display: inline-block; border: 1.5px solid var(--muted); border-radius: 2px; vertical-align: middle; }
+
+/* converter */
+.conv { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+.conv-out { font-family: var(--font-mono); font-size: 14px; background: var(--sunk); border-radius: 8px; padding: 10px 12px; line-height: 1.8; }
+
+/* swatches */
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+.swatch { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); display: grid; }
+.swatch .chipcolor { height: 84px; border: 0; cursor: pointer; display: flex; align-items: flex-end; padding: 8px 10px; font: 500 12px var(--font-mono); }
+.swatch .info { padding: 10px 12px; display: grid; gap: 2px; font-size: 12px; }
+.swatch .info b { font-size: 14px; font-family: var(--font-body); }
+.swatch .info .mono { color: var(--muted); }
+.swatch .info button { justify-self: start; margin-top: 4px; }
+.contrast-demo { border-radius: 10px; padding: 18px; display: grid; gap: 4px; border: 1px solid var(--line); }
+.contrast-demo .big { font-family: var(--font-display); font-size: 24px; font-weight: 800; }
+.verdicts { display: flex; gap: 6px; flex-wrap: wrap; }
+.ratio-num { font-family: var(--font-mono); font-size: 30px; font-weight: 500; }
+
+/* calendar */
+.days { list-style: none; margin: 0; padding: 0; display: grid; }
+.day { display: grid; grid-template-columns: 70px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 11px 4px; border-top: 1px solid var(--line); }
+.day:first-child { border-top: 0; }
+.day .date { font-family: var(--font-mono); font-size: 13px; color: var(--muted); line-height: 1.3; }
+.day .date b { display: block; font-size: 20px; color: var(--ink); font-weight: 500; }
+.day .name { font-weight: 700; }
+.day .hint { font-size: 13px; color: var(--muted); }
+.day.now { background: var(--accent-soft); border-radius: 8px; border-top-color: transparent; }
+.day.now + .day { border-top-color: transparent; }
+@media (max-width: 560px) { .day { grid-template-columns: 56px minmax(0, 1fr); } .day > :last-child { grid-column: 2; justify-self: start; } }
+
+/* text tools */
+.out { font-family: var(--font-mono); font-size: 14px; background: var(--sunk); border-radius: 8px; padding: 12px; overflow-wrap: anywhere; }
+.meters { display: grid; gap: 10px; }
+.meter { display: grid; gap: 4px; font-size: 13px; }
+.meter .bar { height: 6px; border-radius: 3px; background: var(--sunk); overflow: hidden; }
+.meter .bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width .2s; }
+.meter.over .bar i { background: var(--danger); }
+.meter .lbl { display: flex; justify-content: space-between; gap: 8px; }
+.meter .lbl span:last-child { font-family: var(--font-mono); }
+.meter.over .lbl span:last-child { color: var(--danger); }
+
+/* checklist */
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.checks label { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; padding: 7px 4px; cursor: pointer; border-radius: 6px; align-items: start; }
+.checks label:hover { background: var(--sunk); }
+.checks input { width: 17px; height: 17px; margin-top: 3px; accent-color: var(--accent); }
+.checks input:checked + span { color: var(--muted); text-decoration: line-through; }
+.checks span small { display: block; font-size: 12px; color: var(--muted); text-decoration: none; }
+.progress { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+pre.brief { margin: 0; white-space: pre-wrap; font-family: var(--font-body); font-size: 14px; background: var(--sunk); border-radius: 8px; padding: 14px; overflow-wrap: anywhere; }
+
+/* toast */
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); background: var(--ink); color: var(--bg); padding: 9px 16px; border-radius: 999px; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; max-width: calc(100% - 32px); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (prefers-reduced-motion: reduce) { .toast, .meter .bar i { transition: none; } }
+footer { font-size: 12px; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brandmark">
+      <div class="leaf" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19l8-8"/></svg>
+      </div>
+      <div>
+        <p class="eyebrow">환경재단 디자인팀</p>
+        <h1>그린 디자인 데스크</h1>
+      </div>
+    </div>
+    <div class="today"><span class="eyebrow">오늘</span><b id="todayLabel"></b></div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="도구">
+    <button class="tab" role="tab" id="tab-requests" data-tab="requests">작업 요청<span class="count" id="reqCount"></span></button>
+    <button class="tab" role="tab" id="tab-specs" data-tab="specs">규격·변환</button>
+    <button class="tab" role="tab" id="tab-colors" data-tab="colors">컬러</button>
+    <button class="tab" role="tab" id="tab-calendar" data-tab="calendar">환경 기념일</button>
+    <button class="tab" role="tab" id="tab-text" data-tab="text">파일명·글자수</button>
+    <button class="tab" role="tab" id="tab-checks" data-tab="checks">체크리스트</button>
+  </nav>
+
+  <!-- 작업 요청 -->
+  <section class="panel" id="panel-requests" role="tabpanel" aria-labelledby="tab-requests">
+    <div class="panel-head">
+      <div><h2>작업 요청 보드</h2><p class="muted small">부서에서 들어온 디자인 요청을 마감일 순으로 정리해요. 이 브라우저에만 저장돼요.</p></div>
+      <button class="btn ghost tiny" id="clearSamples" hidden>예시 요청 지우기</button>
+    </div>
+    <div class="summary" aria-label="요약">
+      <div class="bad"><span class="eyebrow">마감 지남</span><b id="sumLate">0</b></div>
+      <div class="warn"><span class="eyebrow">3일 안 마감</span><b id="sumSoon">0</b></div>
+      <div><span class="eyebrow">진행 중</span><b id="sumDoing">0</b></div>
+      <div><span class="eyebrow">이번 달 완료</span><b id="sumDone">0</b></div>
+    </div>
+    <div class="box">
+      <details class="add" id="addReq">
+        <summary>새 요청 추가</summary>
+        <form id="reqForm">
+          <div class="row">
+            <label class="field" style="flex-basis:260px">작업명<input type="text" id="rqTitle" required placeholder="예: 지구의 날 캠페인 인스타 카드뉴스"></label>
+            <label class="field">요청 부서·담당<input type="text" id="rqWho" placeholder="예: 캠페인팀 김OO"></label>
+          </div>
+          <div class="row">
+            <label class="field">매체·규격<select id="rqMedia"></select></label>
+            <label class="field">마감일<input type="date" id="rqDue" required></label>
+            <label class="field">상태<select id="rqStatus"></select></label>
+          </div>
+          <label class="field">메모<input type="text" id="rqNote" placeholder="수량, 참고 자료 위치, 인쇄소 등"></label>
+          <div class="row"><button class="btn" type="submit">요청 추가</button></div>
+        </form>
+      </details>
+    </div>
+    <div class="box">
+      <div class="filters" id="reqFilters" role="group" aria-label="상태 필터"></div>
+      <ul class="reqs" id="reqList"></ul>
+    </div>
+  </section>
+
+  <!-- 규격 -->
+  <section class="panel" id="panel-specs" role="tabpanel" aria-labelledby="tab-specs" hidden>
+    <div class="panel-head">
+      <div><h2>규격 모음</h2><p class="muted small">자주 쓰는 SNS·인쇄 사이즈예요. 숫자를 누르면 복사돼요. 인쇄물은 재단 사이즈에 도련을 더한 작업 사이즈와 픽셀 환산도 함께 보여줘요.</p></div>
+      <div class="row">
+        <label class="field" style="flex:0 0 100px">도련 (mm)<input type="number" id="bleed" min="0" max="20" step="0.5" value="3"></label>
+        <label class="field" style="flex:0 0 100px">해상도 (dpi)<input type="number" id="dpi" min="72" max="1200" step="1" value="300"></label>
+      </div>
+    </div>
+    <div class="box">
+      <h3>SNS·웹</h3>
+      <div class="table-wrap"><table id="tblDigital"><thead><tr><th>용도</th><th>비율</th><th>사이즈 (px)</th><th></th></tr></thead><tbody></tbody></table></div>
+    </div>
+    <div class="box">
+      <h3>인쇄물</h3>
+      <div class="table-wrap"><table id="tblPrint"><thead><tr><th>용도</th><th>재단 (mm)</th><th>작업 (mm)</th><th id="pxHead">작업 (px)</th><th></th></tr></thead><tbody></tbody></table></div>
+      <p class="muted small">현수막·배너는 실사 출력이라 보통 100~150dpi로 작업해요. 인쇄소마다 도련·해상도 요구가 다르니 발주 전에 확인하세요.</p>
+    </div>
+    <div class="box">
+      <h3>단위 변환기</h3>
+      <div class="conv">
+        <label class="field">값<input type="number" id="cvVal" value="210" step="any"></label>
+        <label class="field">단위<select id="cvUnit"><option value="mm">mm</option><option value="cm">cm</option><option value="in">inch</option><option value="px">px</option><option value="pt">pt</option></select></label>
+        <label class="field">해상도 (dpi)<input type="number" id="cvDpi" value="300" min="1" step="1"></label>
+      </div>
+      <div class="conv-out" id="cvOut"></div>
+    </div>
+  </section>
+
+  <!-- 컬러 -->
+  <section class="panel" id="panel-colors" role="tabpanel" aria-labelledby="tab-colors" hidden>
+    <div class="panel-head">
+      <div><h2>컬러 팔레트</h2><p class="muted small">색 칩을 누르면 HEX가 복사돼요. 처음 보이는 색은 <b>예시</b>예요. 재단 CI 가이드의 공식 값으로 바꿔서 쓰세요. CMYK는 화면용 근사값이라 인쇄 지정색은 CI 가이드 값을 따르세요.</p></div>
+      <button class="btn ghost tiny" id="resetPalette">예시 팔레트로 되돌리기</button>
+    </div>
+    <div class="swatches" id="swatches"></div>
+    <div class="box">
+      <h3>색 추가·수정</h3>
+      <form class="row" id="colorForm">
+        <label class="field" style="flex:0 0 auto">색<input type="color" id="cfPick" value="#2f6b45"></label>
+        <label class="field">HEX<input type="text" id="cfHex" value="#2F6B45" pattern="#?[0-9a-fA-F]{6}" required></label>
+        <label class="field">이름<input type="text" id="cfName" placeholder="예: 메인 그린" required></label>
+        <button class="btn" type="submit">팔레트에 저장</button>
+      </form>
+      <p class="muted small">같은 이름으로 저장하면 기존 색을 덮어써요.</p>
+    </div>
+    <div class="box">
+      <h3>명도 대비 검사 (WCAG)</h3>
+      <div class="cols">
+        <div style="display:grid;gap:12px">
+          <div class="row">
+            <label class="field" style="flex:0 0 auto">글자색<input type="color" id="ctFg" value="#ffffff"></label>
+            <label class="field" style="flex:0 0 auto">배경색<input type="color" id="ctBg" value="#2f6b45"></label>
+            <button class="btn ghost" type="button" id="ctSwap">바꾸기</button>
+          </div>
+          <div><span class="ratio-num" id="ctRatio"></span> <span class="muted">: 1</span></div>
+          <div class="verdicts" id="ctVerdicts"></div>
+          <p class="muted small">본문은 4.5:1, 큰 글자(18pt 이상 또는 14pt 굵게)는 3:1 이상이면 AA 기준을 통과해요.</p>
+        </div>
+        <div class="contrast-demo" id="ctDemo">
+          <span class="big">지구를 위한 한 걸음</span>
+          <span>본문 크기 글자는 이렇게 보여요. 캠페인 포스터와 카드뉴스에 쓸 조합을 미리 확인하세요.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 캘린더 -->
+  <section class="panel" id="panel-calendar" role="tabpanel" aria-labelledby="tab-calendar" hidden>
+    <div class="panel-head">
+      <div><h2>환경 기념일 캘린더</h2><p class="muted small">앞으로 1년 동안의 환경 기념일이에요. 기획·시안·검수 기간을 고려해 제작 시작 권장일을 함께 보여줘요. 재단 행사 일정은 직접 추가하세요.</p></div>
+      <label class="field" style="flex:0 0 140px">준비 기간 (일)<input type="number" id="lead" min="1" max="120" value="21"></label>
+    </div>
+    <div class="box">
+      <ul class="days" id="dayList"></ul>
+    </div>
+    <div class="box">
+      <h3>일정 직접 추가</h3>
+      <form class="row" id="eventForm">
+        <label class="field">날짜<input type="date" id="evDate" required></label>
+        <label class="field" style="flex-basis:240px">이름<input type="text" id="evName" required placeholder="예: 재단 후원의 밤"></label>
+        <label class="field" style="flex:0 0 auto; align-self:center; flex-direction:row; display:flex; gap:6px; align-items:center"><input type="checkbox" id="evYearly"> 매년 반복</label>
+        <button class="btn" type="submit">추가</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 파일명·글자수 -->
+  <section class="panel" id="panel-text" role="tabpanel" aria-labelledby="tab-text" hidden>
+    <div class="panel-head">
+      <div><h2>파일명·글자수</h2><p class="muted small">팀이 같은 규칙으로 파일을 저장하고, 캡션이 매체별 제한을 넘지 않는지 확인해요.</p></div>
+    </div>
+    <div class="cols">
+      <div class="box">
+        <h3>파일명 만들기</h3>
+        <div class="row">
+          <label class="field">날짜<input type="date" id="fnDate"></label>
+          <label class="field">버전<input type="number" id="fnVer" min="1" max="99" value="1"></label>
+        </div>
+        <label class="field">프로젝트<input type="text" id="fnProj" value="지구의날캠페인"></label>
+        <div class="row">
+          <label class="field">매체<input type="text" id="fnMedia" value="인스타피드"></label>
+          <label class="field">상태<select id="fnState"><option value="">작업중</option><option value="시안">시안</option><option value="수정">수정</option><option value="최종">최종</option></select></label>
+          <label class="field">확장자<select id="fnExt"><option>png</option><option>jpg</option><option>pdf</option><option>ai</option><option>psd</option><option>fig</option><option>mp4</option></select></label>
+        </div>
+        <div class="out" id="fnOut"></div>
+        <div class="row"><button class="btn" type="button" id="fnCopy">파일명 복사</button></div>
+        <p class="muted small">규칙: <span class="mono">YYMMDD_프로젝트_매체_상태_v00.확장자</span>. 띄어쓰기와 특수문자는 자동으로 빠져요.</p>
+      </div>
+      <div class="box">
+        <h3>캡션 글자수</h3>
+        <label class="field">캡션<textarea id="capText">4월 22일은 지구의 날이에요.
+오늘 저녁 8시, 10분만 불을 꺼볼까요?
+작은 소등이 모이면 큰 변화가 됩니다.
+
+#지구의날 #소등캠페인 #환경재단 #기후행동</textarea></label>
+        <p class="small"><span class="mono" id="capStats"></span></p>
+        <div class="meters" id="capMeters"></div>
+        <p class="muted small">X는 한글을 2자로 셈해요. 인스타그램 캡션은 첫 두 줄 정도만 미리보기로 보여요.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 체크리스트 -->
+  <section class="panel" id="panel-checks" role="tabpanel" aria-labelledby="tab-checks" hidden>
+    <div class="panel-head">
+      <div><h2>넘기기 전 체크리스트</h2><p class="muted small">인쇄소 발주, SNS 업로드 전에 하나씩 확인하세요. 체크 상태는 이 브라우저에 남아요.</p></div>
+    </div>
+    <div class="cols" id="checkCols"></div>
+    <div class="box">
+      <div class="panel-head">
+        <div><h3>디자인 요청서 양식</h3><p class="muted small">요청 부서에 보내면 정보가 빠짐없이 들어와요. 메신저나 메일에 붙여넣으세요.</p></div>
+        <button class="btn" type="button" id="briefCopy">양식 복사</button>
+      </div>
+      <pre class="brief" id="briefText">[디자인 요청서]
+1. 작업명:
+2. 요청 부서 / 담당자:
+3. 목적 (누구에게, 무엇을 전하려는지):
+4. 매체 / 규격 / 수량: (예: 인스타 피드 1080×1350 5장, A2 포스터 30부)
+5. 마감일: (시안 / 최종 / 인쇄 입고일 각각)
+6. 꼭 들어갈 문구 (최종 확정본):
+7. 로고·후원사 표기:
+8. 참고 이미지·레퍼런스 링크:
+9. 사진·초상권 확인 여부:
+10. 최종 검수자:</pre>
+    </div>
+  </section>
+
+  <footer>그린 디자인 데스크 · 입력한 내용은 이 브라우저에만 저장돼요. 기념일 날짜는 국제·국내 공식 기념일 기준이에요.</footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const load = (k, fb) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch { return fb; } };
+  const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+
+  const toastEl = $("#toast"); let toastT;
+  const toast = msg => { toastEl.textContent = msg; toastEl.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove("show"), 1600); };
+  const copy = (text, label) => {
+    const fallback = () => {
+      const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand("copy"); } catch {}
+      ta.remove(); toast(ok ? `${label || text} 복사됨` : "복사가 막혀 있어요. 직접 선택해서 복사하세요");
+    };
+    if (navigator.clipboard?.writeText) navigator.clipboard.writeText(text).then(() => toast(`${label || text} 복사됨`), fallback);
+    else fallback();
+  };
+
+  // ---------- dates ----------
+  const DAY = 86400000;
+  const startOf = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const today = startOf(new Date());
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const parseIso = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+  const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+  const diff = d => Math.round((startOf(d) - today) / DAY);
+  const dday = n => n === 0 ? "D-DAY" : n > 0 ? `D-${n}` : `D+${-n}`;
+  const WK = ["일", "월", "화", "수", "목", "금", "토"];
+  const md = d => `${d.getMonth() + 1}.${d.getDate()}`;
+  $("#todayLabel").textContent = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, "0")}.${String(today.getDate()).padStart(2, "0")} (${WK[today.getDay()]})`;
+
+  // ---------- tabs ----------
+  const tabs = $$(".tab");
+  const showTab = name => {
+    if (!tabs.some(t => t.dataset.tab === name)) name = "requests";
+    tabs.forEach(t => {
+      const on = t.dataset.tab === name;
+      t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1;
+      $("#panel-" + t.dataset.tab).hidden = !on;
+    });
+    save("gdd.tab", name);
+  };
+  tabs.forEach(t => t.addEventListener("click", () => { showTab(t.dataset.tab); try { history.replaceState(null, "", "#" + t.dataset.tab); } catch {} }));
+  showTab((location.hash || "").slice(1) || load("gdd.tab", "requests"));
+
+  // ---------- specs data ----------
+  const DIGITAL = [
+    ["인스타그램 피드 (세로)", 1080, 1350, "카드뉴스 기본"],
+    ["인스타그램 피드 (정사각)", 1080, 1080, ""],
+    ["인스타그램 스토리·릴스", 1080, 1920, "위아래 250px 정도는 UI에 가려져요"],
+    ["유튜브 썸네일", 1280, 720, ""],
+    ["유튜브 채널 배너", 2560, 1440, "모든 기기 안전 영역 1546×423"],
+    ["페이스북·링크 미리보기 (OG)", 1200, 630, "홈페이지 공유 이미지에도 사용"],
+    ["X 게시 이미지", 1600, 900, ""],
+    ["이메일 뉴스레터 본문", 600, null, "너비 기준, 고해상도는 1200px로 제작"],
+  ];
+  const PRINT = [
+    ["명함", 90, 50, ""],
+    ["엽서", 100, 148, ""],
+    ["A5 전단", 148, 210, ""],
+    ["A4 전단·보고서", 210, 297, ""],
+    ["A4 3단 리플렛 (펼침)", 297, 210, "접지선 99mm 간격"],
+    ["A3 포스터", 297, 420, ""],
+    ["A2 포스터", 420, 594, ""],
+    ["X배너", 600, 1800, "실사 출력", 150],
+    ["롤업배너", 850, 2000, "실사 출력", 150],
+    ["가로 현수막", 5000, 900, "실사 출력", 100],
+  ];
+  const gcd = (a, b) => b ? gcd(b, a % b) : a;
+  const ratioLabel = (w, h) => { const g = gcd(w, h); const a = w / g, b = h / g; return a > 40 ? (w / h).toFixed(2) + ":1" : `${a}:${b}`; };
+  const ratioBox = (w, h) => { const s = 20 / Math.max(w, h); return `<span class="ratio" style="width:${Math.max(3, Math.round(w * s))}px;height:${Math.max(3, Math.round(h * s))}px" aria-hidden="true"></span>`; };
+  const copyBtn = (text, label) => `<button class="btn ghost tiny" type="button" data-copy="${esc(text)}" data-label="${esc(label || text)}">복사</button>`;
+
+  const renderDigital = () => {
+    $("#tblDigital tbody").innerHTML = DIGITAL.map(([n, w, h, note]) => `<tr>
+      <td>${esc(n)}${note ? `<span class="note">${esc(note)}</span>` : ""}</td>
+      <td class="num">${h ? ratioBox(w, h) + " " + ratioLabel(w, h) : "—"}</td>
+      <td class="num">${h ? `${w} × ${h}` : `${w} 너비`}</td>
+      <td>${copyBtn(h ? `${w}x${h}` : `${w}`, h ? `${w}×${h}` : `${w}px`)}</td></tr>`).join("");
+  };
+  const fmt = n => Number.isInteger(n) ? String(n) : n.toFixed(1).replace(/\.0$/, "");
+  const renderPrint = () => {
+    const bleed = Math.max(0, parseFloat($("#bleed").value) || 0);
+    const dpi = Math.max(1, parseFloat($("#dpi").value) || 300);
+    $("#pxHead").textContent = `작업 (px)`;
+    $("#tblPrint tbody").innerHTML = PRINT.map(([n, w, h, note, bannerDpi]) => {
+      const W = w + bleed * 2, H = h + bleed * 2;
+      const useDpi = bannerDpi ? Math.min(dpi, bannerDpi) : dpi;
+      const px = v => Math.round(v / 25.4 * useDpi);
+      return `<tr>
+        <td>${esc(n)}${note ? `<span class="note">${esc(note)}</span>` : ""}</td>
+        <td class="num">${w} × ${h}</td>
+        <td class="num">${fmt(W)} × ${fmt(H)}</td>
+        <td class="num">${px(W).toLocaleString()} × ${px(H).toLocaleString()}<span class="note">@${useDpi}dpi</span></td>
+        <td>${copyBtn(`${fmt(W)}x${fmt(H)}mm`, `${fmt(W)}×${fmt(H)}mm`)}</td></tr>`;
+    }).join("");
+  };
+  ["bleed", "dpi"].forEach(id => $("#" + id).addEventListener("input", () => { renderPrint(); save("gdd.print", { bleed: $("#bleed").value, dpi: $("#dpi").value }); }));
+  const savedPrint = load("gdd.print", null); if (savedPrint) { $("#bleed").value = savedPrint.bleed; $("#dpi").value = savedPrint.dpi; }
+  renderDigital(); renderPrint();
+
+  const renderConv = () => {
+    const v = parseFloat($("#cvVal").value), u = $("#cvUnit").value, dpi = Math.max(1, parseFloat($("#cvDpi").value) || 300);
+    if (!isFinite(v)) { $("#cvOut").textContent = "숫자를 입력하세요"; return; }
+    const toIn = { mm: v / 25.4, cm: v / 2.54, in: v, px: v / dpi, pt: v / 72 }[u];
+    const r = (n, d = 2) => (+n.toFixed(d)).toLocaleString();
+    $("#cvOut").innerHTML = `${r(toIn * 25.4)} mm · ${r(toIn * 2.54)} cm · ${r(toIn, 3)} inch<br>${r(toIn * dpi, 0)} px @${dpi}dpi · ${r(toIn * 72)} pt`;
+  };
+  ["cvVal", "cvUnit", "cvDpi"].forEach(id => $("#" + id).addEventListener("input", renderConv));
+  renderConv();
+
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-copy]");
+    if (b) copy(b.dataset.copy, b.dataset.label);
+  });
+
+  // ---------- requests ----------
+  const STATUSES = ["접수", "진행", "검수", "완료"];
+  const MEDIA = [...DIGITAL.map(d => d[0]), ...PRINT.map(p => p[0]), "영상", "웹페이지", "굿즈", "기타"];
+  $("#rqMedia").innerHTML = MEDIA.map(m => `<option>${esc(m)}</option>`).join("");
+  $("#rqStatus").innerHTML = STATUSES.map(s => `<option>${s}</option>`).join("");
+  $("#rqDue").value = iso(addDays(today, 7));
+
+  const sampleReqs = () => [
+    { title: "지구의 날 소등 캠페인 카드뉴스 5장", who: "캠페인팀", media: "인스타그램 피드 (세로)", due: iso(addDays(today, 2)), status: "진행", note: "문구 확정본 공유 드라이브에 있음" },
+    { title: "후원자 감사 엽서", who: "후원팀", media: "엽서", due: iso(addDays(today, -1)), status: "검수", note: "300부, 인쇄소 입고 전 색 교정" },
+    { title: "환경영화 상영회 X배너", who: "문화사업팀", media: "X배너", due: iso(addDays(today, 9)), status: "접수", note: "" },
+    { title: "뉴스레터 10월호 헤더", who: "홍보팀", media: "이메일 뉴스레터 본문", due: iso(addDays(today, 15)), status: "접수", note: "" },
+    { title: "분리수거 대작전 공유 이미지", who: "홍보팀", media: "페이스북·링크 미리보기 (OG)", due: iso(addDays(today, -4)), status: "완료", note: "" },
+  ].map((r, i) => ({ ...r, id: "s" + i, sample: true, doneAt: r.status === "완료" ? iso(addDays(today, -4)) : null }));
+
+  let reqs = load("gdd.requests", null) || sampleReqs();
+  let reqFilter = load("gdd.reqFilter", "open");
+  const saveReqs = () => save("gdd.requests", reqs);
+
+  const FILTERS = [["open", "진행 중인 일"], ...STATUSES.map(s => [s, s]), ["all", "전체"]];
+  const renderFilters = () => {
+    $("#reqFilters").innerHTML = FILTERS.map(([k, l]) => `<button class="chip" type="button" data-f="${k}" aria-pressed="${k === reqFilter}">${l}</button>`).join("");
+  };
+  $("#reqFilters").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (!b) return; reqFilter = b.dataset.f; save("gdd.reqFilter", reqFilter); renderFilters(); renderReqs(); });
+
+  const duePill = r => {
+    if (r.status === "완료") return `<span class="pill ok">완료</span>`;
+    const n = diff(parseIso(r.due));
+    return `<span class="pill ${n < 0 ? "bad" : n <= 3 ? "warn" : ""}">${dday(n)}</span>`;
+  };
+  const renderReqs = () => {
+    const open = reqs.filter(r => r.status !== "완료");
+    $("#sumLate").textContent = open.filter(r => diff(parseIso(r.due)) < 0).length;
+    $("#sumSoon").textContent = open.filter(r => { const n = diff(parseIso(r.due)); return n >= 0 && n <= 3; }).length;
+    $("#sumDoing").textContent = open.length;
+    $("#sumDone").textContent = reqs.filter(r => r.status === "완료" && r.doneAt && r.doneAt.slice(0, 7) === iso(today).slice(0, 7)).length;
+    $("#reqCount").textContent = open.length || "";
+    $("#clearSamples").hidden = !reqs.some(r => r.sample);
+
+    const list = reqs
+      .filter(r => reqFilter === "all" || (reqFilter === "open" ? r.status !== "완료" : r.status === reqFilter))
+      .sort((a, b) => (a.status === "완료") - (b.status === "완료") || a.due.localeCompare(b.due));
+    $("#reqList").innerHTML = list.length ? list.map(r => {
+      const d = parseIso(r.due);
+      return `<li class="req${r.status === "완료" ? " done" : ""}" data-id="${esc(r.id)}">
+        <div class="due">${duePill(r)}<small>${md(d)} (${WK[d.getDay()]})</small></div>
+        <div style="min-width:0">
+          <div class="title">${esc(r.title)}</div>
+          <div class="meta">${r.sample ? `<span class="pill sample">예시</span>` : ""}<span>${esc(r.media)}</span>${r.who ? `<span>· ${esc(r.who)}</span>` : ""}${r.note ? `<span>· ${esc(r.note)}</span>` : ""}</div>
+        </div>
+        <div class="act">
+          <select aria-label="상태 변경" data-status>${STATUSES.map(s => `<option${s === r.status ? " selected" : ""}>${s}</option>`).join("")}</select>
+          <button class="btn danger-text tiny" type="button" data-del aria-label="삭제">삭제</button>
+        </div></li>`;
+    }).join("") : `<li class="empty">${reqs.length ? "이 상태의 요청이 없어요." : "아직 요청이 없어요. 위에서 <b>새 요청 추가</b>를 눌러 첫 작업을 등록하세요."}</li>`;
+  };
+  $("#reqList").addEventListener("change", e => {
+    if (!e.target.matches("[data-status]")) return;
+    const r = reqs.find(x => x.id === e.target.closest(".req").dataset.id);
+    r.status = e.target.value; r.doneAt = r.status === "완료" ? iso(today) : null;
+    saveReqs(); renderReqs(); toast(`'${r.title}' → ${r.status}`);
+  });
+  let pendingDel = null;
+  $("#reqList").addEventListener("click", e => {
+    const b = e.target.closest("[data-del]"); if (!b) return;
+    const id = b.closest(".req").dataset.id;
+    if (pendingDel !== id) { pendingDel = id; b.textContent = "정말 삭제"; setTimeout(() => { if (pendingDel === id) { pendingDel = null; b.textContent = "삭제"; } }, 3000); return; }
+    reqs = reqs.filter(x => x.id !== id); pendingDel = null; saveReqs(); renderReqs(); toast("삭제했어요");
+  });
+  $("#reqForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const r = { id: Date.now().toString(36), title: $("#rqTitle").value.trim(), who: $("#rqWho").value.trim(), media: $("#rqMedia").value, due: $("#rqDue").value, status: $("#rqStatus").value, note: $("#rqNote").value.trim() };
+    if (!r.title || !r.due) return;
+    r.doneAt = r.status === "완료" ? iso(today) : null;
+    reqs.push(r); saveReqs(); renderReqs();
+    $("#rqTitle").value = ""; $("#rqNote").value = ""; $("#rqWho").value = "";
+    toast("요청을 추가했어요");
+  });
+  $("#clearSamples").addEventListener("click", () => { reqs = reqs.filter(r => !r.sample); saveReqs(); renderReqs(); toast("예시 요청을 지웠어요"); });
+  renderFilters(); renderReqs();
+
+  // ---------- colors ----------
+  const SAMPLE_PALETTE = [
+    { name: "포레스트 그린", hex: "#2F6B45" },
+    { name: "새싹 그린", hex: "#8CC63F" },
+    { name: "오션 블루", hex: "#1F6FA8" },
+    { name: "스카이", hex: "#BFE3F2" },
+    { name: "어스 브라운", hex: "#8A5A3B" },
+    { name: "선라이트", hex: "#F2B632" },
+    { name: "차콜", hex: "#2B2F2C" },
+    { name: "페이퍼", hex: "#F4F5EF" },
+  ];
+  let palette = load("gdd.palette", null) || SAMPLE_PALETTE.map(c => ({ ...c, sample: true }));
+  const normHex = h => { h = h.trim().replace(/^#/, ""); return /^[0-9a-f]{6}$/i.test(h) ? "#" + h.toUpperCase() : null; };
+  const rgbOf = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  const cmykOf = ([r, g, b]) => {
+    const R = r / 255, G = g / 255, B = b / 255, k = 1 - Math.max(R, G, B);
+    if (k >= 1) return [0, 0, 0, 100];
+    return [(1 - R - k) / (1 - k), (1 - G - k) / (1 - k), (1 - B - k) / (1 - k), k].map(v => Math.round(v * 100));
+  };
+  const lum = hex => rgbOf(hex).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((s, v, i) => s + v * [0.2126, 0.7152, 0.0722][i], 0);
+  const contrast = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+  const textOn = hex => contrast(hex, "#FFFFFF") >= contrast(hex, "#111111") ? "#FFFFFF" : "#111111";
+
+  const renderPalette = () => {
+    $("#swatches").innerHTML = palette.map((c, i) => {
+      const rgb = rgbOf(c.hex), cmyk = cmykOf(rgb);
+      return `<div class="swatch">
+        <button class="chipcolor" type="button" style="background:${c.hex};color:${textOn(c.hex)}" data-copy="${c.hex}" data-label="${esc(c.name)} ${c.hex}" aria-label="${esc(c.name)} HEX 복사">${c.hex}</button>
+        <div class="info">
+          <b>${esc(c.name)}${c.sample ? ` <span class="pill sample">예시</span>` : ""}</b>
+          <span class="mono">RGB ${rgb.join(" ")}</span>
+          <span class="mono">CMYK ${cmyk.join(" ")}</span>
+          <div class="row" style="gap:4px">
+            <button class="btn ghost tiny" type="button" data-copy="rgb(${rgb.join(", ")})" data-label="RGB">RGB</button>
+            <button class="btn ghost tiny" type="button" data-edit="${i}">수정</button>
+            <button class="btn danger-text tiny" type="button" data-rm="${i}">삭제</button>
+          </div>
+        </div></div>`;
+    }).join("") || `<p class="empty">팔레트가 비어 있어요. 아래에서 색을 추가하세요.</p>`;
+  };
+  $("#swatches").addEventListener("click", e => {
+    const ed = e.target.closest("[data-edit]"), rm = e.target.closest("[data-rm]");
+    if (ed) { const c = palette[+ed.dataset.edit]; $("#cfHex").value = c.hex; $("#cfPick").value = c.hex.toLowerCase(); $("#cfName").value = c.name; $("#cfName").focus(); }
+    if (rm) { const c = palette.splice(+rm.dataset.rm, 1)[0]; save("gdd.palette", palette); renderPalette(); toast(`${c.name} 삭제`); }
+  });
+  $("#cfPick").addEventListener("input", () => { $("#cfHex").value = $("#cfPick").value.toUpperCase(); });
+  $("#cfHex").addEventListener("input", () => { const h = normHex($("#cfHex").value); if (h) $("#cfPick").value = h.toLowerCase(); });
+  $("#colorForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const hex = normHex($("#cfHex").value), name = $("#cfName").value.trim();
+    if (!hex) { toast("HEX는 #2F6B45처럼 6자리로 입력하세요"); return; }
+    if (!name) return;
+    const at = palette.findIndex(c => c.name === name);
+    if (at >= 0) palette[at] = { name, hex }; else palette.push({ name, hex });
+    save("gdd.palette", palette); renderPalette(); toast(`${name} 저장`);
+  });
+  let resetArmed = false;
+  $("#resetPalette").addEventListener("click", e => {
+    if (!resetArmed) { resetArmed = true; e.target.textContent = "한 번 더 누르면 되돌려요"; setTimeout(() => { resetArmed = false; e.target.textContent = "예시 팔레트로 되돌리기"; }, 3000); return; }
+    resetArmed = false; e.target.textContent = "예시 팔레트로 되돌리기";
+    palette = SAMPLE_PALETTE.map(c => ({ ...c, sample: true })); save("gdd.palette", palette); renderPalette(); toast("예시 팔레트로 되돌렸어요");
+  });
+  renderPalette();
+
+  const renderContrast = () => {
+    const fg = $("#ctFg").value.toUpperCase(), bg = $("#ctBg").value.toUpperCase(), r = contrast(fg, bg);
+    $("#ctRatio").textContent = r.toFixed(2);
+    $("#ctDemo").style.background = bg; $("#ctDemo").style.color = fg;
+    const v = (label, need) => `<span class="pill ${r >= need ? "ok" : "bad"}">${r >= need ? "통과" : "미달"} · ${label}</span>`;
+    $("#ctVerdicts").innerHTML = v("본문 AA 4.5", 4.5) + v("큰 글자 AA 3", 3) + v("본문 AAA 7", 7);
+  };
+  ["ctFg", "ctBg"].forEach(id => $("#" + id).addEventListener("input", renderContrast));
+  $("#ctSwap").addEventListener("click", () => { const a = $("#ctFg").value; $("#ctFg").value = $("#ctBg").value; $("#ctBg").value = a; renderContrast(); });
+  renderContrast();
+
+  // ---------- calendar ----------
+  const FIXED = [
+    [2, 2, "세계 습지의 날"], [2, 27, "국제 북극곰의 날"], [3, 3, "세계 야생동물의 날"], [3, 21, "세계 산림의 날"],
+    [3, 22, "세계 물의 날"], [3, 23, "세계 기상의 날"], [4, 5, "식목일"], [4, 22, "지구의 날"],
+    [5, 20, "세계 벌의 날"], [5, 22, "세계 생물다양성의 날"], [5, 31, "바다의 날"], [6, 5, "환경의 날 (세계 환경의 날)"],
+    [6, 8, "세계 해양의 날"], [6, 17, "세계 사막화 방지의 날"], [7, 3, "세계 일회용 비닐봉투 없는 날"], [8, 22, "에너지의 날"],
+    [9, 6, "자원순환의 날"], [9, 7, "푸른 하늘의 날"], [9, 16, "세계 오존층 보호의 날"], [9, 22, "세계 차 없는 날"],
+    [10, 4, "세계 동물의 날"], [10, 16, "세계 식량의 날"], [12, 5, "세계 토양의 날"],
+  ];
+  const lastSatOfMarch = y => { const d = new Date(y, 2, 31); return addDays(d, -((d.getDay() + 1) % 7)); };
+  let customEvents = load("gdd.events", []);
+  const nextOf = (m, d) => { let x = new Date(today.getFullYear(), m - 1, d); if (x < today) x = new Date(today.getFullYear() + 1, m - 1, d); return x; };
+  const renderDays = () => {
+    const lead = Math.max(1, parseInt($("#lead").value) || 21);
+    const items = FIXED.map(([m, d, n]) => ({ date: nextOf(m, d), name: n }));
+    let eh = lastSatOfMarch(today.getFullYear()); if (eh < today) eh = lastSatOfMarch(today.getFullYear() + 1);
+    items.push({ date: eh, name: "어스아워 (3월 마지막 토요일 저녁 8시 30분 소등)" });
+    customEvents.forEach((ev, i) => {
+      let d = parseIso(ev.date);
+      if (ev.yearly) d = nextOf(d.getMonth() + 1, d.getDate());
+      if (d >= today) items.push({ date: d, name: ev.name, custom: i });
+    });
+    items.sort((a, b) => a.date - b.date);
+    $("#dayList").innerHTML = items.map(it => {
+      const n = diff(it.date), start = addDays(it.date, -lead), sn = diff(start);
+      const now = sn <= 0;
+      const hint = now ? `제작 시작 권장일이 지났어요 (${md(start)})` : `제작 시작 ${md(start)} (${WK[start.getDay()]}) · ${sn}일 남음`;
+      return `<li class="day${now ? " now" : ""}">
+        <div class="date"><b>${md(it.date)}</b>${it.date.getFullYear()} ${WK[it.date.getDay()]}</div>
+        <div style="min-width:0"><div class="name">${esc(it.name)}${it.custom != null ? ` <span class="pill sample">직접 추가</span>` : ""}</div><div class="hint">${hint}</div></div>
+        <div class="row" style="gap:6px"><span class="pill ${n <= 7 ? "bad" : now ? "warn" : ""}">${dday(n)}</span>${it.custom != null ? `<button class="btn danger-text tiny" type="button" data-ev="${it.custom}">삭제</button>` : ""}</div></li>`;
+    }).join("");
+  };
+  $("#lead").addEventListener("input", () => { save("gdd.lead", $("#lead").value); renderDays(); });
+  $("#lead").value = load("gdd.lead", "21");
+  $("#dayList").addEventListener("click", e => { const b = e.target.closest("[data-ev]"); if (!b) return; customEvents.splice(+b.dataset.ev, 1); save("gdd.events", customEvents); renderDays(); toast("일정을 삭제했어요"); });
+  $("#eventForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const ev = { date: $("#evDate").value, name: $("#evName").value.trim(), yearly: $("#evYearly").checked };
+    if (!ev.date || !ev.name) return;
+    customEvents.push(ev); save("gdd.events", customEvents); renderDays();
+    $("#evName").value = ""; toast(parseIso(ev.date) < today && !ev.yearly ? "지난 날짜라 목록에는 보이지 않아요" : "일정을 추가했어요");
+  });
+  renderDays();
+
+  // ---------- filename ----------
+  $("#fnDate").value = iso(today);
+  const clean = s => s.trim().replace(/[\s\\/:*?"<>|.,#&%]+/g, "");
+  const renderFn = () => {
+    const d = $("#fnDate").value ? $("#fnDate").value.slice(2).replace(/-/g, "") : "";
+    const parts = [d, clean($("#fnProj").value), clean($("#fnMedia").value), $("#fnState").value].filter(Boolean);
+    const v = "v" + String(Math.max(1, parseInt($("#fnVer").value) || 1)).padStart(2, "0");
+    $("#fnOut").textContent = `${parts.join("_")}_${v}.${$("#fnExt").value}`;
+  };
+  ["fnDate", "fnVer", "fnProj", "fnMedia", "fnState", "fnExt"].forEach(id => $("#" + id).addEventListener("input", renderFn));
+  $("#fnCopy").addEventListener("click", () => copy($("#fnOut").textContent, "파일명"));
+  renderFn();
+
+  // ---------- caption ----------
+  const LIMITS = [
+    ["인스타그램 캡션", 2200, t => [...t].length],
+    ["인스타그램 해시태그", 30, t => (t.match(/#[^\s#]+/g) || []).length, "개"],
+    ["X 게시글", 280, t => [...t].reduce((s, c) => s + (/[ᄀ-ᇿ　-鿿가-힯豈-﫿＀-￯]/.test(c) ? 2 : 1), 0)],
+    ["유튜브 제목", 100, t => [...t.split("\n")[0]].length, "자 (첫 줄)"],
+  ];
+  const savedCap = load("gdd.caption", null); if (savedCap != null) $("#capText").value = savedCap;
+  const renderCap = () => {
+    const t = $("#capText").value;
+    const chars = [...t].length, noSpace = [...t.replace(/\s/g, "")].length, bytes = new TextEncoder().encode(t).length, lines = t ? t.split("\n").length : 0;
+    $("#capStats").textContent = `${chars.toLocaleString()}자 · 공백 제외 ${noSpace.toLocaleString()}자 · ${lines}줄 · ${bytes.toLocaleString()}바이트(UTF-8)`;
+    $("#capMeters").innerHTML = LIMITS.map(([n, max, f, unit]) => {
+      const v = f(t), over = v > max;
+      return `<div class="meter${over ? " over" : ""}"><div class="lbl"><span>${n}</span><span>${v.toLocaleString()} / ${max.toLocaleString()}${unit ? " " + unit : ""}</span></div><div class="bar"><i style="width:${Math.min(100, v / max * 100)}%"></i></div></div>`;
+    }).join("");
+  };
+  $("#capText").addEventListener("input", () => { save("gdd.caption", $("#capText").value); renderCap(); });
+  renderCap();
+
+  // ---------- checklists ----------
+  const CHECKS = {
+    print: ["인쇄소 발주 전", [
+      ["색상 모드 CMYK", "RGB 이미지가 섞여 있지 않은지 링크 패널에서 확인"],
+      ["이미지 해상도 300dpi 이상", "실사 출력물은 100~150dpi"],
+      ["도련 사방 3mm", "배경·사진이 도련 끝까지 채워졌는지"],
+      ["안전 여백 확보", "글자와 로고는 재단선 안쪽 3~5mm 이상"],
+      ["폰트 아웃라인 또는 포함", "PDF 저장 시 글꼴 포함 확인"],
+      ["검정 텍스트 K100", "작은 검정 글자가 4도 검정(리치 블랙)이 아닌지"],
+      ["오버프린트·투명도 확인", "흰색 개체에 오버프린트가 걸려 있지 않은지"],
+      ["재생지·콩기름 잉크 등 친환경 사양 확인", "인쇄소 견적서에 용지명 기재"],
+      ["재단 로고·후원사 표기 최신본", "CI 가이드의 최소 크기와 여백"],
+      ["최종 문구 교정 완료", "맞춤법, 날짜·요일, 연락처, URL"],
+    ]],
+    sns: ["SNS 업로드 전", [
+      ["규격과 비율 확인", "규격 탭 참고"],
+      ["썸네일·첫 장에서 핵심이 보이는지", "피드 그리드에서 잘리는 부분 확인"],
+      ["모바일 화면에서 글자 크기 확인", "실제 폰으로 미리보기"],
+      ["명도 대비 4.5:1 이상", "컬러 탭에서 검사"],
+      ["대체 텍스트(alt) 작성", "시각장애인을 위한 이미지 설명"],
+      ["사진 출처·초상권·저작권 확인", "무료 이미지도 라이선스 조건 확인"],
+      ["캡션 글자수·해시태그 수", "파일명·글자수 탭에서 확인"],
+      ["링크·QR 코드 실제로 열어보기", ""],
+      ["파일명 규칙에 맞게 저장·공유 드라이브 업로드", ""],
+    ]],
+  };
+  let checked = load("gdd.checks", {});
+  const renderChecks = () => {
+    $("#checkCols").innerHTML = Object.entries(CHECKS).map(([key, [title, items]]) => {
+      const done = items.filter((_, i) => checked[`${key}.${i}`]).length;
+      return `<div class="box">
+        <div class="panel-head"><h3>${title}</h3><span class="progress">${done}/${items.length}</span></div>
+        <ul class="checks">${items.map(([t, s], i) => `<li><label><input type="checkbox" id="ck-${key}-${i}" data-ck="${key}.${i}"${checked[`${key}.${i}`] ? " checked" : ""}><span>${esc(t)}${s ? `<small>${esc(s)}</small>` : ""}</span></label></li>`).join("")}</ul>
+        <div><button class="btn ghost tiny" type="button" data-ckreset="${key}">모두 해제</button></div></div>`;
+    }).join("");
+  };
+  $("#checkCols").addEventListener("change", e => { if (!e.target.dataset.ck) return; checked[e.target.dataset.ck] = e.target.checked; save("gdd.checks", checked); renderChecks(); $("#" + e.target.id)?.focus(); });
+  $("#checkCols").addEventListener("click", e => { const b = e.target.closest("[data-ckreset]"); if (!b) return; Object.keys(checked).forEach(k => { if (k.startsWith(b.dataset.ckreset + ".")) delete checked[k]; }); save("gdd.checks", checked); renderChecks(); });
+  renderChecks();
+  $("#briefCopy").addEventListener("click", () => copy($("#briefText").textContent, "요청서 양식"));
+})();
+</script>
