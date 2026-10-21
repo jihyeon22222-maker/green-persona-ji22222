@@ -107,8 +107,8 @@ a{color:inherit}
 
 /* ocean body */
 .ocean{position:relative;z-index:2;background:linear-gradient(180deg,#0e6aa0 0%,#0b5a8c 8%,#084a78 18%,#063a62 32%,#052c4d 50%,#04213b 70%,#03172b 86%,#03111f 100%)}
-.rays{position:absolute;left:0;right:0;top:0;height:900px;pointer-events:none;overflow:hidden;opacity:.55;-webkit-mask-image:linear-gradient(180deg,#000,transparent);mask-image:linear-gradient(180deg,#000,transparent)}
-.rays i{position:absolute;top:-20%;width:14vw;height:140%;background:linear-gradient(180deg,rgba(190,240,255,.35),transparent 80%);transform:skewX(-14deg);filter:blur(6px);animation:sway 9s ease-in-out infinite alternate}
+.rays{position:absolute;left:-10%;right:-10%;top:0;height:1000px;pointer-events:none;overflow:hidden;opacity:.6;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 38%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 38%,transparent 100%)}
+.rays i{position:absolute;top:-10%;width:14vw;height:120%;background:linear-gradient(90deg,transparent,rgba(200,242,255,.32) 50%,transparent);-webkit-mask-image:linear-gradient(180deg,#000 0,rgba(0,0,0,.6) 45%,transparent 90%);mask-image:linear-gradient(180deg,#000 0,rgba(0,0,0,.6) 45%,transparent 90%);transform:skewX(-14deg);transform-origin:top;filter:blur(14px);animation:sway 9s ease-in-out infinite alternate}
 .rays i:nth-child(1){left:6%;animation-delay:-2s}.rays i:nth-child(2){left:30%;width:8vw;animation-delay:-5s}.rays i:nth-child(3){left:52%;width:18vw}.rays i:nth-child(4){left:80%;width:9vw;animation-delay:-7s}
 @keyframes sway{0%{opacity:.25;transform:skewX(-18deg) translateX(-2vw)}100%{opacity:.9;transform:skewX(-8deg) translateX(3vw)}}
 section{position:relative;z-index:2;scroll-margin-top:72px}
@@ -125,9 +125,10 @@ section{position:relative;z-index:2;scroll-margin-top:72px}
 .in .mask > span,.mask.in > span{transform:none}
 
 /* wave text */
-.wavetext{position:relative;z-index:2;height:clamp(110px,14vw,170px);overflow:hidden}
-.wavetext svg{width:100%;height:100%;display:block}
-.wavetext text{font-size:46px;font-weight:200;letter-spacing:.04em;fill:var(--foam)}
+.wavetext{position:relative;z-index:2;height:200px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.wavetext svg{width:100%;height:100%;display:block;overflow:visible}
+@media (max-width:719px){.wavetext{height:150px}}
+.wavetext text{font-size:var(--wtsize,46px);font-weight:200;letter-spacing:.04em;fill:var(--foam)}
 .wavetext text tspan.a{fill:var(--aqua);font-weight:600}
 .wavetext .line{fill:none;stroke:rgba(255,255,255,.18);stroke-width:1}
 
@@ -439,7 +440,7 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
 <div class="ocean" id="ocean">
   <div class="rays" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
-  <div class="wavetext" aria-hidden="true"><svg viewBox="0 0 1440 160" preserveAspectRatio="xMidYMid slice"><path id="wtp" class="line" d="M-40 96 Q 140 46 320 96 T 680 96 T 1040 96 T 1400 96 T 1760 96"/><text dy="-14"><textPath href="#wtp" id="wtext" startOffset="0"></textPath></text></svg></div>
+  <div class="wavetext" aria-hidden="true"><svg id="wtsvg" viewBox="0 0 1440 200" preserveAspectRatio="none"><path id="wtp" class="line" d=""/><text dy="-14"><textPath href="#wtp" id="wtext" startOffset="0"></textPath></text></svg></div>
 
   <!-- ABOUT -->
   <section class="sec" id="about" style="padding-top:clamp(56px,8vw,100px)">
@@ -757,6 +758,13 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
     if(pinMode){ travel=Math.max(0,track.scrollWidth-innerWidth); pin.style.height=(travel+innerHeight)+'px'; }
     else pin.style.height='';
     if(reduce) voys.forEach(function(y){y.classList.add('seen')});
+    /* wave-text path: viewBox matches the box in pixels, so glyphs are never scaled or cropped */
+    var ws=$('wtsvg'), W=ws.clientWidth||innerWidth, Hh=ws.clientHeight||200, mob=innerWidth<720;
+    ws.setAttribute('viewBox','0 0 '+W+' '+Hh);
+    ws.style.setProperty('--wtsize',(mob?30:46)+'px');
+    var base=Math.round(Hh*.68), amp=mob?12:20, wl=mob?640:1100, d='M-60 '+base, up=true;
+    for(var x=-60;x<W+wl*2;x+=wl/2){ d+=' Q '+(x+wl/4)+' '+(up?base-amp*2:base+amp*2)+' '+(x+wl/2)+' '+base; up=!up; }
+    $('wtp').setAttribute('d',d);
     wLen=wtext.getComputedTextLength ? wtext.getComputedTextLength() : 0;
   }
   if('IntersectionObserver' in window){
