@@ -186,12 +186,17 @@ section{position:relative;z-index:2;scroll-margin-top:72px}
 @media (min-width:960px){.route-wrap{grid-template-columns:1fr 1fr;gap:56px;align-items:center}}
 .route{padding:14px}
 .route svg{width:100%;height:auto;display:block}
-.route .grid line{stroke:rgba(255,255,255,.07)}
+.route .grat line{stroke:rgba(255,255,255,.06)}
+.route .grat text{fill:rgba(169,205,227,.45);font-size:9px;letter-spacing:.08em;font-family:inherit}
+.route .land path{fill:rgba(190,225,245,.13);stroke:rgba(210,240,255,.38);stroke-width:1;stroke-linejoin:round}
+.route .geo text{font-family:inherit;fill:rgba(210,235,250,.55);font-size:11px;letter-spacing:.12em}
+.route .geo text.sea{fill:rgba(69,224,239,.5);font-size:13px;letter-spacing:.5em}
+.route .geo text.sea2{fill:rgba(69,224,239,.4);font-size:9px;letter-spacing:.32em}
 .route .path{fill:none;stroke:rgba(69,224,239,.35);stroke-width:2;stroke-dasharray:4 8}
 .route .draw{fill:none;stroke:var(--aqua);stroke-width:3;stroke-linecap:round}
 .route .port circle.c{fill:#fff}
 .route .port circle.p{fill:none;stroke:var(--aqua);stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:ping 2.4s var(--ease) infinite}
-.route .port text{fill:var(--foam);font-size:15px;font-weight:600;font-family:inherit}
+.route .port text{fill:var(--foam);font-size:15px;paint-order:stroke;stroke:rgba(5,44,77,.85);stroke-width:4px;stroke-linejoin:round;font-weight:600;font-family:inherit}
 .route .port text.s{fill:var(--mist-2);font-size:10.5px;font-weight:500;letter-spacing:.14em}
 .route-note{font-size:12px;color:var(--mist-2);margin:10px 4px 0;text-align:right}
 .facts-list{list-style:none;margin:0;padding:0}
@@ -490,16 +495,16 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
 
       <div class="route-wrap">
         <div class="rv">
-          <div class="route glass"><svg viewBox="0 0 520 380" id="routeSvg" role="img" aria-label="항로: 부산에서 하코다테, 오타루를 거쳐 부산으로">
-            <g class="grid"><line x1="0" y1="95" x2="520" y2="95"/><line x1="0" y1="190" x2="520" y2="190"/><line x1="0" y1="285" x2="520" y2="285"/><line x1="130" y1="0" x2="130" y2="380"/><line x1="260" y1="0" x2="260" y2="380"/><line x1="390" y1="0" x2="390" y2="380"/></g>
-            <path class="path" d="M110 300 C 200 250, 300 200, 380 150 C 400 130, 420 110, 430 95 C 400 70, 360 60, 330 70 C 260 120, 180 230, 110 300"/>
-            <path class="draw" id="routeDraw" d="M110 300 C 200 250, 300 200, 380 150 C 400 130, 420 110, 430 95 C 400 70, 360 60, 330 70 C 260 120, 180 230, 110 300"/>
-            <g class="port"><circle class="p" cx="110" cy="300" r="10"/><circle class="c" cx="110" cy="300" r="5"/><text x="96" y="332" text-anchor="middle">부산</text><text class="s" x="96" y="348" text-anchor="middle">BUSAN</text></g>
-            <g class="port"><circle class="p" cx="430" cy="95" r="10"/><circle class="c" cx="430" cy="95" r="5"/><text x="444" y="120">하코다테</text><text class="s" x="444" y="135">HAKODATE</text></g>
-            <g class="port"><circle class="p" cx="330" cy="70" r="10"/><circle class="c" cx="330" cy="70" r="5"/><text x="316" y="50" text-anchor="end">오타루</text><text class="s" x="316" y="34" text-anchor="end">OTARU</text></g>
+          <div class="route glass"><svg viewBox="0 0 520 480" id="routeSvg" role="img" aria-label="지도 위 항로: 부산에서 동해를 지나 하코다테, 오타루를 거쳐 부산으로">
+            <g class="grat" id="rGrat"></g>
+            <g class="land" id="rLand"></g>
+            <g class="geo" id="rGeo"></g>
+            <path class="path" id="routePath"/>
+            <path class="draw" id="routeDraw"/>
+            <g id="rPorts"></g>
             <g id="shipMark"><circle r="11" fill="#45e0ef" opacity=".25"/><circle r="6" fill="#45e0ef"/></g>
           </svg></div>
-          <div class="route-note">항로는 이해를 돕기 위한 도식입니다</div>
+          <div class="route-note">해안선과 항로는 단순화해 그린 지도입니다</div>
         </div>
         <div>
           <ul class="facts-list rv">
@@ -835,10 +840,48 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
     requestAnimationFrame(step);
   }
 
+  /* route map: simplified coastlines (lon, lat) projected onto the SVG */
+  (function(){
+    function X(lon){return 12+(lon-124.5)*0.777*30} function Y(lat){return 10+(46.4-lat)*30}
+    function poly(pts){return 'M'+pts.map(function(q){return X(q[0]).toFixed(1)+' '+Y(q[1]).toFixed(1)}).join(' L')+'Z'}
+    var LAND=[
+      /* Korean peninsula + mainland coast (closed along the top-left edge) */
+      [[123.4,47.4],[123.4,39.9],[124.3,39.9],[125.1,39.6],[125.4,38.8],[125.1,38.1],[125.4,37.7],[126.1,37.75],[126.6,37.45],[126.5,36.85],[126.2,36.6],[126.6,35.95],[126.3,35.15],[126.4,34.6],[126.9,34.4],[127.5,34.65],[128.1,34.85],[128.6,34.85],[129.05,35.05],[129.4,35.45],[129.55,36.0],[129.4,36.8],[129.2,37.5],[128.65,38.3],[128.3,38.65],[127.6,39.2],[127.55,39.75],[128.6,40.25],[129.7,40.85],[129.75,41.45],[130.6,42.3],[131.1,42.65],[131.9,43.1],[133.2,42.8],[134.6,43.2],[135.6,43.9],[137.0,45.0],[138.2,46.2],[138.9,47.4]],
+      /* Jeju */ [[126.15,33.4],[126.5,33.2],[126.95,33.3],[126.9,33.52],[126.5,33.57]],
+      /* Tsushima */ [[129.2,34.15],[129.4,34.35],[129.5,34.7],[129.3,34.62],[129.25,34.4]],
+      /* Kyushu */ [[130.9,33.95],[131.2,33.6],[131.7,33.3],[131.9,32.9],[131.6,32.3],[131.4,31.4],[130.7,31.0],[130.2,31.3],[130.3,31.9],[130.6,32.6],[130.2,32.75],[129.8,32.7],[129.6,33.2],[130.0,33.5],[130.4,33.62]],
+      /* Shikoku */ [[132.5,33.0],[132.95,32.75],[133.6,33.45],[134.3,33.3],[134.7,33.8],[134.6,34.2],[133.9,34.4],[133.0,34.05],[132.7,33.85],[132.4,33.45]],
+      /* Honshu */ [[130.9,34.0],[131.4,34.4],[132.2,35.0],[133.0,35.5],[134.0,35.55],[135.2,35.7],[135.8,35.55],[136.05,35.95],[136.2,36.3],[136.75,36.9],[136.9,37.35],[137.35,37.5],[137.05,36.85],[137.6,36.95],[138.3,37.2],[138.8,37.8],[139.4,38.3],[139.8,39.0],[140.0,39.8],[139.9,40.6],[140.3,41.15],[140.9,40.95],[141.4,41.4],[141.45,40.6],[141.95,40.0],[142.05,39.4],[141.6,38.4],[141.0,38.2],[140.95,37.5],[140.9,36.9],[140.6,36.3],[140.85,35.7],[140.4,35.15],[139.95,34.95],[139.8,35.3],[139.2,35.2],[138.8,34.65],[138.2,34.6],[137.3,34.65],[136.9,34.3],[136.3,34.1],[135.8,33.5],[135.3,33.8],[135.1,34.3],[135.4,34.7],[134.6,34.8],[133.9,34.5],[133.0,34.3],[132.3,34.2],[131.8,34.0]],
+      /* Hokkaido */ [[140.05,41.45],[140.7,41.75],[141.15,41.8],[141.0,41.95],[140.45,42.3],[140.9,42.6],[141.7,42.6],[142.5,42.2],[143.3,41.95],[143.9,42.6],[144.8,43.0],[145.6,43.3],[145.3,43.6],[144.5,43.95],[143.3,44.3],[142.0,45.4],[141.65,45.3],[141.7,44.4],[141.35,43.8],[141.0,43.2],[140.5,43.35],[140.3,42.85],[139.85,42.6],[140.0,42.1],[139.95,41.6]],
+      /* Sakhalin tip */ [[141.8,46.6],[141.9,46.05],[142.1,45.9],[142.4,46.6]]
+    ];
+    $('rLand').innerHTML=LAND.map(function(l){return '<path d="'+poly(l)+'"/>'}).join('');
+    var g='';
+    [35,40,45].forEach(function(lat){g+='<line x1="0" x2="520" y1="'+Y(lat).toFixed(1)+'" y2="'+Y(lat).toFixed(1)+'"/><text x="506" y="'+(Y(lat)-4).toFixed(1)+'" text-anchor="end">'+lat+'°N</text>'});
+    [130,135,140,145].forEach(function(lon){g+='<line y1="0" y2="480" x1="'+X(lon).toFixed(1)+'" x2="'+X(lon).toFixed(1)+'"/><text x="'+(X(lon)+4).toFixed(1)+'" y="472">'+lon+'°E</text>'});
+    $('rGrat').innerHTML=g;
+    $('rGeo').innerHTML='<text class="sea" x="'+X(134.7)+'" y="'+Y(39.75)+'" text-anchor="middle">동해</text><text class="sea2" x="'+X(134.7)+'" y="'+(Y(39.75)+16)+'" text-anchor="middle">EAST SEA</text>'+
+      '<text x="'+X(127.6)+'" y="'+Y(36.4)+'" text-anchor="middle">대한민국</text><text x="'+X(138.6)+'" y="'+Y(36.2)+'" text-anchor="middle">일본</text><text x="'+X(143.4)+'" y="'+Y(43.45)+'" text-anchor="middle">홋카이도</text>';
+    /* route through the sea: Busan → East Sea → Tsugaru Strait → Hakodate → around to Otaru → back to Busan */
+    var R=[[129.05,35.1],[129.9,35.75],[132.4,37.2],[135.5,38.8],[138.2,40.3],[139.55,41.1],[140.2,41.32],[140.6,41.55],[140.72,41.74],
+           [140.45,41.42],[139.75,41.55],[139.5,42.35],[139.8,43.15],[140.4,43.5],[140.9,43.35],[141.0,43.24],
+           [140.75,43.62],[140.0,43.85],[138.8,43.55],[136.6,42.6],[133.4,40.9],[130.8,38.0],[129.6,36.0],[129.05,35.1]];
+    var P=R.map(function(q){return [X(q[0]),Y(q[1])]}), d='M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1);
+    for(var i=0;i<P.length-1;i++){ /* Catmull-Rom to cubic Bezier for a smooth course */
+      var p0=P[Math.max(0,i-1)],p1=P[i],p2=P[i+1],p3=P[Math.min(P.length-1,i+2)];
+      d+=' C'+(p1[0]+(p2[0]-p0[0])/6).toFixed(1)+' '+(p1[1]+(p2[1]-p0[1])/6).toFixed(1)+' '+(p2[0]-(p3[0]-p1[0])/6).toFixed(1)+' '+(p2[1]-(p3[1]-p1[1])/6).toFixed(1)+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1);
+    }
+    $('routePath').setAttribute('d',d); $('routeDraw').setAttribute('d',d);
+    var ports=[[129.04,35.1,'부산','BUSAN','end',-12,22],[140.73,41.77,'하코다테','HAKODATE','start',14,20],[141.0,43.2,'오타루','OTARU','end',-14,-16]], ph='';
+    ports.forEach(function(o){var x=X(o[0]),y=Y(o[1]);
+      ph+='<g class="port"><circle class="p" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="10"/><circle class="c" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="4.5"/><text x="'+(x+o[5]).toFixed(1)+'" y="'+(y+o[6]).toFixed(1)+'" text-anchor="'+o[4]+'">'+o[2]+'</text><text class="s" x="'+(x+o[5]).toFixed(1)+'" y="'+(y+o[6]+14).toFixed(1)+'" text-anchor="'+o[4]+'">'+o[3]+'</text></g>'});
+    $('rPorts').innerHTML=ph;
+  })();
+
   /* route */
   var routeDraw=$('routeDraw'), shipMark=$('shipMark'), routeLen=routeDraw.getTotalLength();
   routeDraw.style.strokeDasharray=routeLen; routeDraw.style.strokeDashoffset=routeLen;
-  shipMark.setAttribute('transform','translate(110 300)');
+  (function(){var p0=routeDraw.getPointAtLength(0);shipMark.setAttribute('transform','translate('+p0.x+' '+p0.y+')')})();
   function animateRoute(){
     if(reduce){routeDraw.style.strokeDashoffset=0;return}
     var t0=null,d=5200;
