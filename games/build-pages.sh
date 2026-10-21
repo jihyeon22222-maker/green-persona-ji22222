@@ -25,4 +25,7 @@ HEAD
 # 환경재단 연차보고서 웹 버전(푸른발자국 Vol.23)은 /report/ 로 함께 배포해요.
 mkdir -p "$out/report"
 cp -R report/. "$out/report/"
-echo "built $out/index.html, $out/report/"
+# 그린보트 소개 페이지는 /greenboat/ 로 배포해요.
+mkdir -p "$out/greenboat"
+cp -R greenboat/. "$out/greenboat/"
+echo "built $out/index.html, $out/report/, $out/greenboat/"
