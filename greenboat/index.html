@@ -124,13 +124,6 @@ section{position:relative;z-index:2;scroll-margin-top:72px}
 .mask > span{display:block;transform:translateY(110%);transition:transform 1.2s var(--ease);transition-delay:var(--d,0s)}
 .in .mask > span,.mask.in > span{transform:none}
 
-/* wave text */
-.wavetext{position:relative;z-index:2;height:200px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
-.wavetext svg{width:100%;height:100%;display:block;overflow:visible}
-@media (max-width:719px){.wavetext{height:150px}}
-.wavetext text{font-size:var(--wtsize,46px);font-weight:200;letter-spacing:.04em;fill:var(--foam)}
-.wavetext text tspan.a{fill:var(--aqua);font-weight:600}
-.wavetext .line{fill:none;stroke:rgba(255,255,255,.18);stroke-width:1}
 
 /* about */
 .statement{font-size:clamp(28px,4.4vw,58px);line-height:1.38;letter-spacing:-.035em;font-weight:300;margin:0}
@@ -445,10 +438,8 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
 <div class="ocean" id="ocean">
   <div class="rays" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
-  <div class="wavetext" aria-hidden="true"><svg id="wtsvg" viewBox="0 0 1440 200" preserveAspectRatio="none"><path id="wtp" class="line" d=""/><text dy="-14"><textPath href="#wtp" id="wtext" startOffset="0"></textPath></text></svg></div>
-
   <!-- ABOUT -->
-  <section class="sec" id="about" style="padding-top:clamp(56px,8vw,100px)">
+  <section class="sec" id="about">
     <div class="wrap">
       <div class="sec-title"><span class="label rv">What is Green Boat</span></div>
       <p class="statement" id="statement">그린보트는 *세계 유일의 환경 테마 크루즈*입니다. 바다 위에서 함께 배우고, 기항지에서 직접 보며, *지구와 공존하는 방법*을 찾습니다.</p>
@@ -699,14 +690,6 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
     g.innerHTML=html;
   })();
 
-  /* wave text */
-  var wtext=$('wtext'), wLen=0, wOff=0;
-  (function(){
-    var parts=['지구를 생각하는 특별한 항해','GREEN BOAT','바다 위 선상학교','SAIL FOR THE EARTH'];
-    var s=''; for(var r=0;r<4;r++) parts.forEach(function(p,i){s+='<tspan'+(i%2?' class="a"':'')+'>'+esc(p)+'</tspan><tspan>  ·  </tspan>'});
-    wtext.innerHTML=s;
-  })();
-
   /* statement */
   (function(){
     var el=$('statement'), parts=el.textContent.split(/(\*[^*]+\*)/), html='';
@@ -763,14 +746,6 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
     if(pinMode){ travel=Math.max(0,track.scrollWidth-innerWidth); pin.style.height=(travel+innerHeight)+'px'; }
     else pin.style.height='';
     if(reduce) voys.forEach(function(y){y.classList.add('seen')});
-    /* wave-text path: viewBox matches the box in pixels, so glyphs are never scaled or cropped */
-    var ws=$('wtsvg'), W=ws.clientWidth||innerWidth, Hh=ws.clientHeight||200, mob=innerWidth<720;
-    ws.setAttribute('viewBox','0 0 '+W+' '+Hh);
-    ws.style.setProperty('--wtsize',(mob?30:46)+'px');
-    var base=Math.round(Hh*.68), amp=mob?12:20, wl=mob?640:1100, d='M-60 '+base, up=true;
-    for(var x=-60;x<W+wl*2;x+=wl/2){ d+=' Q '+(x+wl/4)+' '+(up?base-amp*2:base+amp*2)+' '+(x+wl/2)+' '+base; up=!up; }
-    $('wtp').setAttribute('d',d);
-    wLen=wtext.getComputedTextLength ? wtext.getComputedTextLength() : 0;
   }
   if('IntersectionObserver' in window){
     var vio=new IntersectionObserver(function(es){ if(pinMode) return; es.forEach(function(e){ if(e.isIntersecting) setV(voys.indexOf(e.target)); }); },{root:track,threshold:.6});
@@ -961,10 +936,6 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
       setV(Math.round(prog*(V.length-1)),prog);
     }
     if(!reduce){
-      /* wave text flows, faster while scrolling */
-      wOff-=0.7+Math.min(14,Math.abs(dy))*0.6;
-      if(wLen>0 && -wOff>wLen/4) wOff+=wLen/4;
-      wtext.setAttribute('startOffset',wOff);
       /* bubbles only under water */
       var under2=y>hh*.7; cv.classList.toggle('on',under2);
       if(under2) drawBubbles(t||0);
