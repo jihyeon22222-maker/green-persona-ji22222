@@ -5,385 +5,412 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>그린보트 Green Boat</title>
 <meta name="description" content="세계 유일의 환경 테마 크루즈, 그린보트. 2005년 첫 출항부터 2026 바다 위 선상학교까지 16번의 항해와 17,213명의 그린리더.">
-<meta name="theme-color" content="#00b969">
+<meta name="theme-color" content="#0e6aa0">
 <meta property="og:type" content="website">
 <meta property="og:title" content="그린보트 · 지구를 생각하는 특별한 항해">
 <meta property="og:description" content="2005년부터 16번의 항해, 17,213명의 그린리더. 2026 바다 위 선상학교.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
 <style>
 :root{
-  --green:#00b969;
-  --green-text:#00804a;
-  --on-green:#04140c;
-  --sea:#0a1f36;
-  --sea-2:#123153;
-  --ink:#0d0f0e;
-  --ink-2:#4b514e;
-  --ink-3:#8a908d;
-  --hair:#e6e9e7;
-  --bg:#ffffff;
-  --bg-2:#f3f6f4;
-  --mute-bar:#c9cfcc;
+  --navy:#052a4a;        /* text on sky */
+  --aqua:#45e0ef;        /* key accent on water */
+  --aqua-2:#9af0f7;
+  --foam:#eef9ff;        /* main text on water */
+  --mist:#a9cde3;        /* secondary text on water */
+  --mist-2:#7aa6c2;
+  --glass:rgba(255,255,255,.07);
+  --glass-line:rgba(255,255,255,.16);
+  --on-aqua:#03222f;
   --ease:cubic-bezier(.2,.8,.2,1);
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --green-text:#2fd68a; --ink:#eef2f0; --ink-2:#b4bcb8; --ink-3:#7c8581; --hair:#262b29; --bg:#0c0e0d; --bg-2:#151917; --sea:#071628; --sea-2:#0f2846; --mute-bar:#4a524e;
-  }
-}
-:root[data-theme="dark"]{
-  --green-text:#2fd68a; --ink:#eef2f0; --ink-2:#b4bcb8; --ink-3:#7c8581; --hair:#262b29; --bg:#0c0e0d; --bg-2:#151917; --sea:#071628; --sea-2:#0f2846; --mute-bar:#4a524e;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.7;word-break:keep-all;overflow-x:hidden;transition:background .4s,color .4s}
+body{margin:0;background:#03111f;color:var(--foam);font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.7;word-break:keep-all;overflow-x:hidden}
 img{max-width:100%;display:block}
 a{color:inherit}
-::selection{background:var(--green);color:var(--on-green)}
+::selection{background:var(--aqua);color:var(--on-aqua)}
 .wrap{max-width:1240px;margin:0 auto;padding:0 16px}
 @media (min-width:720px){.wrap{padding:0 40px}}
 .num{font-variant-numeric:tabular-nums}
-.label{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green-text)}
-.label::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:10px;vertical-align:1px}
+.label{font-size:12px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:var(--aqua);display:inline-flex;align-items:center;gap:12px}
+.label::before{content:"";width:28px;height:1px;background:currentColor}
 
-/* progress + nav */
-.progress{position:fixed;inset:0 0 auto 0;height:3px;z-index:60;background:var(--green);transform-origin:0 50%;transform:scaleX(0)}
-.nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:transform .5s var(--ease),background .3s}
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;color:var(--navy);transition:transform .5s var(--ease),background .4s,color .4s}
 .nav.hide{transform:translateY(-100%)}
-.nav.solid{background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.nav.deep{color:var(--foam);background:rgba(3,25,45,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .nav .wrap{display:flex;align-items:center;gap:12px;height:64px}
-.logo{display:flex;align-items:center;gap:8px;font-weight:800;text-decoration:none;letter-spacing:.02em;white-space:nowrap}
-.logo svg{width:26px;height:26px;color:var(--green)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.24em;font-size:13px;text-decoration:none;white-space:nowrap}
+.logo svg{width:26px;height:26px}
 .links{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
 .links::-webkit-scrollbar{display:none}
-.links a{position:relative;text-decoration:none;font-size:14px;font-weight:600;color:var(--ink-2);padding:8px 12px;white-space:nowrap;transition:color .2s}
-.links a::after{content:"";position:absolute;left:12px;right:12px;bottom:4px;height:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
-.links a:hover,.links a.on{color:var(--ink)}
-.links a:hover::after,.links a.on::after{transform:scaleX(1)}
-@media (max-width:719px){.links{display:none}.theme{margin-left:auto}}
-.theme{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--hair);background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:transform .5s var(--ease)}
-.theme:hover{transform:rotate(180deg)}
-.theme svg{width:18px;height:18px}
-.blob{position:fixed;left:0;top:0;width:420px;height:420px;margin:-210px 0 0 -210px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--green) 24%,transparent),transparent 65%);pointer-events:none;z-index:0;opacity:0;transition:opacity .6s}
-.blob.on{opacity:1}
+.links a{text-decoration:none;font-size:13.5px;font-weight:500;opacity:.7;padding:8px 12px;white-space:nowrap;border-radius:999px;transition:opacity .2s,background .3s}
+.links a:hover{opacity:1}
+.links a.on{opacity:1;background:rgba(255,255,255,.12)}
+.nav:not(.deep) .links a.on{background:rgba(5,42,74,.08)}
+@media (max-width:719px){.links{display:none}}
 
-/* hero */
-.hero{position:relative;min-height:100svh;display:grid;align-items:center;overflow:hidden}
-.hero .wrap{position:relative;z-index:3;width:100%;padding-top:96px;padding-bottom:30vh}
-.hero-meta{display:flex;justify-content:space-between;font-size:13px;font-weight:600;letter-spacing:.12em;color:var(--ink-2);margin-bottom:5vh}
-.hero h1{margin:0;font-size:clamp(68px,16vw,250px);font-weight:900;letter-spacing:-.05em;line-height:.88}
-.hero h1 .row{display:block;overflow:hidden;padding-bottom:.04em}
-.hero h1 .row span{display:inline-block;transform:translateY(110%);transition:transform 1.2s var(--ease)}
-.hero h1 .row:nth-child(2) span{color:var(--green);transition-delay:.12s}
+/* depth gauge */
+.gauge{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:40;display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .5s;pointer-events:none}
+.gauge.on{opacity:1}
+.gauge .rail{position:relative;width:1px;height:38vh;background:rgba(255,255,255,.22)}
+.gauge .rail i{position:absolute;left:-4px;width:9px;height:9px;border-radius:50%;background:var(--aqua);box-shadow:0 0 12px var(--aqua);top:0}
+.gauge .read{font-size:11px;letter-spacing:.18em;color:var(--mist);writing-mode:vertical-rl;transform:rotate(180deg)}
+.gauge .read b{color:var(--foam);font-weight:600;letter-spacing:.06em}
+@media (max-width:1100px){.gauge{display:none}}
+
+/* canvas bubbles + ripple */
+#bubbles{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity .8s}
+#bubbles.on{opacity:1}
+.ripple{position:fixed;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:1.5px solid rgba(255,255,255,.75);pointer-events:none;z-index:70;animation:rip 1.1s var(--ease) forwards}
+.ripple.b{animation-delay:.12s;opacity:0}
+@keyframes rip{0%{transform:scale(.2);opacity:.9}100%{transform:scale(7);opacity:0}}
+
+/* hero: sky + sea */
+.hero{position:relative;min-height:100svh;overflow:hidden;background:linear-gradient(180deg,#cfeeff 0%,#e9f7ff 38%,#fff6e8 56%,#bfe6fa 62%)}
+.sun{position:absolute;left:68%;top:46%;width:44vmin;height:44vmin;margin:-22vmin 0 0 -22vmin;border-radius:50%;background:radial-gradient(circle,rgba(255,236,196,.95),rgba(255,236,196,.35) 35%,transparent 68%);filter:blur(2px)}
+.hero .wrap{position:relative;z-index:4;padding-top:clamp(96px,14vh,140px);color:var(--navy)}
+.hero-meta{display:flex;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.3em;opacity:.75;margin-bottom:5vh}
+.hero h1{margin:0;font-weight:200;font-size:clamp(64px,14.5vw,224px);letter-spacing:-.04em;line-height:.9;display:flex;flex-wrap:wrap;column-gap:.22em}
+.hero h1 .row{display:block;overflow:hidden;padding-bottom:.05em}
+@media (min-width:900px){.hero h1{font-size:clamp(96px,11.5vw,190px)}}
+.hero h1 .row span{display:inline-block;transform:translateY(110%);transition:transform 1.4s var(--ease)}
+.hero h1 .row:nth-child(2) span{transition-delay:.15s;font-weight:600;background:linear-gradient(90deg,#0c6fa8,#21b3cc);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero.ready h1 .row span{transform:none}
-.hero-sub{margin:5vh 0 0;font-size:clamp(18px,2.2vw,26px);font-weight:600;letter-spacing:-.02em;max-width:620px;opacity:0;transform:translateY(20px);transition:1s var(--ease) .6s}
+.hero-sub{margin:3.5vh 0 0;font-size:clamp(16px,1.8vw,21px);font-weight:400;max-width:520px;line-height:1.65;opacity:0;transform:translateY(16px);transition:1.1s var(--ease) .7s}
 .hero.ready .hero-sub{opacity:1;transform:none}
-.hero-sub b{color:var(--green-text)}
-.sea{position:absolute;left:0;right:0;bottom:0;height:34vh;min-height:200px;z-index:2;pointer-events:none}
-@media (max-width:719px){.sea{height:24vh;min-height:150px}.hero .wrap{padding-bottom:26vh}}
-.sea svg.wave{position:absolute;left:0;bottom:0;width:200%;height:100%}
-.sea .w1{animation:drift 14s linear infinite;opacity:.18}
-.sea .w2{animation:drift 9s linear infinite reverse;opacity:.32;height:78%}
-.sea .w3{animation:drift 6s linear infinite;opacity:1;height:52%}
-.sea .w1 path,.sea .w2 path,.sea .w3 path{fill:var(--green)}
+.hero-sub b{font-weight:700}
+.gulls{position:absolute;left:0;right:0;top:16%;height:30%;z-index:3;pointer-events:none}
+.gull{position:absolute;width:34px;height:12px;animation:fly linear infinite}
+.gull svg{width:100%;height:100%;animation:flap .7s ease-in-out infinite alternate;transform-origin:center}
+.gull path{fill:none;stroke:#2f5d80;stroke-width:2;stroke-linecap:round}
+@keyframes fly{from{transform:translateX(-12vw)}to{transform:translateX(112vw)}}
+@keyframes flap{from{transform:scaleY(1)}to{transform:scaleY(.35)}}
+.waves{position:absolute;left:0;right:0;bottom:0;height:42%;z-index:2;pointer-events:none}
+.waves svg{position:absolute;left:0;width:200%}
+.waves .l1{bottom:0;height:100%;animation:drift 22s linear infinite}
+.waves .l2{bottom:0;height:76%;animation:drift 15s linear infinite reverse}
+.waves .l3{bottom:0;height:54%;animation:drift 11s linear infinite}
+.waves .l4{bottom:0;height:32%;animation:drift 8s linear infinite reverse}
+.waves .l1 path{fill:#8fd2f0}.waves .l2 path{fill:#4fb0de}.waves .l3 path{fill:#2088c2}.waves .l4 path{fill:#0e6aa0}
+.waves .base{position:absolute;left:0;right:0;bottom:0;height:20%;background:#0e6aa0}
 @keyframes drift{to{transform:translateX(-50%)}}
-.boat{position:absolute;bottom:40%;left:-160px;width:clamp(110px,14vw,190px);z-index:1;animation:sail 26s linear infinite}
-.boat svg{width:100%;height:auto;display:block;animation:bob 3.2s ease-in-out infinite}
-@keyframes sail{to{transform:translateX(calc(100vw + 340px))}}
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-8px) rotate(1.5deg)}}
+.ship{position:absolute;bottom:calc(42% * .52);left:-200px;width:clamp(120px,13vw,190px);z-index:2;animation:sail 34s linear infinite}
+.ship svg{width:100%;height:auto;display:block;animation:bob 3.4s ease-in-out infinite}
+@keyframes sail{to{transform:translateX(calc(100vw + 400px))}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-6px) rotate(1.2deg)}}
+.dive{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:5;color:#fff;font-size:11px;letter-spacing:.32em;display:flex;flex-direction:column;align-items:center;gap:10px}
+.dive i{width:1px;height:44px;background:rgba(255,255,255,.35);position:relative;overflow:hidden}
+.dive i::after{content:"";position:absolute;left:0;top:-50%;width:1px;height:50%;background:#fff;animation:drip 1.8s var(--ease) infinite}
+@keyframes drip{to{top:100%}}
+@media (max-width:719px){.hero-meta{letter-spacing:.16em}.hero-meta span:last-child{display:none}.stack i{padding:0 8px;font-size:12px}.waves{height:34%}.ship{bottom:calc(34% * .52)}.sun{left:78%;top:40%}}
 
-/* marquee */
-.marquee{background:var(--green);color:var(--on-green);overflow:hidden;padding:22px 0;position:relative;z-index:2}
-.marquee .track{display:flex;white-space:nowrap;will-change:transform;width:max-content}
-.marquee span{font-size:clamp(28px,4.4vw,56px);font-weight:800;letter-spacing:-.03em;padding-right:.6em;display:flex;align-items:center;gap:.6em}
-.marquee span::after{content:"";width:.42em;height:.42em;border-radius:50%;background:var(--on-green);display:inline-block}
-
-/* common */
+/* ocean body */
+.ocean{position:relative;z-index:2;background:linear-gradient(180deg,#0e6aa0 0%,#0b5a8c 8%,#084a78 18%,#063a62 32%,#052c4d 50%,#04213b 70%,#03172b 86%,#03111f 100%)}
+.rays{position:absolute;left:0;right:0;top:0;height:900px;pointer-events:none;overflow:hidden;opacity:.55;-webkit-mask-image:linear-gradient(180deg,#000,transparent);mask-image:linear-gradient(180deg,#000,transparent)}
+.rays i{position:absolute;top:-20%;width:14vw;height:140%;background:linear-gradient(180deg,rgba(190,240,255,.35),transparent 80%);transform:skewX(-14deg);filter:blur(6px);animation:sway 9s ease-in-out infinite alternate}
+.rays i:nth-child(1){left:6%;animation-delay:-2s}.rays i:nth-child(2){left:30%;width:8vw;animation-delay:-5s}.rays i:nth-child(3){left:52%;width:18vw}.rays i:nth-child(4){left:80%;width:9vw;animation-delay:-7s}
+@keyframes sway{0%{opacity:.25;transform:skewX(-18deg) translateX(-2vw)}100%{opacity:.9;transform:skewX(-8deg) translateX(3vw)}}
 section{position:relative;z-index:2;scroll-margin-top:72px}
-.sec{padding:clamp(96px,14vw,180px) 0}
-.sec-title{display:grid;gap:18px;margin-bottom:clamp(48px,7vw,88px)}
-.sec-title h2{margin:0;font-size:clamp(34px,5.6vw,76px);line-height:1.08;letter-spacing:-.05em;font-weight:800}
-.sec-title h2 em{font-style:normal;color:var(--green)}
-.sec-title p{margin:0;max-width:600px;color:var(--ink-2);font-size:17px}
-.rv{opacity:0;transform:translateY(36px);transition:opacity 1s var(--ease),transform 1s var(--ease);transition-delay:var(--d,0s)}
-.rv.in{opacity:1;transform:none}
-.mask{display:block;overflow:hidden;padding-bottom:.06em}
-.mask > span{display:block;transform:translateY(110%);transition:transform 1.1s var(--ease);transition-delay:var(--d,0s)}
+.sec{padding:clamp(96px,13vw,170px) 0}
+.sec-title{display:grid;gap:20px;margin-bottom:clamp(48px,7vw,88px)}
+.sec-title h2{margin:0;font-size:clamp(34px,5.4vw,72px);line-height:1.12;letter-spacing:-.04em;font-weight:300}
+.sec-title h2 em{font-style:normal;font-weight:600;color:var(--aqua)}
+.sec-title p{margin:0;max-width:600px;color:var(--mist);font-size:17px}
+.coord{font-size:11px;letter-spacing:.24em;color:var(--mist-2);font-variant-numeric:tabular-nums}
+.rv{opacity:0;transform:translateY(40px);filter:blur(6px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease),filter 1.1s var(--ease);transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none;filter:none}
+.mask{display:block;overflow:hidden;padding-bottom:.08em}
+.mask > span{display:block;transform:translateY(110%);transition:transform 1.2s var(--ease);transition-delay:var(--d,0s)}
 .in .mask > span,.mask.in > span{transform:none}
 
+/* wave text */
+.wavetext{position:relative;z-index:2;height:clamp(110px,14vw,170px);overflow:hidden}
+.wavetext svg{width:100%;height:100%;display:block}
+.wavetext text{font-size:46px;font-weight:200;letter-spacing:.04em;fill:var(--foam)}
+.wavetext text tspan.a{fill:var(--aqua);font-weight:600}
+.wavetext .line{fill:none;stroke:rgba(255,255,255,.18);stroke-width:1}
+
 /* about */
-.statement{font-size:clamp(28px,4.6vw,62px);line-height:1.3;letter-spacing:-.045em;font-weight:700;margin:0}
-.statement .w{color:color-mix(in srgb,var(--ink) 16%,transparent);transition:color .25s}
-.statement .w.lit{color:var(--ink)}
-.statement .w.g.lit{color:var(--green)}
-.about-meta{display:grid;gap:16px;margin-top:clamp(56px,8vw,96px)}
-@media (min-width:860px){.about-meta{grid-template-columns:repeat(3,1fr);gap:24px}}
-.chip{border-top:1px solid var(--ink);padding-top:16px}
-.chip b{display:block;font-size:clamp(28px,3.2vw,40px);letter-spacing:-.04em;line-height:1.2;margin-bottom:6px}
-.chip span{font-size:14.5px;color:var(--ink-2)}
-.two{display:grid;gap:24px;margin-top:clamp(80px,11vw,140px)}
-@media (min-width:860px){.two{grid-template-columns:1fr 1fr;gap:32px}}
-.pane{background:var(--bg-2);padding:32px 28px;display:grid;gap:12px;align-content:start;transition:transform .5s var(--ease)}
-.pane:hover{transform:translateY(-4px)}
-.pane h3{margin:0;font-size:clamp(22px,2.4vw,28px);letter-spacing:-.03em}
-.pane .tag{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--green-text)}
-.pane p{margin:0;color:var(--ink-2);font-size:15.5px}
+.statement{font-size:clamp(28px,4.4vw,58px);line-height:1.38;letter-spacing:-.035em;font-weight:300;margin:0}
+.statement .w{color:rgba(238,249,255,.22);transition:color .3s}
+.statement .w.lit{color:var(--foam)}
+.statement .w.g.lit{color:var(--aqua);font-weight:500}
+.buoys{display:grid;gap:16px;margin-top:clamp(56px,8vw,96px)}
+@media (min-width:860px){.buoys{grid-template-columns:repeat(3,1fr);gap:20px}}
+.buoy{display:flex;gap:18px;align-items:flex-start;padding:22px 0;border-top:1px solid var(--glass-line)}
+.buoy .dot{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--aqua);display:grid;place-items:center;position:relative}
+.buoy .dot::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--aqua)}
+.buoy .dot::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--aqua);animation:ping 2.6s var(--ease) infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.9);opacity:0}}
+.buoy b{display:block;font-size:clamp(26px,3vw,36px);font-weight:300;letter-spacing:-.03em;line-height:1.15}
+.buoy span{font-size:14.5px;color:var(--mist)}
+.glass{background:var(--glass);border:1px solid var(--glass-line);border-radius:20px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.two{display:grid;gap:20px;margin-top:clamp(72px,10vw,120px)}
+@media (min-width:860px){.two{grid-template-columns:1fr 1fr}}
+.pane{padding:34px 30px;display:grid;gap:12px;align-content:start;transition:transform .6s var(--ease),background .4s}
+.pane:hover{transform:translateY(-6px);background:rgba(255,255,255,.1)}
+.pane .tag{font-size:11px;letter-spacing:.28em;color:var(--aqua)}
+.pane h3{margin:0;font-size:clamp(22px,2.4vw,30px);font-weight:400;letter-spacing:-.03em}
+.pane p{margin:0;color:var(--mist);font-size:15.5px}
 
 /* 2026 */
-.y26{background:var(--sea);color:#eef4f8;overflow:hidden}
-.y26 .label{color:var(--green)}
-.y26 .sec-title p{color:#b9c8d6}
 .y26-hero{display:grid;gap:32px}
 @media (min-width:960px){.y26-hero{grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}}
-.photo-reveal{position:relative;overflow:hidden;border-radius:6px}
-.photo-reveal.rv{opacity:1;transform:none}
-.photo-reveal img{width:100%;height:100%;object-fit:cover;clip-path:inset(0 100% 0 0);transform:scale(1.2);transition:clip-path 1.4s var(--ease),transform 1.8s var(--ease);transition-delay:var(--d,0s)}
-.photo-reveal.in img{clip-path:inset(0 0 0 0);transform:none}
-.y26-hero .photo-reveal{aspect-ratio:3/2}
-.y26 .lead{font-size:clamp(20px,2.2vw,28px);font-weight:700;line-height:1.45;letter-spacing:-.03em;margin:0 0 16px}
-.y26 .body{color:#b9c8d6;margin:0}
-.kpis{display:grid;grid-template-columns:repeat(2,1fr);margin-top:clamp(56px,8vw,96px);border-top:1px solid rgba(255,255,255,.16)}
-@media (min-width:960px){.kpis{grid-template-columns:repeat(4,1fr)}}
-.kpi{padding:28px 16px 28px 0;border-bottom:1px solid rgba(255,255,255,.16)}
-.kpi .v{font-size:clamp(40px,5.4vw,76px);font-weight:800;letter-spacing:-.05em;line-height:1;color:#fff}
-.kpi .v small{font-size:.32em;margin-left:.12em;letter-spacing:0;color:#b9c8d6}
-.kpi .k{font-size:14px;margin-top:10px;color:#b9c8d6}
-.kpi.g .v{color:var(--green)}
+.porthole{position:relative;aspect-ratio:1;max-width:520px;width:100%;justify-self:center;border-radius:50%;padding:14px;background:linear-gradient(145deg,#d9e6ee,#7f97a8 40%,#e7f1f7 60%,#6f8798);box-shadow:0 30px 60px rgba(0,0,0,.35)}
+.porthole .glassin{position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;box-shadow:inset 0 0 0 6px rgba(0,0,0,.25)}
+.porthole img{width:100%;height:100%;object-fit:cover;transform:scale(1.25);clip-path:circle(0% at 50% 50%);transition:clip-path 1.6s var(--ease),transform 2s var(--ease)}
+.porthole.in img{clip-path:circle(75% at 50% 50%);transform:none}
+.porthole .glassin::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.35),transparent 40%)}
+.porthole .bolt{position:absolute;width:10px;height:10px;border-radius:50%;background:#53697a}
+.y26 .lead{font-size:clamp(20px,2.2vw,28px);font-weight:400;line-height:1.5;letter-spacing:-.03em;margin:0 0 16px}
+.y26 .lead em{font-style:normal;color:var(--aqua);font-weight:600}
+.y26 .body{color:var(--mist);margin:0}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:clamp(56px,8vw,96px)}
+@media (min-width:960px){.kpis{grid-template-columns:repeat(4,1fr);gap:18px}}
+.kpi{padding:26px 22px}
+.kpi .v{font-size:clamp(38px,5vw,68px);font-weight:200;letter-spacing:-.05em;line-height:1}
+.kpi .v small{font-size:.3em;margin-left:.12em;letter-spacing:0;color:var(--mist);font-weight:400}
+.kpi .k{font-size:13.5px;margin-top:12px;color:var(--mist)}
+.kpi.hl .v{color:var(--aqua);font-weight:300}
 .mix{margin-top:clamp(48px,6vw,72px)}
-.mix h3{margin:0 0 6px;font-size:18px}
-.mix p{margin:0 0 16px;font-size:14px;color:#b9c8d6}
-.stack{display:flex;height:44px;gap:2px;border-radius:6px;overflow:hidden}
-.stack i{display:flex;align-items:center;padding:0 12px;font-style:normal;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;width:0;transition:width 1.6s var(--ease)}
-.stack i:nth-child(1){background:var(--green);color:var(--on-green)}
-.stack i:nth-child(2){background:#7fdcb2;color:var(--on-green);transition-delay:.15s}
-.stack i:nth-child(3){background:#d2f3e4;color:var(--on-green);transition-delay:.3s}
+.mix h3{margin:0 0 4px;font-size:18px;font-weight:500}
+.mix p{margin:0 0 16px;font-size:14px;color:var(--mist)}
+.stack{display:flex;height:46px;gap:3px}
+.stack i{display:flex;align-items:center;padding:0 14px;font-style:normal;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;width:0;border-radius:23px;transition:width 1.6s var(--ease);color:var(--on-aqua)}
+.stack i:nth-child(1){background:var(--aqua)}
+.stack i:nth-child(2){background:#86c9f2;transition-delay:.15s}
+.stack i:nth-child(3){background:#d4ecfa;transition-delay:.3s}
 .route-wrap{display:grid;gap:32px;margin-top:clamp(72px,9vw,120px)}
 @media (min-width:960px){.route-wrap{grid-template-columns:1fr 1fr;gap:56px;align-items:center}}
-.route{background:var(--sea-2);border-radius:8px;padding:12px}
+.route{padding:14px}
 .route svg{width:100%;height:auto;display:block}
-.route .path{fill:none;stroke:var(--green);stroke-width:3;stroke-linecap:round;stroke-dasharray:6 8}
-.route .draw{fill:none;stroke:var(--green);stroke-width:3;stroke-linecap:round}
-.route .port circle{fill:#fff}
-.route .port text{fill:#eef4f8;font-size:15px;font-weight:700;font-family:inherit}
-.route .port text.s{fill:#8fa6bb;font-size:11px;font-weight:600}
-.route .shipdot{fill:var(--green)}
-.route-note{font-size:12px;color:#8fa6bb;margin-top:8px;text-align:right}
+.route .grid line{stroke:rgba(255,255,255,.07)}
+.route .path{fill:none;stroke:rgba(69,224,239,.35);stroke-width:2;stroke-dasharray:4 8}
+.route .draw{fill:none;stroke:var(--aqua);stroke-width:3;stroke-linecap:round}
+.route .port circle.c{fill:#fff}
+.route .port circle.p{fill:none;stroke:var(--aqua);stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:ping 2.4s var(--ease) infinite}
+.route .port text{fill:var(--foam);font-size:15px;font-weight:600;font-family:inherit}
+.route .port text.s{fill:var(--mist-2);font-size:10.5px;font-weight:500;letter-spacing:.14em}
+.route-note{font-size:12px;color:var(--mist-2);margin:10px 4px 0;text-align:right}
 .facts-list{list-style:none;margin:0;padding:0}
-.facts-list li{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:15.5px}
-.facts-list li b{color:#8fa6bb;font-weight:600;font-size:14px}
+.facts-list li{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--glass-line);font-size:15.5px}
+.facts-list li b{color:var(--mist-2);font-weight:500;font-size:13.5px;letter-spacing:.04em}
 .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
-.tags span{font-size:14px;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.25);transition:background .3s,color .3s,border-color .3s,transform .3s var(--ease)}
-.tags span:hover{background:var(--green);color:var(--on-green);border-color:var(--green);transform:translateY(-3px)}
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-.duo .photo-reveal{aspect-ratio:4/3}
+.tags span{font-size:14px;padding:8px 15px;border-radius:999px;border:1px solid var(--glass-line);background:var(--glass);transition:background .3s,color .3s,transform .4s var(--ease)}
+.tags span:hover{background:var(--aqua);color:var(--on-aqua);transform:translateY(-4px)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.duo .ph{aspect-ratio:4/3;border-radius:16px;overflow:hidden}
+.duo img{width:100%;height:100%;object-fit:cover;clip-path:inset(100% 0 0 0);transition:clip-path 1.4s var(--ease);transition-delay:var(--d,0s)}
+.duo .ph.in img{clip-path:inset(0)}
 
 /* history */
-.history{padding-top:clamp(96px,14vw,180px)}
+.history{padding-top:clamp(96px,13vw,170px)}
 .pin{position:relative}
 .pin-inner{overflow:hidden}
+.seaLine{position:relative;height:56px;margin:0 16px 8px}
+.seaLine svg{width:100%;height:100%;display:block}
+.seaLine path{fill:none;stroke:rgba(255,255,255,.22);stroke-width:1.5}
+.seaLine .done{stroke:var(--aqua);stroke-width:2.5}
+.seaLine .boatmark{position:absolute;top:2px;left:0;width:46px;transform:translateX(-50%);transition:left .2s linear}
+.seaLine .boatmark svg{width:100%;height:auto;animation:bob 3s ease-in-out infinite}
+@media (min-width:720px){.seaLine{margin:0 40px 8px}}
 .htrack{display:flex;gap:16px;padding:8px 16px 32px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
 .htrack::-webkit-scrollbar{display:none}
-.voy{flex:none;width:min(80vw,340px);scroll-snap-align:center;border-top:1px solid var(--ink);padding-top:16px;transition:opacity .5s}
-.voy .no{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--ink-3);display:flex;gap:8px;align-items:center}
-.voy .no em{font-style:normal;font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--hair);color:var(--ink-2);letter-spacing:0}
-.voy .y{font-size:clamp(60px,8vw,110px);font-weight:800;letter-spacing:-.06em;line-height:1;margin-top:6px;color:transparent;-webkit-text-stroke:1.5px var(--ink);transition:color .5s,-webkit-text-stroke-color .5s}
-.voy.on .y{color:var(--green);-webkit-text-stroke-color:var(--green)}
-.voy h3{margin:12px 0 6px;font-size:18px;letter-spacing:-.03em;line-height:1.35;min-height:2.7em}
-.voy .meta{font-size:13.5px;color:var(--ink-2);line-height:1.6;min-height:4.8em}
-.voy .pax{margin-top:14px;display:grid;gap:6px}
-.voy .pax b{font-size:22px;letter-spacing:-.03em}
-.voy .pax b small{font-size:13px;font-weight:600;color:var(--ink-3);margin-left:2px}
-.voy .pbar{height:6px;background:var(--hair);border-radius:999px;overflow:hidden}
-.voy .pbar i{display:block;height:100%;width:0;background:var(--green);border-radius:999px;transition:width 1s var(--ease)}
+.voy{flex:none;width:min(80vw,330px);scroll-snap-align:center;padding:24px 22px;transition:opacity .5s,transform .6s var(--ease),background .4s}
+.voy .no{font-size:11px;letter-spacing:.24em;color:var(--mist-2);display:flex;gap:8px;align-items:center;text-transform:uppercase}
+.voy .no em{font-style:normal;font-size:11px;letter-spacing:0;padding:2px 9px;border-radius:999px;border:1px solid var(--glass-line);color:var(--mist);text-transform:none}
+.voy .y{font-size:clamp(56px,7vw,96px);font-weight:200;letter-spacing:-.05em;line-height:1;margin-top:8px;transition:color .5s}
+.voy.on .y{color:var(--aqua)}
+.voy h3{margin:12px 0 6px;font-size:17px;font-weight:500;letter-spacing:-.02em;line-height:1.4;min-height:2.8em}
+.voy .meta{font-size:13px;color:var(--mist);line-height:1.6;min-height:4.8em}
+.voy .pax{margin-top:14px;display:grid;gap:8px}
+.voy .pax b{font-size:24px;font-weight:300;letter-spacing:-.03em}
+.voy .pax b small{font-size:13px;color:var(--mist);margin-left:2px}
+.voy .pbar{height:4px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}
+.voy .pbar i{display:block;height:100%;width:0;background:var(--aqua);border-radius:999px;transition:width 1s var(--ease)}
 .voy.seen .pbar i{width:var(--w)}
 .pin-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
-.counter{font-size:14px;font-weight:700;color:var(--ink-3);display:flex;align-items:center;gap:12px}
-.counter #vNow{color:var(--ink);font-size:18px}
-.counter .rail{width:140px;height:2px;background:var(--hair);position:relative;overflow:hidden}
-.counter .rail i{position:absolute;inset:0;background:var(--green);transform-origin:left;transform:scaleX(0);transition:transform .3s}
-.cum{font-size:14px;color:var(--ink-2);margin-top:6px}
-.cum b{color:var(--ink);font-size:18px}
+.counter{text-align:right}
+.counter .big{font-size:clamp(34px,4vw,52px);font-weight:200;letter-spacing:-.04em;line-height:1}
+.counter .big small{font-size:.32em;color:var(--mist);margin-left:4px}
+.counter .k{font-size:12px;letter-spacing:.2em;color:var(--mist-2)}
 @media (min-width:900px){
   .pin.active .pin-inner{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center}
-  .pin.active .htrack{overflow:visible;scroll-snap-type:none;padding-left:max(40px,calc((100vw - 1240px)/2 + 40px));padding-right:40vw;gap:44px;will-change:transform}
-  .pin.active .voy{width:330px;opacity:.35}
-  .pin.active .voy.on{opacity:1}
+  .pin.active .htrack{overflow:visible;scroll-snap-type:none;padding-left:max(40px,calc((100vw - 1240px)/2 + 40px));padding-right:40vw;gap:22px;will-change:transform}
+  .pin.active .voy{opacity:.4;transform:scale(.96)}
+  .pin.active .voy.on{opacity:1;transform:none;background:rgba(255,255,255,.11)}
 }
 
 /* programs */
 .prog{display:grid;gap:32px}
-@media (min-width:960px){.prog{grid-template-columns:.8fr 1.2fr;gap:64px;align-items:start}}
-.plist{list-style:none;margin:0;padding:0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+@media (min-width:960px){.prog{grid-template-columns:.8fr 1.2fr;gap:56px;align-items:start}}
+.plist{list-style:none;margin:0;padding:0 0 4px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
 .plist::-webkit-scrollbar{display:none}
-.plist button{font:inherit;border:1px solid var(--hair);background:none;color:var(--ink-3);cursor:pointer;padding:10px 16px;border-radius:999px;white-space:nowrap;font-weight:700;font-size:15px;transition:color .3s,background .3s,border-color .3s}
-.plist button[aria-selected="true"]{background:var(--green);border-color:var(--green);color:var(--on-green)}
+.plist button{font:inherit;border:1px solid var(--glass-line);background:var(--glass);color:var(--mist);cursor:pointer;padding:10px 18px;border-radius:999px;white-space:nowrap;font-size:15px;transition:color .3s,background .3s,border-color .3s}
+.plist button[aria-selected="true"]{background:var(--aqua);border-color:var(--aqua);color:var(--on-aqua);font-weight:600}
 @media (min-width:960px){
-  .plist{display:grid;gap:0;overflow:visible}
-  .plist button{border:0;border-top:1px solid var(--hair);border-radius:0;padding:16px 0;width:100%;text-align:left;font-size:clamp(20px,2vw,26px);letter-spacing:-.03em;display:flex;gap:16px;align-items:baseline;position:relative}
-  .plist li:last-child button{border-bottom:1px solid var(--hair)}
-  .plist button small{font-size:12px;font-weight:800;color:var(--ink-3);letter-spacing:.06em}
-  .plist button::after{content:"";position:absolute;left:0;top:-1px;height:2px;width:100%;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
-  .plist button[aria-selected="true"]{background:none;color:var(--ink)}
-  .plist button[aria-selected="true"]::after{transform:scaleX(1)}
-  .plist button[aria-selected="true"] small{color:var(--green-text)}
-  .plist button:hover{color:var(--ink)}
+  .plist{display:grid;gap:6px;overflow:visible}
+  .plist button{width:100%;text-align:left;font-size:19px;padding:14px 22px;display:flex;gap:16px;align-items:baseline}
+  .plist button small{font-size:11px;letter-spacing:.18em;opacity:.7}
+  .plist button:hover{color:var(--foam);background:rgba(255,255,255,.1)}
 }
 @media (max-width:959px){.plist button small{display:none}}
-.ppanel{min-height:320px}
-.ppanel .big{font-size:clamp(44px,6vw,84px);font-weight:800;letter-spacing:-.05em;line-height:1;margin:0}
-.ppanel .big span{color:var(--green)}
-.ppanel .sub{font-size:clamp(18px,1.8vw,22px);font-weight:700;margin:14px 0 12px;letter-spacing:-.02em}
-.ppanel p{margin:0;color:var(--ink-2);font-size:16px}
-.ppanel .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.ppanel .chips span{font-size:13.5px;padding:7px 12px;border-radius:6px;background:var(--bg-2)}
-.ppanel > *{animation:pin .6s var(--ease) both}
+.ppanel{padding:36px 32px;min-height:340px}
+.ppanel .big{font-size:clamp(40px,5.4vw,72px);font-weight:200;letter-spacing:-.04em;line-height:1.05;margin:0}
+.ppanel .big span{color:var(--aqua);font-weight:300;margin-right:10px}
+.ppanel .sub{font-size:clamp(17px,1.7vw,21px);font-weight:500;margin:16px 0 12px}
+.ppanel p{margin:0;color:var(--mist);font-size:16px}
+.ppanel .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.ppanel .chips span{font-size:13.5px;padding:7px 13px;border-radius:999px;border:1px solid var(--glass-line)}
+.ppanel > *{animation:rise .7s var(--ease) both}
 .ppanel > *:nth-child(2){animation-delay:.06s}.ppanel > *:nth-child(3){animation-delay:.12s}.ppanel > *:nth-child(4){animation-delay:.18s}
-@keyframes pin{from{opacity:0;transform:translateY(16px)}}
-.ports{display:grid;gap:16px;margin-top:clamp(80px,10vw,130px)}
+@keyframes rise{from{opacity:0;transform:translateY(18px);filter:blur(4px)}}
+.ports{display:grid;gap:16px;margin-top:40px}
 @media (min-width:720px){.ports{grid-template-columns:repeat(2,1fr)}}
 @media (min-width:1080px){.ports{grid-template-columns:repeat(4,1fr)}}
-.port-card{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:8px;color:#fff;isolation:isolate}
-.port-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1s var(--ease)}
-.port-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.78));z-index:-1;transition:background .5s}
-.port-card .in-c{position:absolute;left:0;right:0;bottom:0;padding:22px}
-.port-card small{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--green)}
-.port-card h3{margin:4px 0 0;font-size:28px;letter-spacing:-.03em}
-.port-card p{margin:0;font-size:14px;line-height:1.6;max-height:0;opacity:0;overflow:hidden;transition:max-height .6s var(--ease),opacity .4s,margin .4s}
+.port-card{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:200px 200px 20px 20px;color:#fff;isolation:isolate;transition:border-radius .8s var(--ease)}
+.port-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.2s var(--ease)}
+.port-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,23,43,0) 35%,rgba(3,23,43,.88));z-index:-1}
+.port-card .in-c{position:absolute;left:0;right:0;bottom:0;padding:24px}
+.port-card small{font-size:11px;letter-spacing:.26em;color:var(--aqua-2)}
+.port-card h3{margin:4px 0 0;font-size:28px;font-weight:400;letter-spacing:-.02em}
+.port-card p{margin:0;font-size:14px;line-height:1.6;color:#d6ebf6;max-height:0;opacity:0;overflow:hidden;transition:max-height .7s var(--ease),opacity .5s,margin .5s}
 @media (hover:hover){
+  .port-card:hover{border-radius:20px}
   .port-card:hover img{transform:scale(1.08)}
-  .port-card:hover::before{background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.85))}
   .port-card:hover p{max-height:12em;opacity:1;margin-top:10px}
 }
 @media (hover:none){.port-card p{max-height:none;opacity:1;margin-top:8px}}
 
 /* impact */
-.impact{background:var(--bg-2)}
 .claim{display:grid;gap:40px}
 @media (min-width:960px){.claim{grid-template-columns:.9fr 1.1fr;gap:64px;align-items:center}}
-.claim .huge{font-size:clamp(88px,15vw,200px);font-weight:800;letter-spacing:-.07em;line-height:.9;color:var(--green)}
-.claim .huge small{font-size:.3em;letter-spacing:-.02em;color:var(--ink)}
-.claim h3{margin:12px 0 10px;font-size:clamp(22px,2.6vw,32px);letter-spacing:-.04em;line-height:1.3}
-.claim p{margin:0;color:var(--ink-2)}
-.hbars{display:grid;gap:22px}
-.hb .lab{display:flex;justify-content:space-between;font-size:14.5px;font-weight:700;margin-bottom:8px}
-.hb .lab span:last-child{font-variant-numeric:tabular-nums}
-.hb .track{height:40px;position:relative}
-.hb .track i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:0 4px 4px 0;transition:width 1.6s var(--ease)}
-.hb.cruise i{background:var(--green)}
-.hb.air i{background:var(--mute-bar)}
-.hb .src{font-size:12px;color:var(--ink-3);margin-top:6px}
-.chart-note{font-size:12.5px;color:var(--ink-3);margin-top:18px}
-.compare{display:grid;gap:12px;margin-top:clamp(64px,8vw,96px)}
-@media (min-width:860px){.compare{grid-template-columns:repeat(3,1fr);gap:24px}}
-.cbox{background:var(--bg);padding:28px 24px;border-radius:8px}
-.cbox .k{font-size:14px;color:var(--ink-2)}
-.cbox .v{font-size:clamp(34px,4vw,52px);font-weight:800;letter-spacing:-.05em;line-height:1.1;margin-top:6px}
-.cbox .v small{font-size:.38em;letter-spacing:0;margin-left:2px;color:var(--ink-2)}
-.cbox.g .v{color:var(--green)}
-.survey{margin-top:clamp(80px,10vw,130px)}
-.survey h3{margin:12px 0 6px;font-size:clamp(22px,2.6vw,32px);letter-spacing:-.04em}
-.survey > p{margin:0 0 28px;color:var(--ink-2);font-size:15px}
-.legend{display:flex;gap:18px;font-size:13.5px;color:var(--ink-2);margin-bottom:20px}
+.claim .huge{font-size:clamp(96px,15vw,210px);font-weight:100;letter-spacing:-.07em;line-height:.9;color:var(--aqua)}
+.claim .huge small{font-size:.26em;font-weight:300;letter-spacing:-.02em;color:var(--foam);margin-left:6px}
+.claim h3{margin:14px 0 10px;font-size:clamp(21px,2.4vw,30px);font-weight:400;letter-spacing:-.03em;line-height:1.4}
+.claim p{margin:0;color:var(--mist)}
+.hbars{display:grid;gap:24px;padding:30px 28px}
+.hb .lab{display:flex;justify-content:space-between;font-size:14.5px;margin-bottom:10px}
+.hb .lab span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
+.hb .track{height:16px;position:relative;border-radius:999px;background:rgba(255,255,255,.06)}
+.hb .track i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;transition:width 1.6s var(--ease)}
+.hb.cruise i{background:var(--aqua)}
+.hb.air i{background:rgba(255,255,255,.38)}
+.hb .src{font-size:12px;color:var(--mist-2);margin-top:6px}
+.chart-note{font-size:12.5px;color:var(--mist-2);margin-top:16px}
+.compare{display:grid;gap:14px;margin-top:clamp(56px,7vw,88px)}
+@media (min-width:860px){.compare{grid-template-columns:repeat(3,1fr);gap:18px}}
+.cbox{padding:28px 24px}
+.cbox .k{font-size:13.5px;color:var(--mist)}
+.cbox .v{font-size:clamp(34px,4vw,52px);font-weight:200;letter-spacing:-.04em;line-height:1.1;margin-top:8px}
+.cbox .v small{font-size:.36em;margin-left:4px;color:var(--mist);font-weight:400}
+.cbox.hl .v{color:var(--aqua);font-weight:300}
+.survey{margin-top:clamp(88px,11vw,140px)}
+.survey h3{margin:16px 0 6px;font-size:clamp(24px,2.8vw,36px);font-weight:300;letter-spacing:-.03em}
+.survey > p{margin:0 0 28px;color:var(--mist);font-size:15px}
+.legend{display:flex;gap:18px;font-size:13.5px;color:var(--mist);margin-bottom:20px}
 .legend span{display:flex;align-items:center;gap:8px}
-.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.legend i{width:12px;height:12px;border-radius:50%;display:inline-block}
 .srows{display:grid;gap:26px}
-.srow .t{font-size:15.5px;font-weight:700;margin-bottom:10px}
-.srow .pair{display:grid;gap:4px}
+.srow .t{font-size:15.5px;font-weight:500;margin-bottom:10px}
+.srow .pair{display:grid;gap:5px}
 .srow .b{display:grid;grid-template-columns:1fr 48px;gap:10px;align-items:center}
-.srow .b span{font-size:14px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
-.srow .b .bt{height:16px;position:relative;background:transparent}
-.srow .b .bt i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:0 4px 4px 0;transition:width 1.4s var(--ease)}
-.srow .b.pre i{background:var(--mute-bar)}
-.srow .b.post i{background:var(--green);transition-delay:.25s}
-.scale{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-3);margin-top:12px;padding-right:58px}
+.srow .b span{font-size:14px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.srow .b .bt{height:12px;position:relative;border-radius:999px;background:rgba(255,255,255,.05)}
+.srow .b .bt i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;transition:width 1.4s var(--ease)}
+.srow .b.pre i{background:rgba(255,255,255,.38)}
+.srow .b.post i{background:var(--aqua);transition-delay:.25s}
+.scale{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mist-2);margin-top:12px;padding-right:58px}
 .ring3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:clamp(56px,7vw,80px)}
 @media (max-width:640px){.ring3{grid-template-columns:1fr}}
-.rg{display:flex;gap:16px;align-items:center}
-.rg svg{width:92px;height:92px;flex:none;transform:rotate(-90deg)}
-.rg circle{fill:none;stroke-width:9}
-.rg .bgc{stroke:var(--hair)}
-.rg .fg{stroke:var(--green);stroke-linecap:round;stroke-dasharray:251.3;stroke-dashoffset:251.3;transition:stroke-dashoffset 1.8s var(--ease)}
-.rg b{display:block;font-size:30px;letter-spacing:-.04em;line-height:1}
-.rg span{font-size:14px;color:var(--ink-2)}
+.rg{display:flex;gap:18px;align-items:center;padding:20px 22px}
+.rg svg{width:88px;height:88px;flex:none;transform:rotate(-90deg)}
+.rg circle{fill:none;stroke-width:7}
+.rg .bgc{stroke:rgba(255,255,255,.1)}
+.rg .fg{stroke:var(--aqua);stroke-linecap:round;stroke-dasharray:251.3;stroke-dashoffset:251.3;transition:stroke-dashoffset 1.8s var(--ease)}
+.rg b{display:block;font-size:30px;font-weight:300;letter-spacing:-.03em;line-height:1}
+.rg span{font-size:13.5px;color:var(--mist)}
 
 /* gallery */
-.gallery{overflow:hidden}
-.gallery .row{display:flex;gap:16px;width:max-content;animation:slide 80s linear infinite}
+.gallery{overflow:hidden;padding:20px 0;position:relative;z-index:2}
+.gallery .row{display:flex;gap:18px;width:max-content;animation:slide 90s linear infinite}
 .gallery:hover .row{animation-play-state:paused}
 @keyframes slide{to{transform:translateX(-50%)}}
-.shot{margin:0;width:clamp(240px,28vw,400px);flex:none}
-.shot .im{aspect-ratio:4/3;overflow:hidden;border-radius:6px;background:var(--bg-2)}
-.shot img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.shot{margin:0;width:clamp(230px,26vw,380px);flex:none}
+.shot:nth-child(odd){transform:translateY(18px)}
+.shot .im{aspect-ratio:4/5;overflow:hidden;border-radius:999px 999px 18px 18px}
+.shot:nth-child(3n) .im{border-radius:18px}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
 .shot:hover img{transform:scale(1.08)}
-.shot figcaption{font-size:13.5px;font-weight:600;margin-top:10px;display:flex;align-items:center;gap:8px}
-.shot figcaption::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
+.shot figcaption{font-size:13px;color:var(--mist);margin-top:12px;text-align:center;letter-spacing:.02em}
 
 /* voices */
 .voices{display:grid;gap:40px}
-@media (min-width:960px){.voices{grid-template-columns:.75fr 1.25fr;gap:72px;align-items:start}}
+@media (min-width:960px){.voices{grid-template-columns:.7fr 1.3fr;gap:64px;align-items:start}}
 .names{list-style:none;margin:0;padding:0 0 4px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
 .names::-webkit-scrollbar{display:none}
-.names button{font:inherit;text-align:left;border:1px solid var(--hair);background:none;color:var(--ink-3);cursor:pointer;padding:10px 16px;border-radius:999px;white-space:nowrap;font-weight:700;font-size:15px;position:relative;transition:color .3s,background .3s,border-color .3s}
+.names button{font:inherit;text-align:left;border:1px solid var(--glass-line);background:var(--glass);color:var(--mist);cursor:pointer;padding:10px 16px;border-radius:999px;white-space:nowrap;font-size:15px;position:relative;overflow:hidden;transition:color .3s,background .3s,border-color .3s}
+.names button i{position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--aqua);transform:scaleX(0);transform-origin:left}
+.names button[aria-selected="true"]{color:var(--foam);border-color:var(--aqua)}
+.names button[aria-selected="true"] i{animation:fill var(--dur,9s) linear forwards}
 @media (min-width:960px){
-  .names{display:grid;gap:0;overflow:visible}
-  .names button{border:0;border-top:1px solid var(--hair);border-radius:0;padding:18px 0;font-size:clamp(20px,2vw,26px);letter-spacing:-.03em;width:100%;display:flex;justify-content:space-between;align-items:center}
-  .names li:last-child button{border-bottom:1px solid var(--hair)}
-  .names button small{font-size:13px;font-weight:500;letter-spacing:0}
-  .names button i{position:absolute;left:0;top:-1px;height:2px;width:100%;background:var(--green);transform:scaleX(0);transform-origin:left}
-  .names button[aria-selected="true"] i{animation:fill var(--dur,9s) linear forwards}
-  .names button:hover{color:var(--ink)}
-  .names button[aria-selected="true"]{color:var(--ink)}
+  .names{display:grid;gap:8px;overflow:visible}
+  .names button{width:100%;padding:16px 22px;border-radius:16px;font-size:19px;display:flex;justify-content:space-between;align-items:center}
+  .names button small{font-size:12.5px;opacity:.75}
+  .names button:hover{color:var(--foam)}
 }
-@media (max-width:959px){.names button small,.names button i{display:none}.names button[aria-selected="true"]{background:var(--green);color:var(--on-green);border-color:var(--green)}}
+@media (max-width:959px){.names button small{display:none}}
 @keyframes fill{to{transform:scaleX(1)}}
-.quote{position:relative;min-height:320px}
-.quote .mark{font-size:120px;line-height:.7;font-weight:800;color:var(--green);display:block;height:60px}
-.quote blockquote{margin:0;font-size:clamp(21px,2.5vw,32px);line-height:1.55;letter-spacing:-.035em;font-weight:600}
-.quote blockquote .w{display:inline-block;opacity:0;transform:translateY(.5em);filter:blur(4px);animation:wi .7s var(--ease) forwards;animation-delay:calc(var(--i) * 22ms)}
+.quote{position:relative;min-height:320px;padding:8px 0}
+.quote .mark{font-size:120px;line-height:.7;font-weight:200;color:var(--aqua);display:block;height:56px}
+.quote blockquote{margin:0;font-size:clamp(21px,2.4vw,31px);line-height:1.6;letter-spacing:-.03em;font-weight:300}
+.quote blockquote .w{display:inline-block;opacity:0;transform:translateY(.6em);filter:blur(6px);animation:wi .8s var(--ease) forwards;animation-delay:calc(var(--i) * 24ms)}
 @keyframes wi{to{opacity:1;transform:none;filter:none}}
-.quote cite{display:block;font-style:normal;margin-top:32px;font-size:15px;color:var(--ink-3)}
-.quote cite b{color:var(--ink);font-size:18px;margin-right:8px}
+.quote cite{display:block;font-style:normal;margin-top:30px;font-size:14.5px;color:var(--mist)}
+.quote cite b{color:var(--foam);font-size:18px;font-weight:600;margin-right:8px}
 
 /* footer */
-footer{position:relative;z-index:2;background:var(--green);color:var(--on-green);padding:clamp(80px,12vw,150px) 0 40px;overflow:hidden}
-.foot-big{font-size:clamp(44px,8.6vw,128px);font-weight:800;letter-spacing:-.06em;line-height:1.02;margin:0}
-.foot-grid{display:grid;gap:32px;margin-top:clamp(56px,8vw,96px);font-size:14.5px}
+footer{position:relative;z-index:2;padding:clamp(110px,14vw,190px) 0 40px;text-align:center;overflow:hidden}
+footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;height:90%;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(69,224,239,.18),transparent 60%);pointer-events:none}
+.foot-big{font-size:clamp(44px,8vw,120px);font-weight:200;letter-spacing:-.05em;line-height:1.05;margin:0}
+.foot-big em{font-style:normal;color:var(--aqua);font-weight:400}
+.cta{display:inline-flex;align-items:center;gap:10px;margin-top:36px;padding:15px 26px;border-radius:999px;background:var(--aqua);color:var(--on-aqua);font-weight:700;text-decoration:none;transition:transform .4s var(--ease),gap .4s var(--ease),box-shadow .4s}
+.cta:hover{transform:translateY(-3px);gap:16px;box-shadow:0 10px 40px rgba(69,224,239,.35)}
+.foot-grid{display:grid;gap:28px;margin-top:clamp(72px,9vw,110px);font-size:14px;text-align:left;color:var(--mist)}
 @media (min-width:860px){.foot-grid{grid-template-columns:1.2fr 1fr 1fr}}
-.foot-grid h3{font-size:12px;letter-spacing:.14em;margin:0 0 12px}
+.foot-grid h3{font-size:11px;letter-spacing:.28em;margin:0 0 12px;color:var(--foam);font-weight:600}
 .foot-grid dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0}
-.foot-grid dt{font-weight:700}
+.foot-grid dt{color:var(--foam)}
 .foot-grid dd{margin:0}
-.foot-grid a{text-decoration:none;background:linear-gradient(currentColor,currentColor) no-repeat 0 100%/0 1px;transition:background-size .4s var(--ease)}
-.foot-grid a:hover{background-size:100% 1px}
-.cta{display:inline-flex;align-items:center;gap:10px;margin-top:28px;padding:14px 22px;border-radius:999px;background:var(--on-green);color:var(--green);font-weight:800;text-decoration:none;transition:transform .4s var(--ease),gap .4s var(--ease)}
-.cta:hover{transform:translateY(-3px);gap:16px}
-.fine{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:64px;padding-top:20px;border-top:1px solid color-mix(in srgb,var(--on-green) 30%,transparent);font-size:12.5px}
+.foot-grid a{text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s}
+.foot-grid a:hover{border-color:currentColor}
+.fine{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:56px;padding-top:20px;border-top:1px solid var(--glass-line);font-size:12px;color:var(--mist-2);text-align:left}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}
   .rv,.mask > span,.hero h1 .row span,.hero-sub,.quote blockquote .w,.ppanel > *{opacity:1!important;transform:none!important;filter:none!important}
-  .photo-reveal img{clip-path:none!important;transform:none!important}
-  .boat{animation:none;left:62%}
+  .porthole img{clip-path:none!important;transform:none!important}.duo img{clip-path:none!important}
+  .ship{animation:none;left:58%}.gull{display:none}
   .gallery .row{animation:none}.gallery{overflow-x:auto}
 }
 </style>
 </head>
 <body>
-<div class="progress" id="progress"></div>
-<div class="blob" id="blob" aria-hidden="true"></div>
+<canvas id="bubbles" aria-hidden="true"></canvas>
+<div class="gauge" id="gauge" aria-hidden="true"><span class="read">DEPTH <b id="depth">0</b> M</span><span class="rail"><i id="gaugeDot"></i></span></div>
 
 <header class="nav" id="nav">
   <div class="wrap">
-    <a class="logo" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 19h22l-3.5 6h-15z" fill="currentColor"/><path d="M10 19v-5h12v5M13 14v-3h6v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>GREEN BOAT</a>
+    <a class="logo" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 22c3 0 3-2 6.5-2s3.5 2 6.5 2 3-2 6.5-2 3.5 2 6.5 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 18h18l-2.5-4h-13z" fill="currentColor"/><path d="M12 14v-3h8v3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>GREEN BOAT</a>
     <nav class="links" aria-label="목차">
       <a href="#about">그린보트</a>
       <a href="#y2026">2026 선상학교</a>
       <a href="#history">16번의 항해</a>
       <a href="#programs">프로그램</a>
-      <a href="#impact">그린보트의 진실</a>
+      <a href="#impact">오해와 진실</a>
       <a href="#voices">함께한 사람들</a>
     </nav>
-    <button class="theme" id="themeBtn" aria-label="밝게/어둡게 전환"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg></button>
   </div>
 </header>
 
@@ -391,268 +418,288 @@ footer{position:relative;z-index:2;background:var(--green);color:var(--on-green)
 
 <!-- HERO -->
 <section class="hero" id="hero" aria-label="표지">
+  <div class="sun" aria-hidden="true"></div>
+  <div class="gulls" aria-hidden="true" id="gulls"></div>
   <div class="wrap" id="heroInner">
-    <div class="hero-meta"><span>환경재단 · SINCE 2005</span><span>16 VOYAGES</span></div>
+    <div class="hero-meta"><span>환경재단 · SINCE 2005</span><span>N 35°06′ E 129°02′</span></div>
     <h1 aria-label="GREEN BOAT"><span class="row"><span>GREEN</span></span><span class="row"><span>BOAT</span></span></h1>
     <p class="hero-sub">지구를 생각하는 특별한 항해.<br>2005년부터 <b>17,213명</b>의 그린리더가 함께 바다를 건넜습니다.</p>
   </div>
-  <div class="sea" aria-hidden="true">
-    <div class="boat"><svg viewBox="0 0 200 110"><path d="M10 70h180l-26 32H34z" fill="#fff" stroke="#0d0f0e" stroke-width="3" stroke-linejoin="round"/><rect x="44" y="44" width="110" height="26" fill="#fff" stroke="#0d0f0e" stroke-width="3"/><rect x="66" y="26" width="60" height="18" fill="#fff" stroke="#0d0f0e" stroke-width="3"/><rect x="84" y="6" width="16" height="20" fill="#00b969" stroke="#0d0f0e" stroke-width="3"/><g fill="#0d0f0e"><circle cx="58" cy="57" r="3.5"/><circle cx="74" cy="57" r="3.5"/><circle cx="90" cy="57" r="3.5"/><circle cx="106" cy="57" r="3.5"/><circle cx="122" cy="57" r="3.5"/><circle cx="138" cy="57" r="3.5"/></g><text x="100" y="91" text-anchor="middle" font-size="13" font-weight="800" fill="#0d0f0e" font-family="sans-serif" letter-spacing="2">GREEN BOAT</text></svg></div>
-    <svg class="wave w1" viewBox="0 0 2880 200" preserveAspectRatio="none"><path d="M0 80 Q 180 20 360 80 T 720 80 T 1080 80 T 1440 80 T 1800 80 T 2160 80 T 2520 80 T 2880 80 V200 H0Z"/></svg>
-    <svg class="wave w2" viewBox="0 0 2880 200" preserveAspectRatio="none"><path d="M0 90 Q 240 40 480 90 T 960 90 T 1440 90 T 1920 90 T 2400 90 T 2880 90 V200 H0Z"/></svg>
-    <svg class="wave w3" viewBox="0 0 2880 200" preserveAspectRatio="none"><path d="M0 100 Q 120 60 240 100 T 480 100 T 720 100 T 960 100 T 1200 100 T 1440 100 T 1680 100 T 1920 100 T 2160 100 T 2400 100 T 2640 100 T 2880 100 V200 H0Z"/></svg>
+  <div class="waves" aria-hidden="true">
+    <svg class="l1" viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50 Q 180 15 360 50 T 720 50 T 1080 50 T 1440 50 T 1800 50 T 2160 50 T 2520 50 T 2880 50 V100 H0Z"/></svg>
+    <div class="ship"><svg viewBox="0 0 200 110"><path d="M10 70h180l-24 32H34z" fill="#ffffff" stroke="#052a4a" stroke-width="2.5" stroke-linejoin="round"/><path d="M34 102h132" stroke="#45e0ef" stroke-width="4"/><rect x="44" y="44" width="110" height="26" fill="#ffffff" stroke="#052a4a" stroke-width="2.5"/><rect x="66" y="26" width="60" height="18" fill="#ffffff" stroke="#052a4a" stroke-width="2.5"/><rect x="86" y="8" width="14" height="18" fill="#21b3cc" stroke="#052a4a" stroke-width="2.5"/><g fill="#052a4a"><circle cx="58" cy="57" r="3"/><circle cx="74" cy="57" r="3"/><circle cx="90" cy="57" r="3"/><circle cx="106" cy="57" r="3"/><circle cx="122" cy="57" r="3"/><circle cx="138" cy="57" r="3"/></g><text x="100" y="90" text-anchor="middle" font-size="12" font-weight="700" fill="#052a4a" font-family="sans-serif" letter-spacing="3">GREEN BOAT</text></svg></div>
+    <svg class="l2" viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50 Q 240 10 480 50 T 960 50 T 1440 50 T 1920 50 T 2400 50 T 2880 50 V100 H0Z"/></svg>
+    <svg class="l3" viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50 Q 150 18 300 50 T 600 50 T 900 50 T 1200 50 T 1500 50 T 1800 50 T 2100 50 T 2400 50 T 2700 50 T 3000 50 V100 H0Z"/></svg>
+    <svg class="l4" viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50 Q 120 22 240 50 T 480 50 T 720 50 T 960 50 T 1200 50 T 1440 50 T 1680 50 T 1920 50 T 2160 50 T 2400 50 T 2640 50 T 2880 50 V100 H0Z"/></svg>
+    <div class="base"></div>
   </div>
+  <div class="dive" aria-hidden="true">DIVE IN<i></i></div>
 </section>
 
-<div class="marquee" aria-hidden="true"><div class="track" id="marquee"></div></div>
+<div class="ocean" id="ocean">
+  <div class="rays" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
-<!-- ABOUT -->
-<section class="sec" id="about">
-  <div class="wrap">
-    <div class="sec-title"><span class="label rv">What is Green Boat</span></div>
-    <p class="statement" id="statement">그린보트는 *세계 유일의 환경 테마 크루즈*입니다. 바다 위에서 함께 배우고, 기항지에서 직접 보며, *지구와 공존하는 방법*을 찾습니다.</p>
-    <div class="about-meta">
-      <div class="chip rv"><b class="num">2005</b><span>환경재단과 일본 피스보트가 함께 피스&amp;그린보트 첫 출항</span></div>
-      <div class="chip rv" style="--d:.1s"><b class="num">2018</b><span>환경재단이 독자적으로 그린보트 첫 단독 출항</span></div>
-      <div class="chip rv" style="--d:.2s"><b class="num">16번</b><span>2005~2026년, 바다 위에서 이어 온 항해</span></div>
-    </div>
-    <div class="two">
-      <div class="pane rv"><span class="tag">PEACE &amp; GREEN BOAT</span><h3>평화와 환경을 위한 항해</h3><p>한국의 환경재단과 일본의 피스보트가 2005년부터 함께 운영한 크루즈 프로그램입니다. 한일 양국 참가자가 한 배에 올라 아시아 곳곳을 여행하며, 아시아의 화합을 가로막는 환경·역사·사회·문화 문제를 열린 시각으로 바라보고 대안을 찾았습니다.</p></div>
-      <div class="pane rv" style="--d:.1s"><span class="tag">GREEN BOAT</span><h3>바다 위 지구학교</h3><p>기후 변화, 플라스틱 쓰레기, 미세먼지 등 환경 문제를 탐구하고 평화와 인권, 역사 문제까지 고민해 온 환경 연수 여행입니다. 선내에서는 명사들의 강연과 공연, 워크숍이 열리고, 기항지에서는 환경·역사·평화·문화의 현장을 직접 탐방합니다.</p></div>
-    </div>
-  </div>
-</section>
+  <div class="wavetext" aria-hidden="true"><svg viewBox="0 0 1440 160" preserveAspectRatio="xMidYMid slice"><path id="wtp" class="line" d="M-40 96 Q 140 46 320 96 T 680 96 T 1040 96 T 1400 96 T 1760 96"/><text dy="-14"><textPath href="#wtp" id="wtext" startOffset="0"></textPath></text></svg></div>
 
-<!-- 2026 -->
-<section class="sec y26" id="y2026">
-  <div class="wrap">
-    <div class="sec-title">
-      <span class="label rv">2026 · Latest voyage</span>
-      <h2 class="rv"><span class="mask"><span>2026 바다 위 <em>선상학교</em></span></span></h2>
-      <p class="rv" style="--d:.1s">여행에 환경교육을 더해 지속가능한 여행문화를 만들다</p>
-    </div>
-    <div class="y26-hero">
-      <div class="photo-reveal rv"><img src="img/y26-main.webp" alt="2026 바다 위 선상학교 선내 체험 프로그램" loading="lazy"></div>
-      <div>
-        <p class="lead rv">그린보트가 전문여행사와의 협업으로 ‘바다 위 선상학교’로 새롭게 운영되었습니다.</p>
-        <p class="body rv" style="--d:.1s">환경교육의 대중성을 높이고 더 많은 시민에게 참여 기회를 제공하고자, 환경·AI·인문학·건강 강연과 캠페인, 체험, 문화공연을 여행에 더했습니다. 특히 강연이 환경 인식 변화에 가장 큰 영향을 준 콘텐츠로 평가되며, 지식과 체험, 환경교육을 결합한 지속가능한 여행 모델의 가능성을 확인했습니다.</p>
+  <!-- ABOUT -->
+  <section class="sec" id="about" style="padding-top:clamp(56px,8vw,100px)">
+    <div class="wrap">
+      <div class="sec-title"><span class="label rv">What is Green Boat</span></div>
+      <p class="statement" id="statement">그린보트는 *세계 유일의 환경 테마 크루즈*입니다. 바다 위에서 함께 배우고, 기항지에서 직접 보며, *지구와 공존하는 방법*을 찾습니다.</p>
+      <div class="buoys">
+        <div class="buoy rv"><span class="dot"></span><div><b class="num">2005</b><span>환경재단과 일본 피스보트가 함께 피스&amp;그린보트 첫 출항</span></div></div>
+        <div class="buoy rv" style="--d:.1s"><span class="dot"></span><div><b class="num">2018</b><span>환경재단이 독자적으로 그린보트 첫 단독 출항</span></div></div>
+        <div class="buoy rv" style="--d:.2s"><span class="dot"></span><div><b>16번의 항해</b><span>2005~2026년, 바다 위에서 이어 온 환경 연수</span></div></div>
+      </div>
+      <div class="two">
+        <div class="pane glass rv"><span class="tag">PEACE &amp; GREEN BOAT</span><h3>평화와 환경을 위한 항해</h3><p>한국의 환경재단과 일본의 피스보트가 2005년부터 함께 운영한 크루즈 프로그램입니다. 한일 양국 참가자가 한 배에 올라 아시아 곳곳을 여행하며, 아시아의 화합을 가로막는 환경·역사·사회·문화 문제를 열린 시각으로 바라보고 대안을 찾았습니다.</p></div>
+        <div class="pane glass rv" style="--d:.1s"><span class="tag">GREEN BOAT</span><h3>바다 위 지구학교</h3><p>기후 변화, 플라스틱 쓰레기, 미세먼지 등 환경 문제를 탐구하고 평화와 인권, 역사 문제까지 고민해 온 환경 연수 여행입니다. 선내에서는 명사들의 강연과 공연, 워크숍이 열리고, 기항지에서는 환경·역사·평화·문화의 현장을 직접 탐방합니다.</p></div>
       </div>
     </div>
+  </section>
 
-    <div class="kpis">
-      <div class="kpi rv g"><div class="v num"><span data-count="2408">0</span><small>명</small></div><div class="k">총 참가자</div></div>
-      <div class="kpi rv" style="--d:.08s"><div class="v num"><span data-count="81">0</span><small>개</small></div><div class="k">선내 프로그램</div></div>
-      <div class="kpi rv" style="--d:.16s"><div class="v num"><span data-count="85">0</span><small>%</small></div><div class="k">재탑승 의향</div></div>
-      <div class="kpi rv" style="--d:.24s"><div class="v num"><span data-count="91.2" data-dec="1">0</span><small>%</small></div><div class="k">선내 프로그램·게스트 강연 긍정 응답</div></div>
-    </div>
-
-    <div class="mix rv" id="mix">
-      <h3>81개 프로그램, 이렇게 채웠어요</h3>
-      <p>선내 강연 29회 · 체험형 프로그램 40회 · 문화공연 12회</p>
-      <div class="stack" role="img" aria-label="선내 강연 29회, 체험형 프로그램 40회, 문화공연 12회"><i data-w="35.8">강연 29</i><i data-w="49.4">체험 40</i><i data-w="14.8">공연 12</i></div>
-    </div>
-
-    <div class="route-wrap">
-      <div class="rv">
-        <div class="route"><svg viewBox="0 0 520 380" id="routeSvg" role="img" aria-label="항로: 부산에서 하코다테, 오타루를 거쳐 부산으로">
-          <path class="path" d="M110 300 C 200 250, 300 200, 380 150 C 400 130, 420 110, 430 95 C 400 70, 360 60, 330 70 C 260 120, 180 230, 110 300"/>
-          <path class="draw" id="routeDraw" d="M110 300 C 200 250, 300 200, 380 150 C 400 130, 420 110, 430 95 C 400 70, 360 60, 330 70 C 260 120, 180 230, 110 300"/>
-          <circle class="shipdot" id="shipDot" r="8" cx="110" cy="300"/>
-          <g class="port"><circle cx="110" cy="300" r="6"/><text x="96" y="330" text-anchor="middle">부산</text><text class="s" x="96" y="346" text-anchor="middle">출항 · 귀항</text></g>
-          <g class="port"><circle cx="430" cy="95" r="6"/><text x="444" y="118">하코다테</text><text class="s" x="444" y="133">HAKODATE</text></g>
-          <g class="port"><circle cx="330" cy="70" r="6"/><text x="318" y="50" text-anchor="end">오타루</text><text class="s" x="318" y="34" text-anchor="end">OTARU</text></g>
-        </svg></div>
-        <div class="route-note">항로는 이해를 돕기 위한 도식입니다</div>
+  <!-- 2026 -->
+  <section class="sec y26" id="y2026">
+    <div class="wrap">
+      <div class="sec-title">
+        <span class="label rv">2026 · Latest voyage</span>
+        <h2 class="rv"><span class="mask"><span>2026 바다 위 <em>선상학교</em></span></span></h2>
+        <p class="rv" style="--d:.1s">여행에 환경교육을 더해 지속가능한 여행문화를 만들다</p>
       </div>
-      <div>
-        <ul class="facts-list rv">
-          <li><b>기간</b><span class="num">2026. 6. 19(금) – 6. 25(목), 6박 7일</span></li>
-          <li><b>기항지</b><span>부산 – 하코다테 – 오타루 – 부산</span></li>
-          <li><b>총 참가자</b><span class="num">2,408명</span></li>
-          <li><b>역대 참가자</b><span class="num">17,213명 (누적)</span></li>
-          <li><b>협력</b><span>모두투어, 웅진프리드미어, 타요플랜</span></li>
-        </ul>
-        <div class="tags rv" style="--d:.1s"><span>그린대여소</span><span>에코마켓</span><span>환경퀴즈 골든벨</span><span>지구를 구하는 쓰레기 운동회</span><span>바다 위 업사이클 공방</span></div>
-        <div class="duo">
-          <div class="photo-reveal rv"><img src="img/y26-a.webp" alt="바다 위 선상학교 프로그램 안내 배너" loading="lazy"></div>
-          <div class="photo-reveal rv" style="--d:.1s"><img src="img/y26-b.webp" alt="선내 체험 부스에 참여한 시민들" loading="lazy"></div>
+      <div class="y26-hero">
+        <div class="porthole rv" id="porthole"><div class="glassin"><img src="img/y26-main.webp" alt="2026 바다 위 선상학교 선내 체험 프로그램" loading="lazy"></div></div>
+        <div>
+          <p class="lead rv">그린보트가 전문여행사와의 협업으로 <em>‘바다 위 선상학교’</em>로 새롭게 운영되었습니다.</p>
+          <p class="body rv" style="--d:.1s">환경교육의 대중성을 높이고 더 많은 시민에게 참여 기회를 제공하고자, 환경·AI·인문학·건강 강연과 캠페인, 체험, 문화공연을 여행에 더했습니다. 특히 강연이 환경 인식 변화에 가장 큰 영향을 준 콘텐츠로 평가되며, 지식과 체험, 환경교육을 결합한 지속가능한 여행 모델의 가능성을 확인했습니다.</p>
         </div>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- HISTORY -->
-<section class="history" id="history">
-  <div class="pin" id="pin">
-    <div class="pin-inner">
-      <div class="wrap">
-        <div class="sec-title" style="margin-bottom:36px">
-          <span class="label rv">Navigation</span>
-          <div class="pin-head">
-            <div>
-              <h2 class="rv"><span class="mask"><span><em>16번</em>의 항해</span></span></h2>
-              <div class="cum">누적 참가자 <b class="num" id="cumNow">550</b>명</div>
-            </div>
-            <div class="counter"><span class="num" id="vNow">1st</span><span class="rail"><i id="vRail"></i></span><span>16th</span></div>
+      <div class="kpis">
+        <div class="kpi glass hl rv"><div class="v num"><span data-count="2408">0</span><small>명</small></div><div class="k">총 참가자</div></div>
+        <div class="kpi glass rv" style="--d:.08s"><div class="v num"><span data-count="81">0</span><small>개</small></div><div class="k">선내 프로그램</div></div>
+        <div class="kpi glass rv" style="--d:.16s"><div class="v num"><span data-count="85">0</span><small>%</small></div><div class="k">재탑승 의향</div></div>
+        <div class="kpi glass rv" style="--d:.24s"><div class="v num"><span data-count="91.2" data-dec="1">0</span><small>%</small></div><div class="k">선내 프로그램·게스트 강연 긍정 응답</div></div>
+      </div>
+
+      <div class="mix rv" id="mix">
+        <h3>81개 프로그램, 이렇게 채웠어요</h3>
+        <p>선내 강연 29회 · 체험형 프로그램 40회 · 문화공연 12회</p>
+        <div class="stack" role="img" aria-label="선내 강연 29회, 체험형 프로그램 40회, 문화공연 12회"><i data-w="35.4">강연 29</i><i data-w="48.8">체험 40</i><i data-w="14.6">공연 12</i></div>
+      </div>
+
+      <div class="route-wrap">
+        <div class="rv">
+          <div class="route glass"><svg viewBox="0 0 520 380" id="routeSvg" role="img" aria-label="항로: 부산에서 하코다테, 오타루를 거쳐 부산으로">
+            <g class="grid"><line x1="0" y1="95" x2="520" y2="95"/><line x1="0" y1="190" x2="520" y2="190"/><line x1="0" y1="285" x2="520" y2="285"/><line x1="130" y1="0" x2="130" y2="380"/><line x1="260" y1="0" x2="260" y2="380"/><line x1="390" y1="0" x2="390" y2="380"/></g>
+            <path class="path" d="M110 300 C 200 250, 300 200, 380 150 C 400 130, 420 110, 430 95 C 400 70, 360 60, 330 70 C 260 120, 180 230, 110 300"/>
+            <path class="draw" id="routeDraw" d="M110 300 C 200 250, 300 200, 380 150 C 400 130, 420 110, 430 95 C 400 70, 360 60, 330 70 C 260 120, 180 230, 110 300"/>
+            <g class="port"><circle class="p" cx="110" cy="300" r="10"/><circle class="c" cx="110" cy="300" r="5"/><text x="96" y="332" text-anchor="middle">부산</text><text class="s" x="96" y="348" text-anchor="middle">BUSAN</text></g>
+            <g class="port"><circle class="p" cx="430" cy="95" r="10"/><circle class="c" cx="430" cy="95" r="5"/><text x="444" y="120">하코다테</text><text class="s" x="444" y="135">HAKODATE</text></g>
+            <g class="port"><circle class="p" cx="330" cy="70" r="10"/><circle class="c" cx="330" cy="70" r="5"/><text x="316" y="50" text-anchor="end">오타루</text><text class="s" x="316" y="34" text-anchor="end">OTARU</text></g>
+            <g id="shipMark"><circle r="11" fill="#45e0ef" opacity=".25"/><circle r="6" fill="#45e0ef"/></g>
+          </svg></div>
+          <div class="route-note">항로는 이해를 돕기 위한 도식입니다</div>
+        </div>
+        <div>
+          <ul class="facts-list rv">
+            <li><b>기간</b><span class="num">2026. 6. 19(금) – 6. 25(목), 6박 7일</span></li>
+            <li><b>기항지</b><span>부산 – 하코다테 – 오타루 – 부산</span></li>
+            <li><b>총 참가자</b><span class="num">2,408명</span></li>
+            <li><b>역대 참가자</b><span class="num">17,213명 (누적)</span></li>
+            <li><b>협력</b><span>모두투어, 웅진프리드미어, 타요플랜</span></li>
+          </ul>
+          <div class="tags rv" style="--d:.1s"><span>그린대여소</span><span>에코마켓</span><span>환경퀴즈 골든벨</span><span>지구를 구하는 쓰레기 운동회</span><span>바다 위 업사이클 공방</span></div>
+          <div class="duo">
+            <div class="ph rv"><img src="img/y26-a.webp" alt="바다 위 선상학교 프로그램 안내 배너" loading="lazy"></div>
+            <div class="ph rv" style="--d:.12s"><img src="img/y26-b.webp" alt="선내 체험 부스에 참여한 시민들" loading="lazy"></div>
           </div>
         </div>
       </div>
-      <div class="htrack" id="htrack"></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- PROGRAMS -->
-<section class="sec" id="programs">
-  <div class="wrap">
-    <div class="sec-title">
-      <span class="label rv">On board</span>
-      <h2 class="rv"><span class="mask"><span>배 위에서 만나는 <em>선내 프로그램</em></span></span></h2>
-      <p class="rv" style="--d:.1s">매일 발행되는 선내신문으로 다음 날 프로그램을 확인하고, 관심 있는 강연과 활동에 자유롭게 참여합니다. 제15회 그린보트(2025)의 프로그램입니다.</p>
-    </div>
-    <div class="prog">
-      <ul class="plist rv" role="tablist" id="plist"></ul>
-      <div class="ppanel" id="ppanel" role="tabpanel" aria-live="polite"></div>
-    </div>
-
-    <div class="sec-title" style="margin:clamp(96px,12vw,160px) 0 0">
-      <span class="label rv">Ports of call</span>
-      <h2 class="rv"><span class="mask"><span>발길 닿는 곳마다, <em>기항지 프로그램</em></span></span></h2>
-    </div>
-    <div class="ports" style="margin-top:40px">
-      <article class="port-card rv"><img src="img/kayak.webp" alt="오키나와 맹그로브 숲 카약 탐방" loading="lazy"><div class="in-c"><small>01 · ENVIRONMENT</small><h3>환경</h3><p>대만 예류지질공원과 양명산, 오키나와 만좌모와 부세나 해중공원을 찾아 천혜의 자연과 마주했습니다.</p></div></article>
-      <article class="port-card rv" style="--d:.08s"><img src="img/castle.webp" alt="오키나와 슈리성" loading="lazy"><div class="in-c"><small>02 · HISTORY</small><h3>역사</h3><p>대만 국립고궁박물원, 류큐 왕국의 슈리성, 조선 도공의 숨결이 남은 아리타를 따라 과거의 발자취를 걸었습니다.</p></div></article>
-      <article class="port-card rv" style="--d:.16s"><img src="img/peace.webp" alt="오키나와 평화기념공원" loading="lazy"><div class="in-c"><small>03 · PEACE</small><h3>평화</h3><p>오키나와 평화기념공원과 히메유리탑, 나가사키 평화공원에서 전쟁의 상흔과 평화의 의미를 되새겼습니다.</p></div></article>
-      <article class="port-card rv" style="--d:.24s"><img src="img/lanterns.webp" alt="대만 지우펀 홍등 거리" loading="lazy"><div class="in-c"><small>04 · CULTURE</small><h3>문화</h3><p>대만 지우펀의 홍등 거리, 오키나와 전통 가옥과 공예, 사세보 하우스텐보스에서 현지의 전통과 오늘을 만났습니다.</p></div></article>
-    </div>
-  </div>
-</section>
-
-<!-- IMPACT -->
-<section class="sec impact" id="impact">
-  <div class="wrap">
-    <div class="sec-title">
-      <span class="label rv">Myth &amp; Truth</span>
-      <h2 class="rv"><span class="mask"><span>그린보트에 대한 <em>오해와 진실</em></span></span></h2>
-      <p class="rv" style="--d:.1s">“크루즈는 탄소를 많이 내지 않나요?” 그린보트는 단순한 관광이 아닙니다. 2천여 명이 함께 숙식하며 강연을 듣고 기항지를 탐방하는, 움직이는 학교입니다.</p>
-    </div>
-    <div class="claim">
-      <div class="rv">
-        <div class="huge num"><span data-count="38">0</span><small>% 적게</small></div>
-        <h3>그린보트가 사용한 코스타 세레나호는 비행기보다 탄소배출이 적습니다</h3>
-        <p>승객 1인이 1km를 이동할 때 배출하는 CO₂ 기준입니다.</p>
-      </div>
-      <div class="rv" id="carbon">
-        <div class="hbars">
-          <div class="hb cruise"><div class="lab"><span>크루즈 (코스타 퍼시피카*)</span><span>175.4 g</span></div><div class="track"><i data-w="58.5"></i></div><div class="src">EU MRV 데이터</div></div>
-          <div class="hb air"><div class="lab"><span>항공기</span><span>285 g</span></div><div class="track"><i data-w="95"></i></div><div class="src">유럽환경청(EEA) 데이터</div></div>
+  <!-- HISTORY -->
+  <section class="history" id="history">
+    <div class="pin" id="pin">
+      <div class="pin-inner">
+        <div class="wrap">
+          <div class="sec-title" style="margin-bottom:28px">
+            <span class="label rv">Navigation log</span>
+            <div class="pin-head">
+              <h2 class="rv"><span class="mask"><span><em>16번</em>의 항해</span></span></h2>
+              <div class="counter"><div class="k" id="vNow">VOYAGE 01 / 16</div><div class="big num"><span id="cumNow">550</span><small>명 누적</small></div></div>
+            </div>
+          </div>
         </div>
-        <p class="chart-note">단위: 승객 1인당 km당 CO₂ 배출량(gCO₂/pax-km) · *코스타 퍼시피카호는 코스타 세레나호와 쌍둥이 배</p>
+        <div class="seaLine" aria-hidden="true">
+          <svg viewBox="0 0 1000 56" preserveAspectRatio="none"><path id="seaPath" d="M0 34 Q 31 18 62 34 T 125 34 T 187 34 T 250 34 T 312 34 T 375 34 T 437 34 T 500 34 T 562 34 T 625 34 T 687 34 T 750 34 T 812 34 T 875 34 T 937 34 T 1000 34"/><path id="seaDone" class="done" d="M0 34 Q 31 18 62 34 T 125 34 T 187 34 T 250 34 T 312 34 T 375 34 T 437 34 T 500 34 T 562 34 T 625 34 T 687 34 T 750 34 T 812 34 T 875 34 T 937 34 T 1000 34"/></svg>
+          <div class="boatmark" id="boatmark"><svg viewBox="0 0 60 34"><path d="M4 20h52l-7 10H11z" fill="#fff"/><rect x="16" y="11" width="26" height="9" fill="#fff"/><rect x="26" y="3" width="6" height="8" fill="#45e0ef"/></svg></div>
+        </div>
+        <div class="htrack" id="htrack"></div>
       </div>
     </div>
+  </section>
 
-    <div class="compare">
-      <div class="cbox rv"><div class="k">같은 여정(2,950km, 2,500명) · 크루즈</div><div class="v num">1,293<small>톤CO₂</small></div></div>
-      <div class="cbox rv" style="--d:.08s"><div class="k">같은 여정 · 항공기</div><div class="v num">2,101<small>톤CO₂</small></div></div>
-      <div class="cbox g rv" style="--d:.16s"><div class="k">항공+호텔로 같은 연수를 하면</div><div class="v num">47%<small>더 배출</small></div></div>
-    </div>
-
-    <div class="survey" id="survey">
-      <span class="label rv">After the voyage</span>
-      <h3 class="rv">그린보트를 다녀온 뒤, 일상이 달라졌을까?</h3>
-      <p class="rv">제15회 그린보트 참가자 설문 · 5점 척도 평균 (사전 427명, 사후 389명 응답)</p>
-      <div class="legend rv"><span><i style="background:var(--mute-bar)"></i>참여 전</span><span><i style="background:var(--green)"></i>참여 후</span></div>
-      <div class="srows">
-        <div class="srow rv"><div class="t">쓰레기를 줄이기 위한 노력</div><div class="pair"><div class="b pre"><div class="bt"><i data-v="4.02"></i></div><span>4.02</span></div><div class="b post"><div class="bt"><i data-v="4.33"></i></div><span>4.33</span></div></div></div>
-        <div class="srow rv"><div class="t">에너지 절약 실천</div><div class="pair"><div class="b pre"><div class="bt"><i data-v="3.80"></i></div><span>3.80</span></div><div class="b post"><div class="bt"><i data-v="4.20"></i></div><span>4.20</span></div></div></div>
-        <div class="srow rv"><div class="t">채식 메뉴를 선택할 의향</div><div class="pair"><div class="b pre"><div class="bt"><i data-v="3.90"></i></div><span>3.90</span></div><div class="b post"><div class="bt"><i data-v="3.99"></i></div><span>3.99</span></div></div></div>
+  <!-- PROGRAMS -->
+  <section class="sec" id="programs">
+    <div class="wrap">
+      <div class="sec-title">
+        <span class="label rv">On board</span>
+        <h2 class="rv"><span class="mask"><span>배 위에서 만나는 <em>선내 프로그램</em></span></span></h2>
+        <p class="rv" style="--d:.1s">매일 발행되는 선내신문으로 다음 날 프로그램을 확인하고, 관심 있는 강연과 활동에 자유롭게 참여합니다. 제15회 그린보트(2025)의 프로그램입니다.</p>
       </div>
-      <div class="scale"><span>1 전혀 하지 않는다</span><span>5 매일 한다</span></div>
-      <div class="ring3">
-        <div class="rg rv"><svg viewBox="0 0 92 92"><circle class="bgc" cx="46" cy="46" r="40"/><circle class="fg" cx="46" cy="46" r="40" data-p="82"/></svg><div><b class="num">82%</b><span>기후위기 인식이 바뀌었다</span></div></div>
-        <div class="rg rv" style="--d:.08s"><svg viewBox="0 0 92 92"><circle class="bgc" cx="46" cy="46" r="40"/><circle class="fg" cx="46" cy="46" r="40" data-p="83"/></svg><div><b class="num">83%</b><span>앞으로 기후 행동을 실천하겠다</span></div></div>
-        <div class="rg rv" style="--d:.16s"><svg viewBox="0 0 92 92"><circle class="bgc" cx="46" cy="46" r="40"/><circle class="fg" cx="46" cy="46" r="40" data-p="78"/></svg><div><b class="num">78%</b><span>다시 꼭 탑승하고 싶다</span></div></div>
+      <div class="prog">
+        <ul class="plist rv" role="tablist" id="plist"></ul>
+        <div class="ppanel glass" id="ppanel" role="tabpanel" aria-live="polite"></div>
       </div>
-      <p class="chart-note">2025년 제15회 그린보트 기준</p>
-    </div>
-  </div>
-</section>
 
-<!-- GALLERY -->
-<div class="gallery" aria-label="그린보트 사진"><div class="row" id="gallery"></div></div>
-
-<!-- VOICES -->
-<section class="sec" id="voices">
-  <div class="wrap">
-    <div class="sec-title">
-      <span class="label rv">Voices</span>
-      <h2 class="rv"><span class="mask"><span>함께 배를 탄 사람들</span></span></h2>
-      <p class="rv" style="--d:.1s">그린보트 매거진 VOL.3(2025)에 실린 이야기입니다.</p>
+      <div class="sec-title" style="margin:clamp(96px,12vw,160px) 0 0">
+        <span class="label rv">Ports of call</span>
+        <h2 class="rv"><span class="mask"><span>발길 닿는 곳마다, <em>기항지 프로그램</em></span></span></h2>
+      </div>
+      <div class="ports">
+        <article class="port-card rv"><img src="img/kayak.webp" alt="오키나와 맹그로브 숲 카약 탐방" loading="lazy"><div class="in-c"><small>01 · ENVIRONMENT</small><h3>환경</h3><p>대만 예류지질공원과 양명산, 오키나와 만좌모와 부세나 해중공원을 찾아 천혜의 자연과 마주했습니다.</p></div></article>
+        <article class="port-card rv" style="--d:.08s"><img src="img/castle.webp" alt="오키나와 슈리성" loading="lazy"><div class="in-c"><small>02 · HISTORY</small><h3>역사</h3><p>대만 국립고궁박물원, 류큐 왕국의 슈리성, 조선 도공의 숨결이 남은 아리타를 따라 과거의 발자취를 걸었습니다.</p></div></article>
+        <article class="port-card rv" style="--d:.16s"><img src="img/peace.webp" alt="오키나와 평화기념공원" loading="lazy"><div class="in-c"><small>03 · PEACE</small><h3>평화</h3><p>오키나와 평화기념공원과 히메유리탑, 나가사키 평화공원에서 전쟁의 상흔과 평화의 의미를 되새겼습니다.</p></div></article>
+        <article class="port-card rv" style="--d:.24s"><img src="img/lanterns.webp" alt="대만 지우펀 홍등 거리" loading="lazy"><div class="in-c"><small>04 · CULTURE</small><h3>문화</h3><p>대만 지우펀의 홍등 거리, 오키나와 전통 가옥과 공예, 사세보 하우스텐보스에서 현지의 전통과 오늘을 만났습니다.</p></div></article>
+      </div>
     </div>
-    <div class="voices">
-      <ul class="names rv" role="tablist" id="names"></ul>
-      <div class="quote" id="quote" aria-live="polite"></div>
-    </div>
-  </div>
-</section>
+  </section>
 
+  <!-- IMPACT -->
+  <section class="sec" id="impact">
+    <div class="wrap">
+      <div class="sec-title">
+        <span class="label rv">Myth &amp; Truth</span>
+        <h2 class="rv"><span class="mask"><span>그린보트에 대한 <em>오해와 진실</em></span></span></h2>
+        <p class="rv" style="--d:.1s">“크루즈는 탄소를 많이 내지 않나요?” 그린보트는 단순한 관광이 아닙니다. 2천여 명이 함께 숙식하며 강연을 듣고 기항지를 탐방하는, 움직이는 학교입니다.</p>
+      </div>
+      <div class="claim">
+        <div class="rv">
+          <div class="huge num"><span data-count="38">0</span><small>% 적게</small></div>
+          <h3>그린보트가 사용한 코스타 세레나호는 비행기보다 탄소배출이 적습니다</h3>
+          <p>승객 1인이 1km를 이동할 때 배출하는 CO₂ 기준입니다.</p>
+        </div>
+        <div class="rv" id="carbon">
+          <div class="hbars glass">
+            <div class="hb cruise"><div class="lab"><span>크루즈 (코스타 퍼시피카*)</span><span>175.4 g</span></div><div class="track"><i data-w="58.5"></i></div><div class="src">EU MRV 데이터</div></div>
+            <div class="hb air"><div class="lab"><span>항공기</span><span>285 g</span></div><div class="track"><i data-w="95"></i></div><div class="src">유럽환경청(EEA) 데이터</div></div>
+          </div>
+          <p class="chart-note">단위: 승객 1인당 km당 CO₂ 배출량(gCO₂/pax-km) · *코스타 퍼시피카호는 코스타 세레나호와 쌍둥이 배</p>
+        </div>
+      </div>
+
+      <div class="compare">
+        <div class="cbox glass rv"><div class="k">같은 여정(2,950km, 2,500명) · 크루즈</div><div class="v num">1,293<small>톤CO₂</small></div></div>
+        <div class="cbox glass rv" style="--d:.08s"><div class="k">같은 여정 · 항공기</div><div class="v num">2,101<small>톤CO₂</small></div></div>
+        <div class="cbox glass hl rv" style="--d:.16s"><div class="k">항공+호텔로 같은 연수를 하면</div><div class="v num">47%<small>더 배출</small></div></div>
+      </div>
+
+      <div class="survey" id="survey">
+        <span class="label rv">After the voyage</span>
+        <h3 class="rv">그린보트를 다녀온 뒤, 일상이 달라졌을까?</h3>
+        <p class="rv">제15회 그린보트 참가자 설문 · 5점 척도 평균 (사전 427명, 사후 389명 응답)</p>
+        <div class="legend rv"><span><i style="background:rgba(255,255,255,.38)"></i>참여 전</span><span><i style="background:var(--aqua)"></i>참여 후</span></div>
+        <div class="srows">
+          <div class="srow rv"><div class="t">쓰레기를 줄이기 위한 노력</div><div class="pair"><div class="b pre"><div class="bt"><i data-v="4.02"></i></div><span>4.02</span></div><div class="b post"><div class="bt"><i data-v="4.33"></i></div><span>4.33</span></div></div></div>
+          <div class="srow rv"><div class="t">에너지 절약 실천</div><div class="pair"><div class="b pre"><div class="bt"><i data-v="3.80"></i></div><span>3.80</span></div><div class="b post"><div class="bt"><i data-v="4.20"></i></div><span>4.20</span></div></div></div>
+          <div class="srow rv"><div class="t">채식 메뉴를 선택할 의향</div><div class="pair"><div class="b pre"><div class="bt"><i data-v="3.90"></i></div><span>3.90</span></div><div class="b post"><div class="bt"><i data-v="3.99"></i></div><span>3.99</span></div></div></div>
+        </div>
+        <div class="scale"><span>1 전혀 하지 않는다</span><span>5 매일 한다</span></div>
+        <div class="ring3">
+          <div class="rg glass rv"><svg viewBox="0 0 92 92"><circle class="bgc" cx="46" cy="46" r="40"/><circle class="fg" cx="46" cy="46" r="40" data-p="82"/></svg><div><b class="num">82%</b><span>기후위기 인식이 바뀌었다</span></div></div>
+          <div class="rg glass rv" style="--d:.08s"><svg viewBox="0 0 92 92"><circle class="bgc" cx="46" cy="46" r="40"/><circle class="fg" cx="46" cy="46" r="40" data-p="83"/></svg><div><b class="num">83%</b><span>앞으로 기후 행동을 실천하겠다</span></div></div>
+          <div class="rg glass rv" style="--d:.16s"><svg viewBox="0 0 92 92"><circle class="bgc" cx="46" cy="46" r="40"/><circle class="fg" cx="46" cy="46" r="40" data-p="78"/></svg><div><b class="num">78%</b><span>다시 꼭 탑승하고 싶다</span></div></div>
+        </div>
+        <p class="chart-note">2025년 제15회 그린보트 기준</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <div class="gallery" aria-label="그린보트 사진"><div class="row" id="gallery"></div></div>
+
+  <!-- VOICES -->
+  <section class="sec" id="voices">
+    <div class="wrap">
+      <div class="sec-title">
+        <span class="label rv">Voices</span>
+        <h2 class="rv"><span class="mask"><span>함께 배를 탄 <em>사람들</em></span></span></h2>
+        <p class="rv" style="--d:.1s">그린보트 매거진 VOL.3(2025)에 실린 이야기입니다.</p>
+      </div>
+      <div class="voices">
+        <ul class="names rv" role="tablist" id="names"></ul>
+        <div class="quote" id="quote" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p class="foot-big rv"><span class="mask"><span>다음 항해에서</span></span><span class="mask"><span style="--d:.1s"><em>만나요</em></span></span></p>
+      <a class="cta" href="https://www.greenfund.org" target="_blank" rel="noopener">환경재단 바로가기 <span aria-hidden="true">→</span></a>
+      <div class="foot-grid">
+        <div>
+          <h3>CONTACT</h3>
+          <dl>
+            <dt>대표전화</dt><dd><a href="tel:02-2011-4300">02-2011-4300</a></dd>
+            <dt>전자메일</dt><dd><a href="mailto:greenfund@greenfund.org">greenfund@greenfund.org</a></dd>
+            <dt>주소</dt><dd>서울특별시 중구 을지로 16 백남빌딩 7층</dd>
+          </dl>
+        </div>
+        <div>
+          <h3>FOLLOW</h3>
+          <dl>
+            <dt>웹사이트</dt><dd><a href="https://www.greenfund.org" target="_blank" rel="noopener">greenfund.org</a></dd>
+            <dt>인스타그램</dt><dd>@koreagreenfund</dd>
+            <dt>블로그</dt><dd>blog.naver.com/greenfu</dd>
+          </dl>
+        </div>
+        <div>
+          <h3>SOURCE</h3>
+          <dl>
+            <dt>항해 이력</dt><dd>그린보트 매거진 VOL.3 (2025)</dd>
+            <dt>2026 항해</dt><dd>환경재단 「푸른발자국」 (2026)</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="fine"><span>STOP CO₂, GO ACTION!</span><span>환경재단 그린보트 자료를 웹으로 옮긴 페이지입니다.</span></div>
+    </div>
+  </footer>
+</div>
 </main>
-
-<footer>
-  <div class="wrap">
-    <p class="foot-big rv"><span class="mask"><span>다음 항해에서</span></span><span class="mask"><span style="--d:.1s">만나요!</span></span></p>
-    <a class="cta" href="https://www.greenfund.org" target="_blank" rel="noopener">환경재단 바로가기 <span aria-hidden="true">→</span></a>
-    <div class="foot-grid">
-      <div>
-        <h3>CONTACT</h3>
-        <dl>
-          <dt>대표전화</dt><dd><a href="tel:02-2011-4300">02-2011-4300</a></dd>
-          <dt>전자메일</dt><dd><a href="mailto:greenfund@greenfund.org">greenfund@greenfund.org</a></dd>
-          <dt>주소</dt><dd>서울특별시 중구 을지로 16 백남빌딩 7층</dd>
-        </dl>
-      </div>
-      <div>
-        <h3>FOLLOW</h3>
-        <dl>
-          <dt>웹사이트</dt><dd><a href="https://www.greenfund.org" target="_blank" rel="noopener">greenfund.org</a></dd>
-          <dt>인스타그램</dt><dd>@koreagreenfund</dd>
-          <dt>블로그</dt><dd>blog.naver.com/greenfu</dd>
-        </dl>
-      </div>
-      <div>
-        <h3>SOURCE</h3>
-        <dl>
-          <dt>항해 이력</dt><dd>그린보트 매거진 VOL.3 (2025)</dd>
-          <dt>2026 항해</dt><dd>환경재단 「푸른발자국」 (2026)</dd>
-        </dl>
-      </div>
-    </div>
-    <div class="fine"><span>STOP CO₂, GO ACTION!</span><span>환경재단 그린보트 자료를 웹으로 옮긴 페이지입니다.</span></div>
-  </div>
-</footer>
 
 <script>
 (function(){
-  var root=document.documentElement;
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function $(id){return document.getElementById(id)}
 
-  /* theme */
-  try{var saved=localStorage.getItem('gs-theme'); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
-  $('themeBtn').addEventListener('click',function(){
-    var cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
-    var next=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',next);
-    try{localStorage.setItem('gs-theme',next);}catch(e){}
-  });
-
   requestAnimationFrame(function(){setTimeout(function(){$('hero').classList.add('ready')},80)});
 
-  /* marquee */
-  var mq=$('marquee'), phrase=['지구를 생각하는 특별한 항해','GREEN BOAT','바다 위 선상학교','SAIL FOR THE EARTH'];
-  var chunk=phrase.map(function(p){return '<span>'+esc(p)+'</span>'}).join('');
-  mq.innerHTML=chunk+chunk+chunk;
+  /* gentle sine swells; low amplitude keeps each trough above the next layer's crest */
+  [['l1',720,9],['l2',960,10],['l3',600,9],['l4',480,8]].forEach(function(w){
+    var path=document.querySelector('.waves .'+w[0]+' path'), d='M0 50', half=w[1]/2, up=true;
+    for(var x=0;x<2880;x+=half){ d+=' Q '+(x+half/2)+' '+(up?50-w[2]*2:50+w[2]*2)+' '+(x+half)+' 50'; up=!up; }
+    path.setAttribute('d',d+' V100 H0Z');
+  });
+
+  /* seagulls */
+  (function(){
+    var g=$('gulls'), html='';
+    [[8,26,0],[22,30,-9],[40,24,-17],[14,36,-4]].forEach(function(o,i){
+      html+='<div class="gull" style="top:'+o[0]+'%;animation-duration:'+o[1]+'s;animation-delay:'+o[2]+'s;width:'+(26+i*5)+'px"><svg viewBox="0 0 34 12"><path d="M1 9 Q 9 0 17 8 Q 25 0 33 9"/></svg></div>';
+    });
+    g.innerHTML=html;
+  })();
+
+  /* wave text */
+  var wtext=$('wtext'), wLen=0, wOff=0;
+  (function(){
+    var parts=['지구를 생각하는 특별한 항해','GREEN BOAT','바다 위 선상학교','SAIL FOR THE EARTH'];
+    var s=''; for(var r=0;r<4;r++) parts.forEach(function(p,i){s+='<tspan'+(i%2?' class="a"':'')+'>'+esc(p)+'</tspan><tspan>  ·  </tspan>'});
+    wtext.innerHTML=s;
+  })();
 
   /* statement */
   (function(){
@@ -684,18 +731,21 @@ footer{position:relative;z-index:2;background:var(--green);color:var(--on-green)
     [2025,'G','바다 위 지구학교','1.16–1.23 · 7박 8일','부산 → 기륭/타이베이 → 오키나와 → 사세보/나가사키 → 부산',2283],
     [2026,'G','바다 위 선상학교','6.19–6.25 · 6박 7일','부산 → 하코다테 → 오타루 → 부산',2408]
   ];
-  var maxP=2408, cum=[], s=0; V.forEach(function(v){s+=v[5];cum.push(s)});
-  function ord(n){return n+(n===1?'st':n===2?'nd':n===3?'rd':'th')}
+  var maxP=2408, cum=[], sum=0; V.forEach(function(v){sum+=v[5];cum.push(sum)});
   var track=$('htrack');
   track.innerHTML=V.map(function(v,i){
-    return '<article class="voy"><div class="no">'+ord(i+1)+' <em>'+(v[1]==='P'?'피스&amp;그린보트':'그린보트')+'</em></div><div class="y num">'+v[0]+'</div><h3>'+esc(v[2])+'</h3><div class="meta">'+esc(v[3])+'<br>'+esc(v[4])+'</div><div class="pax"><b class="num">'+v[5].toLocaleString('ko-KR')+'<small>명</small></b><div class="pbar"><i style="--w:'+(v[5]/maxP*100).toFixed(1)+'%"></i></div></div></article>';
+    return '<article class="voy glass"><div class="no">Voyage '+(i<9?'0':'')+(i+1)+' <em>'+(v[1]==='P'?'피스&amp;그린보트':'그린보트')+'</em></div><div class="y num">'+v[0]+'</div><h3>'+esc(v[2])+'</h3><div class="meta">'+esc(v[3])+'<br>'+esc(v[4])+'</div><div class="pax"><b class="num">'+v[5].toLocaleString('ko-KR')+'<small>명</small></b><div class="pbar"><i style="--w:'+(v[5]/maxP*100).toFixed(1)+'%"></i></div></div></article>';
   }).join('');
   var voys=[].slice.call(track.children), curV=-1;
-  function setV(i){
+  var seaDone=$('seaDone'), seaLen=seaDone.getTotalLength();
+  seaDone.style.strokeDasharray=seaLen;
+  function setV(i,frac){
+    if(frac==null) frac=i/(V.length-1);
+    seaDone.style.strokeDashoffset=seaLen*(1-frac);
+    $('boatmark').style.left=(frac*100)+'%';
     if(i===curV) return; curV=i;
     voys.forEach(function(y,k){y.classList.toggle('on',k===i); if(k<=i) y.classList.add('seen');});
-    $('vNow').textContent=ord(i+1);
-    $('vRail').style.transform='scaleX('+(i/(V.length-1))+')';
+    $('vNow').textContent='VOYAGE '+(i<9?'0':'')+(i+1)+' / 16';
     $('cumNow').textContent=cum[i].toLocaleString('ko-KR');
   }
   setV(0);
@@ -707,6 +757,7 @@ footer{position:relative;z-index:2;background:var(--green);color:var(--on-green)
     if(pinMode){ travel=Math.max(0,track.scrollWidth-innerWidth); pin.style.height=(travel+innerHeight)+'px'; }
     else pin.style.height='';
     if(reduce) voys.forEach(function(y){y.classList.add('seen')});
+    wLen=wtext.getComputedTextLength ? wtext.getComputedTextLength() : 0;
   }
   if('IntersectionObserver' in window){
     var vio=new IntersectionObserver(function(es){ if(pinMode) return; es.forEach(function(e){ if(e.isIntersecting) setV(voys.indexOf(e.target)); }); },{root:track,threshold:.6});
@@ -730,7 +781,7 @@ footer{position:relative;z-index:2;background:var(--green);color:var(--on-green)
   function showP(i){
     pbtn.forEach(function(b,k){b.setAttribute('aria-selected',String(k===i))});
     var p=P[i];
-    $('ppanel').innerHTML='<p class="big"><span>0'+(i+1)+'</span> '+esc(p[0])+'</p><p class="sub">'+esc(p[1])+'</p><p>'+esc(p[2])+'</p><div class="chips">'+p[3].map(function(c){return '<span>'+esc(c)+'</span>'}).join('')+'</div>';
+    $('ppanel').innerHTML='<p class="big"><span>0'+(i+1)+'</span>'+esc(p[0])+'</p><p class="sub">'+esc(p[1])+'</p><p>'+esc(p[2])+'</p><div class="chips">'+p[3].map(function(c){return '<span>'+esc(c)+'</span>'}).join('')+'</div>';
   }
   pbtn.forEach(function(b){b.addEventListener('click',function(){showP(+b.dataset.i); if(innerWidth<960) plist.scrollTo({left:b.parentNode.offsetLeft-16,behavior:'smooth'})})});
   showP(0);
@@ -749,7 +800,7 @@ footer{position:relative;z-index:2;background:var(--green);color:var(--on-green)
     ['사진 공모전 10','제15회 참가자','기륭 야시장에 다회용기 챙겨 가서 유명한 성젠바오 먹기! 주인 분이 흔쾌히 다회용기에 만두를 담아 주시던 장면이 아직도 생생하다.']
   ];
   var DUR=9000, vi=0, vtimer=null, paused=false, names=$('names');
-  names.innerHTML=voices.map(function(v,i){return '<li><button role="tab" data-i="'+i+'" style="--dur:'+DUR+'ms"><span>'+esc(v[0])+'</span><small>'+esc(v[1].trim())+'</small><i></i></button></li>'}).join('');
+  names.innerHTML=voices.map(function(v,i){return '<li><button role="tab" data-i="'+i+'" style="--dur:'+DUR+'ms"><span>'+esc(v[0])+'</span><small>'+esc(v[1])+'</small><i></i></button></li>'}).join('');
   var nbtn=[].slice.call(names.querySelectorAll('button'));
   function showVoice(i,user){
     vi=i;
@@ -757,7 +808,7 @@ footer{position:relative;z-index:2;background:var(--green);color:var(--on-green)
     void nbtn[i].offsetWidth; nbtn[i].setAttribute('aria-selected','true');
     var v=voices[i], k=0;
     var q=v[2].split(/(\s+)/).map(function(w){return /^\s+$/.test(w)?w:'<span class="w" style="--i:'+(k++)+'">'+esc(w)+'</span>'}).join('');
-    $('quote').innerHTML='<span class="mark" aria-hidden="true">“</span><blockquote>'+q+'</blockquote><cite><b>'+esc(v[0])+'</b>'+esc(v[1].trim())+'</cite>';
+    $('quote').innerHTML='<span class="mark" aria-hidden="true">“</span><blockquote>'+q+'</blockquote><cite><b>'+esc(v[0])+'</b>'+esc(v[1])+'</cite>';
     if(user && innerWidth<960) names.scrollTo({left:nbtn[i].parentNode.offsetLeft-16,behavior:'smooth'});
     clearTimeout(vtimer);
     if(!reduce && !paused) vtimer=setTimeout(function(){showVoice((vi+1)%voices.length)},DUR);
@@ -771,21 +822,21 @@ footer{position:relative;z-index:2;background:var(--green);color:var(--on-green)
     var to=+el.dataset.count, dec=+(el.dataset.dec||0);
     function fmt(x){return dec?x.toFixed(dec):Math.round(x).toLocaleString('ko-KR')}
     if(reduce){el.textContent=fmt(to);return}
-    var t0=null,d=1800;
+    var t0=null,d=2000;
     function step(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,4);el.textContent=fmt(to*e);if(p<1)requestAnimationFrame(step)}
     requestAnimationFrame(step);
   }
 
-  /* route animation */
-  var routeDraw=$('routeDraw'), shipDot=$('shipDot'), routeLen=routeDraw.getTotalLength();
+  /* route */
+  var routeDraw=$('routeDraw'), shipMark=$('shipMark'), routeLen=routeDraw.getTotalLength();
   routeDraw.style.strokeDasharray=routeLen; routeDraw.style.strokeDashoffset=routeLen;
+  shipMark.setAttribute('transform','translate(110 300)');
   function animateRoute(){
     if(reduce){routeDraw.style.strokeDashoffset=0;return}
-    var t0=null,d=4200;
-    function step(t){if(!t0)t0=t;var p=((t-t0)/d)%1.25; var q=Math.min(1,p);
-      var e=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
+    var t0=null,d=5200;
+    function step(t){if(!t0)t0=t;var p=((t-t0)/d)%1.3, q=Math.min(1,p), e=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;
       routeDraw.style.strokeDashoffset=routeLen*(1-e);
-      var pt=routeDraw.getPointAtLength(routeLen*e); shipDot.setAttribute('cx',pt.x); shipDot.setAttribute('cy',pt.y);
+      var pt=routeDraw.getPointAtLength(routeLen*e); shipMark.setAttribute('transform','translate('+pt.x+' '+pt.y+')');
       requestAnimationFrame(step)}
     requestAnimationFrame(step);
   }
@@ -804,55 +855,78 @@ footer{position:relative;z-index:2;background:var(--green);color:var(--on-green)
   }
   var targets=document.querySelectorAll('.rv,.mask');
   if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){onIn(e.target);io.unobserve(e.target)}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){onIn(e.target);io.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
     targets.forEach(function(el){io.observe(el)});
   } else targets.forEach(onIn);
 
-  /* blob */
-  var blob=$('blob'), bx=innerWidth/2, by=innerHeight/2, tx=bx, ty=by, fine=matchMedia('(pointer:fine)').matches;
-  if(fine && !reduce){
-    addEventListener('pointermove',function(e){tx=e.clientX;ty=e.clientY;blob.classList.add('on')},{passive:true});
-    document.addEventListener('pointerleave',function(){blob.classList.remove('on')});
+  /* ripples */
+  if(!reduce){
+    addEventListener('pointerdown',function(e){
+      ['a','b'].forEach(function(c){var r=document.createElement('span');r.className='ripple '+c;r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';document.body.appendChild(r);setTimeout(function(){r.remove()},1400)});
+    },{passive:true});
+  }
+
+  /* bubbles */
+  var cv=$('bubbles'), ctx=cv.getContext('2d'), B=[], dpr=Math.min(2,devicePixelRatio||1);
+  function sizeCv(){cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;}
+  function mkB(init){return {x:Math.random()*innerWidth,y:init?Math.random()*innerHeight:innerHeight+20,r:1.5+Math.random()*4.5,s:.3+Math.random()*.9,ph:Math.random()*6.28,a:.15+Math.random()*.35}}
+  if(!reduce){ sizeCv(); for(var b=0;b<46;b++) B.push(mkB(true)); }
+  function drawBubbles(t){
+    ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,innerWidth,innerHeight);
+    for(var i=0;i<B.length;i++){var q=B[i]; q.y-=q.s; var x=q.x+Math.sin(t/900+q.ph)*6;
+      if(q.y<-20) B[i]=mkB(false);
+      ctx.beginPath(); ctx.arc(x,q.y,q.r,0,6.283); ctx.strokeStyle='rgba(210,245,255,'+q.a+')'; ctx.lineWidth=1; ctx.stroke();
+      ctx.beginPath(); ctx.arc(x-q.r*.35,q.y-q.r*.35,q.r*.28,0,6.283); ctx.fillStyle='rgba(255,255,255,'+(q.a*.9)+')'; ctx.fill();}
   }
 
   /* scroll loop */
-  var lastY=scrollY, vel=0, mx=0, nav=$('nav'), heroInner=$('heroInner'), links=[].slice.call(document.querySelectorAll('.links a'));
+  var lastY=scrollY, nav=$('nav'), heroInner=$('heroInner'), hero=$('hero'), gauge=$('gauge'), links=[].slice.call(document.querySelectorAll('.links a'));
   var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
-  function frame(){
-    var y=scrollY, H=document.documentElement.scrollHeight-innerHeight;
-    $('progress').style.transform='scaleX('+(H>0?y/H:0)+')';
-    var dy=y-lastY; vel+=(dy-vel)*0.12;
+  function frame(t){
+    var y=scrollY, H=document.documentElement.scrollHeight-innerHeight, hh=hero.offsetHeight;
+    var dy=y-lastY;
     if(Math.abs(dy)>2) nav.classList.toggle('hide',dy>0&&y>innerHeight*.6);
-    nav.classList.toggle('solid',y>40);
+    nav.classList.toggle('deep',y>hh-64);
     lastY=y;
     if(!reduce && y<innerHeight*1.3){
       var p=y/innerHeight;
-      heroInner.style.transform='translate3d(0,'+(p*120)+'px,0)';
-      heroInner.style.opacity=String(Math.max(0,1-p*1.1));
+      heroInner.style.transform='translate3d(0,'+(p*140)+'px,0)';
+      heroInner.style.opacity=String(Math.max(0,1-p*1.2));
     }
+    /* depth gauge */
+    var under=Math.max(0,y-hh+innerHeight*.5), span=Math.max(1,H-hh+innerHeight*.5), dp=Math.min(1,under/span);
+    gauge.classList.toggle('on',y>hh*.6);
+    $('gaugeDot').style.top=(dp*100)+'%';
+    $('depth').textContent=Math.round(dp*4000).toLocaleString('ko-KR');
+    /* statement */
     var r=$('statement').getBoundingClientRect();
     var sp=Math.min(1,Math.max(0,(innerHeight*0.85-r.top)/(r.height+innerHeight*0.35)));
     var lit=reduce?words.length:Math.round(sp*words.length);
     for(var i=0;i<words.length;i++) words[i].classList.toggle('lit',i<lit);
+    /* pinned history */
     if(pinMode){
       var pr=pin.getBoundingClientRect(), prog=Math.min(1,Math.max(0,-pr.top/Math.max(1,travel)));
       track.style.transform='translate3d('+(-prog*travel)+'px,0,0)';
-      setV(Math.round(prog*(V.length-1)));
+      setV(Math.round(prog*(V.length-1)),prog);
     }
     if(!reduce){
-      mx-=0.6+Math.min(18,Math.abs(vel))*0.5;
-      var w=mq.scrollWidth/3; if(w>0 && -mx>=w) mx+=w;
-      mq.style.transform='translate3d('+mx+'px,0,0)';
+      /* wave text flows, faster while scrolling */
+      wOff-=0.7+Math.min(14,Math.abs(dy))*0.6;
+      if(wLen>0 && -wOff>wLen/4) wOff+=wLen/4;
+      wtext.setAttribute('startOffset',wOff);
+      /* bubbles only under water */
+      var under2=y>hh*.7; cv.classList.toggle('on',under2);
+      if(under2) drawBubbles(t||0);
     }
-    if(fine && !reduce){bx+=(tx-bx)*0.08;by+=(ty-by)*0.08;blob.style.transform='translate3d('+bx+'px,'+by+'px,0)';}
     var cur=null; secs.forEach(function(s){if(s && s.getBoundingClientRect().top<innerHeight*0.4)cur=s.id});
     links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+cur)});
     requestAnimationFrame(frame);
   }
-  layoutPin();
-  addEventListener('resize',layoutPin);
-  addEventListener('load',layoutPin);
-  if(document.fonts && document.fonts.ready) document.fonts.ready.then(layoutPin);
+  function relayout(){layoutPin(); if(!reduce) sizeCv();}
+  relayout();
+  addEventListener('resize',relayout);
+  addEventListener('load',relayout);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
   requestAnimationFrame(frame);
 })();
 </script>
