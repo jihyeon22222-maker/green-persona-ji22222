@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>그린보트 Green Boat</title>
-<meta name="description" content="세계 유일의 환경 테마 크루즈, 그린보트. 2005년 첫 출항부터 2026 바다 위 선상학교까지 16번의 항해와 17,213명의 그린리더.">
+<title>바다 위 선상학교</title>
+<meta name="description" content="환경재단 바다 위 선상학교. 2005년 첫 출항부터 2026년까지 16번의 항해와 17,213명의 그린리더.">
 <meta name="theme-color" content="#0e6aa0">
 <meta property="og:type" content="website">
-<meta property="og:title" content="그린보트 · 지구를 생각하는 특별한 항해">
+<meta property="og:title" content="바다 위 선상학교 · 지구를 생각하는 특별한 항해">
 <meta property="og:description" content="2005년부터 16번의 항해, 17,213명의 그린리더. 2026 바다 위 선상학교.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
 <style>
@@ -40,7 +40,7 @@ a{color:inherit}
 .nav.hide{transform:translateY(-100%)}
 .nav.deep{color:var(--foam);background:rgba(3,25,45,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .nav .wrap{display:flex;align-items:center;gap:12px;height:64px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.24em;font-size:13px;text-decoration:none;white-space:nowrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.02em;font-size:15px;text-decoration:none;white-space:nowrap}
 .logo svg{width:26px;height:26px}
 .links{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
 .links::-webkit-scrollbar{display:none}
@@ -71,9 +71,9 @@ a{color:inherit}
 .sun{position:absolute;left:68%;top:46%;width:44vmin;height:44vmin;margin:-22vmin 0 0 -22vmin;border-radius:50%;background:radial-gradient(circle,rgba(255,236,196,.95),rgba(255,236,196,.35) 35%,transparent 68%);filter:blur(2px)}
 .hero .wrap{position:relative;z-index:4;padding-top:clamp(96px,14vh,140px);color:var(--navy)}
 .hero-meta{display:flex;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.3em;opacity:.75;margin-bottom:5vh}
-.hero h1{margin:0;font-weight:200;font-size:clamp(64px,14.5vw,224px);letter-spacing:-.04em;line-height:.9;display:flex;flex-wrap:wrap;column-gap:.22em}
+.hero h1{margin:0;font-weight:200;font-size:clamp(60px,15.5vw,224px);letter-spacing:-.05em;line-height:.9;display:flex;flex-wrap:wrap;column-gap:.22em}
 .hero h1 .row{display:block;overflow:hidden;padding-bottom:.05em}
-@media (min-width:900px){.hero h1{font-size:clamp(96px,11.5vw,190px)}}
+@media (min-width:900px){.hero h1{font-size:clamp(84px,9vw,160px)}}
 .hero h1 .row span{display:inline-block;transform:translateY(110%);transition:transform 1.4s var(--ease)}
 .hero h1 .row:nth-child(2) span{transition-delay:.15s;font-weight:600;background:linear-gradient(90deg,#0c6fa8,#21b3cc);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero.ready h1 .row span{transform:none}
@@ -107,7 +107,7 @@ a{color:inherit}
 
 /* ocean body */
 .ocean{position:relative;z-index:2;background:linear-gradient(180deg,#0e6aa0 0%,#0b5a8c 8%,#084a78 18%,#063a62 32%,#052c4d 50%,#04213b 70%,#03172b 86%,#03111f 100%)}
-.rays{position:absolute;left:-10%;right:-10%;top:0;height:1000px;pointer-events:none;overflow:hidden;opacity:.6;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 38%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 38%,transparent 100%)}
+.rays{position:absolute;left:0;right:0;top:0;height:1000px;pointer-events:none;overflow:hidden;opacity:.6;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 38%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 14%,#000 38%,transparent 100%)}
 .rays i{position:absolute;top:-10%;width:14vw;height:120%;background:linear-gradient(90deg,transparent,rgba(200,242,255,.32) 50%,transparent);-webkit-mask-image:linear-gradient(180deg,#000 0,rgba(0,0,0,.6) 45%,transparent 90%);mask-image:linear-gradient(180deg,#000 0,rgba(0,0,0,.6) 45%,transparent 90%);transform:skewX(-14deg);transform-origin:top;filter:blur(14px);animation:sway 9s ease-in-out infinite alternate}
 .rays i:nth-child(1){left:6%;animation-delay:-2s}.rays i:nth-child(2){left:30%;width:8vw;animation-delay:-5s}.rays i:nth-child(3){left:52%;width:18vw}.rays i:nth-child(4){left:80%;width:9vw;animation-delay:-7s}
 @keyframes sway{0%{opacity:.25;transform:skewX(-18deg) translateX(-2vw)}100%{opacity:.9;transform:skewX(-8deg) translateX(3vw)}}
@@ -124,13 +124,6 @@ section{position:relative;z-index:2;scroll-margin-top:72px}
 .mask > span{display:block;transform:translateY(110%);transition:transform 1.2s var(--ease);transition-delay:var(--d,0s)}
 .in .mask > span,.mask.in > span{transform:none}
 
-/* wave text */
-.wavetext{position:relative;z-index:2;height:200px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
-.wavetext svg{width:100%;height:100%;display:block;overflow:visible}
-@media (max-width:719px){.wavetext{height:150px}}
-.wavetext text{font-size:var(--wtsize,46px);font-weight:200;letter-spacing:.04em;fill:var(--foam)}
-.wavetext text tspan.a{fill:var(--aqua);font-weight:600}
-.wavetext .line{fill:none;stroke:rgba(255,255,255,.18);stroke-width:1}
 
 /* about */
 .statement{font-size:clamp(28px,4.4vw,58px);line-height:1.38;letter-spacing:-.035em;font-weight:300;margin:0}
@@ -236,6 +229,9 @@ section{position:relative;z-index:2;scroll-margin-top:72px}
 .voy .pbar{height:4px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}
 .voy .pbar i{display:block;height:100%;width:0;background:var(--aqua);border-radius:999px;transition:width 1s var(--ease)}
 .voy.seen .pbar i{width:var(--w)}
+.hist-note{margin:14px 0 0;font-size:15px;color:var(--mist);max-width:620px}
+.hist-note b{color:var(--foam);font-weight:600}
+.voy .no em.nS{border-color:var(--aqua);color:var(--aqua)}
 .pin-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
 .counter{text-align:right}
 .counter .big{font-size:clamp(34px,4vw,52px);font-weight:200;letter-spacing:-.04em;line-height:1}
@@ -408,9 +404,9 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
 
 <header class="nav" id="nav">
   <div class="wrap">
-    <a class="logo" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 22c3 0 3-2 6.5-2s3.5 2 6.5 2 3-2 6.5-2 3.5 2 6.5 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 18h18l-2.5-4h-13z" fill="currentColor"/><path d="M12 14v-3h8v3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>GREEN BOAT</a>
+    <a class="logo" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 22c3 0 3-2 6.5-2s3.5 2 6.5 2 3-2 6.5-2 3.5 2 6.5 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 18h18l-2.5-4h-13z" fill="currentColor"/><path d="M12 14v-3h8v3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>바다 위 선상학교</a>
     <nav class="links" aria-label="목차">
-      <a href="#about">그린보트</a>
+      <a href="#about">소개</a>
       <a href="#y2026">2026 선상학교</a>
       <a href="#history">16번의 항해</a>
       <a href="#programs">프로그램</a>
@@ -428,12 +424,12 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
   <div class="gulls" aria-hidden="true" id="gulls"></div>
   <div class="wrap" id="heroInner">
     <div class="hero-meta"><span>환경재단 · SINCE 2005</span><span>N 35°06′ E 129°02′</span></div>
-    <h1 aria-label="GREEN BOAT"><span class="row"><span>GREEN</span></span><span class="row"><span>BOAT</span></span></h1>
+    <h1 aria-label="바다 위 선상학교"><span class="row"><span>바다 위</span></span><span class="row"><span>선상학교</span></span></h1>
     <p class="hero-sub">지구를 생각하는 특별한 항해.<br>2005년부터 <b>17,213명</b>의 그린리더가 함께 바다를 건넜습니다.</p>
   </div>
   <div class="waves" aria-hidden="true">
     <svg class="l1" viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50 Q 180 15 360 50 T 720 50 T 1080 50 T 1440 50 T 1800 50 T 2160 50 T 2520 50 T 2880 50 V100 H0Z"/></svg>
-    <div class="ship"><svg viewBox="0 0 200 110"><path d="M10 70h180l-24 32H34z" fill="#ffffff" stroke="#052a4a" stroke-width="2.5" stroke-linejoin="round"/><path d="M34 102h132" stroke="#45e0ef" stroke-width="4"/><rect x="44" y="44" width="110" height="26" fill="#ffffff" stroke="#052a4a" stroke-width="2.5"/><rect x="66" y="26" width="60" height="18" fill="#ffffff" stroke="#052a4a" stroke-width="2.5"/><rect x="86" y="8" width="14" height="18" fill="#21b3cc" stroke="#052a4a" stroke-width="2.5"/><g fill="#052a4a"><circle cx="58" cy="57" r="3"/><circle cx="74" cy="57" r="3"/><circle cx="90" cy="57" r="3"/><circle cx="106" cy="57" r="3"/><circle cx="122" cy="57" r="3"/><circle cx="138" cy="57" r="3"/></g><text x="100" y="90" text-anchor="middle" font-size="12" font-weight="700" fill="#052a4a" font-family="sans-serif" letter-spacing="3">GREEN BOAT</text></svg></div>
+    <div class="ship"><svg viewBox="0 0 200 110"><path d="M10 70h180l-24 32H34z" fill="#ffffff" stroke="#052a4a" stroke-width="2.5" stroke-linejoin="round"/><path d="M34 102h132" stroke="#45e0ef" stroke-width="4"/><rect x="44" y="44" width="110" height="26" fill="#ffffff" stroke="#052a4a" stroke-width="2.5"/><rect x="66" y="26" width="60" height="18" fill="#ffffff" stroke="#052a4a" stroke-width="2.5"/><rect x="86" y="8" width="14" height="18" fill="#21b3cc" stroke="#052a4a" stroke-width="2.5"/><g fill="#052a4a"><circle cx="58" cy="57" r="3"/><circle cx="74" cy="57" r="3"/><circle cx="90" cy="57" r="3"/><circle cx="106" cy="57" r="3"/><circle cx="122" cy="57" r="3"/><circle cx="138" cy="57" r="3"/></g><text x="100" y="90" text-anchor="middle" font-size="12" font-weight="700" fill="#052a4a" font-family="sans-serif" letter-spacing="1">바다 위 선상학교</text></svg></div>
     <svg class="l2" viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50 Q 240 10 480 50 T 960 50 T 1440 50 T 1920 50 T 2400 50 T 2880 50 V100 H0Z"/></svg>
     <svg class="l3" viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50 Q 150 18 300 50 T 600 50 T 900 50 T 1200 50 T 1500 50 T 1800 50 T 2100 50 T 2400 50 T 2700 50 T 3000 50 V100 H0Z"/></svg>
     <svg class="l4" viewBox="0 0 2880 100" preserveAspectRatio="none"><path d="M0 50 Q 120 22 240 50 T 480 50 T 720 50 T 960 50 T 1200 50 T 1440 50 T 1680 50 T 1920 50 T 2160 50 T 2400 50 T 2640 50 T 2880 50 V100 H0Z"/></svg>
@@ -445,21 +441,19 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
 <div class="ocean" id="ocean">
   <div class="rays" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
-  <div class="wavetext" aria-hidden="true"><svg id="wtsvg" viewBox="0 0 1440 200" preserveAspectRatio="none"><path id="wtp" class="line" d=""/><text dy="-14"><textPath href="#wtp" id="wtext" startOffset="0"></textPath></text></svg></div>
-
   <!-- ABOUT -->
-  <section class="sec" id="about" style="padding-top:clamp(56px,8vw,100px)">
+  <section class="sec" id="about">
     <div class="wrap">
-      <div class="sec-title"><span class="label rv">What is Green Boat</span></div>
-      <p class="statement" id="statement">그린보트는 *세계 유일의 환경 테마 크루즈*입니다. 바다 위에서 함께 배우고, 기항지에서 직접 보며, *지구와 공존하는 방법*을 찾습니다.</p>
+      <div class="sec-title"><span class="label rv">About</span></div>
+      <p class="statement" id="statement">바다 위 선상학교는 *세계 유일의 환경 테마 크루즈*입니다. 바다 위에서 함께 배우고, 기항지에서 직접 보며, *지구와 공존하는 방법*을 찾습니다.</p>
       <div class="buoys">
-        <div class="buoy rv"><span class="dot"></span><div><b class="num">2005</b><span>환경재단과 일본 피스보트가 함께 피스&amp;그린보트 첫 출항</span></div></div>
-        <div class="buoy rv" style="--d:.1s"><span class="dot"></span><div><b class="num">2018</b><span>환경재단이 독자적으로 그린보트 첫 단독 출항</span></div></div>
-        <div class="buoy rv" style="--d:.2s"><span class="dot"></span><div><b>16번의 항해</b><span>2005~2026년, 바다 위에서 이어 온 환경 연수</span></div></div>
+        <div class="buoy rv"><span class="dot"></span><div><b class="num">2005</b><span>환경재단의 첫 환경 크루즈 출항</span></div></div>
+        <div class="buoy rv" style="--d:.1s"><span class="dot"></span><div><b class="num">17,213명</b><span>2005~2026년, 함께 바다를 건넌 역대 참가자</span></div></div>
+        <div class="buoy rv" style="--d:.2s"><span class="dot"></span><div><b>16번의 항해</b><span>2026년까지 바다 위에서 이어 온 환경 연수</span></div></div>
       </div>
       <div class="two">
-        <div class="pane glass rv"><span class="tag">PEACE &amp; GREEN BOAT</span><h3>평화와 환경을 위한 항해</h3><p>한국의 환경재단과 일본의 피스보트가 2005년부터 함께 운영한 크루즈 프로그램입니다. 한일 양국 참가자가 한 배에 올라 아시아 곳곳을 여행하며, 아시아의 화합을 가로막는 환경·역사·사회·문화 문제를 열린 시각으로 바라보고 대안을 찾았습니다.</p></div>
-        <div class="pane glass rv" style="--d:.1s"><span class="tag">GREEN BOAT</span><h3>바다 위 지구학교</h3><p>기후 변화, 플라스틱 쓰레기, 미세먼지 등 환경 문제를 탐구하고 평화와 인권, 역사 문제까지 고민해 온 환경 연수 여행입니다. 선내에서는 명사들의 강연과 공연, 워크숍이 열리고, 기항지에서는 환경·역사·평화·문화의 현장을 직접 탐방합니다.</p></div>
+        <div class="pane glass rv"><span class="tag">ON BOARD</span><h3>배 위에서 배우는 학교</h3><p>기후 변화, 플라스틱 쓰레기, 미세먼지 등 환경 문제를 탐구하고 평화와 인권, 역사 문제까지 함께 고민합니다. 선내에서는 명사들의 강연과 공연, 워크숍이 열리고, 매일 발행되는 선내신문으로 관심 있는 프로그램을 골라 참여합니다.</p></div>
+        <div class="pane glass rv" style="--d:.1s"><span class="tag">PORTS OF CALL</span><h3>기항지에서 만나는 현장</h3><p>배 안에서 배운 것을 기항지에서 직접 보고 느낍니다. 아시아 곳곳의 환경·역사·평화·문화의 현장을 탐방하며, 아시아의 화합을 가로막는 문제를 열린 시각으로 바라보고 대안을 찾습니다.</p></div>
       </div>
     </div>
   </section>
@@ -475,7 +469,7 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
       <div class="y26-hero">
         <div class="porthole rv" id="porthole"><div class="glassin"><img src="img/y26-main.webp" alt="2026 바다 위 선상학교 선내 체험 프로그램" loading="lazy"></div></div>
         <div>
-          <p class="lead rv">그린보트가 전문여행사와의 협업으로 <em>‘바다 위 선상학교’</em>로 새롭게 운영되었습니다.</p>
+          <p class="lead rv">2026년, 전문여행사와의 협업으로 <em>‘바다 위 선상학교’</em>가 새롭게 출항했습니다.</p>
           <p class="body rv" style="--d:.1s">환경교육의 대중성을 높이고 더 많은 시민에게 참여 기회를 제공하고자, 환경·AI·인문학·건강 강연과 캠페인, 체험, 문화공연을 여행에 더했습니다. 특히 강연이 환경 인식 변화에 가장 큰 영향을 준 콘텐츠로 평가되며, 지식과 체험, 환경교육을 결합한 지속가능한 여행 모델의 가능성을 확인했습니다.</p>
         </div>
       </div>
@@ -532,7 +526,7 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
           <div class="sec-title" style="margin-bottom:28px">
             <span class="label rv">Navigation log</span>
             <div class="pin-head">
-              <h2 class="rv"><span class="mask"><span><em>16번</em>의 항해</span></span></h2>
+              <div><h2 class="rv"><span class="mask"><span><em>16번</em>의 항해</span></span></h2><p class="hist-note rv">2005년 <b>피스&amp;그린보트</b>로 시작해, 2018년 <b>그린보트</b> 단독 항해를 거쳐, 2026년 <b>바다 위 선상학교</b>로 이어졌습니다.</p></div>
               <div class="counter"><div class="k" id="vNow">VOYAGE 01 / 16</div><div class="big num"><span id="cumNow">550</span><small>명 누적</small></div></div>
             </div>
           </div>
@@ -552,7 +546,7 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
       <div class="sec-title">
         <span class="label rv">On board</span>
         <h2 class="rv"><span class="mask"><span>배 위에서 만나는 <em>선내 프로그램</em></span></span></h2>
-        <p class="rv" style="--d:.1s">매일 발행되는 선내신문으로 다음 날 프로그램을 확인하고, 관심 있는 강연과 활동에 자유롭게 참여합니다. 제15회 그린보트(2025)의 프로그램입니다.</p>
+        <p class="rv" style="--d:.1s">매일 발행되는 선내신문으로 다음 날 프로그램을 확인하고, 관심 있는 강연과 활동에 자유롭게 참여합니다. 2025년 제15회 항해의 프로그램입니다.</p>
       </div>
       <div class="prog">
         <ul class="plist rv" role="tablist" id="plist"></ul>
@@ -577,13 +571,13 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
     <div class="wrap">
       <div class="sec-title">
         <span class="label rv">Myth &amp; Truth</span>
-        <h2 class="rv"><span class="mask"><span>그린보트에 대한 <em>오해와 진실</em></span></span></h2>
-        <p class="rv" style="--d:.1s">“크루즈는 탄소를 많이 내지 않나요?” 그린보트는 단순한 관광이 아닙니다. 2천여 명이 함께 숙식하며 강연을 듣고 기항지를 탐방하는, 움직이는 학교입니다.</p>
+        <h2 class="rv"><span class="mask"><span>바다 위 선상학교, <em>오해와 진실</em></span></span></h2>
+        <p class="rv" style="--d:.1s">“크루즈는 탄소를 많이 내지 않나요?” 바다 위 선상학교는 단순한 관광이 아닙니다. 2천여 명이 함께 숙식하며 강연을 듣고 기항지를 탐방하는, 움직이는 학교입니다.</p>
       </div>
       <div class="claim">
         <div class="rv">
           <div class="huge num"><span data-count="38">0</span><small>% 적게</small></div>
-          <h3>그린보트가 사용한 코스타 세레나호는 비행기보다 탄소배출이 적습니다</h3>
+          <h3>2025년 항해에 사용한 코스타 세레나호는 비행기보다 탄소배출이 적습니다</h3>
           <p>승객 1인이 1km를 이동할 때 배출하는 CO₂ 기준입니다.</p>
         </div>
         <div class="rv" id="carbon">
@@ -603,8 +597,8 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
 
       <div class="survey" id="survey">
         <span class="label rv">After the voyage</span>
-        <h3 class="rv">그린보트를 다녀온 뒤, 일상이 달라졌을까?</h3>
-        <p class="rv">제15회 그린보트 참가자 설문 · 5점 척도 평균 (사전 427명, 사후 389명 응답)</p>
+        <h3 class="rv">항해를 다녀온 뒤, 일상이 달라졌을까?</h3>
+        <p class="rv">2025년 제15회 항해 참가자 설문 · 5점 척도 평균 (사전 427명, 사후 389명 응답)</p>
         <div class="legend rv"><span><i style="background:rgba(255,255,255,.38)"></i>참여 전</span><span><i style="background:var(--aqua)"></i>참여 후</span></div>
         <div class="srows">
           <div class="srow rv"><div class="t">쓰레기를 줄이기 위한 노력</div><div class="pair"><div class="b pre"><div class="bt"><i data-v="4.02"></i></div><span>4.02</span></div><div class="b post"><div class="bt"><i data-v="4.33"></i></div><span>4.33</span></div></div></div>
@@ -617,13 +611,13 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
           <div class="rg glass rv" style="--d:.08s"><svg viewBox="0 0 92 92"><circle class="bgc" cx="46" cy="46" r="40"/><circle class="fg" cx="46" cy="46" r="40" data-p="83"/></svg><div><b class="num">83%</b><span>앞으로 기후 행동을 실천하겠다</span></div></div>
           <div class="rg glass rv" style="--d:.16s"><svg viewBox="0 0 92 92"><circle class="bgc" cx="46" cy="46" r="40"/><circle class="fg" cx="46" cy="46" r="40" data-p="78"/></svg><div><b class="num">78%</b><span>다시 꼭 탑승하고 싶다</span></div></div>
         </div>
-        <p class="chart-note">2025년 제15회 그린보트 기준</p>
+        <p class="chart-note">2025년 제15회 항해 기준</p>
       </div>
     </div>
   </section>
 
   <!-- GALLERY -->
-  <div class="gallery" aria-label="그린보트 사진"><div class="row" id="gallery"></div></div>
+  <div class="gallery" aria-label="바다 위 선상학교 사진"><div class="row" id="gallery"></div></div>
 
   <!-- VOICES -->
   <section class="sec" id="voices">
@@ -631,7 +625,7 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
       <div class="sec-title">
         <span class="label rv">Voices</span>
         <h2 class="rv"><span class="mask"><span>함께 배를 탄 <em>사람들</em></span></span></h2>
-        <p class="rv" style="--d:.1s">그린보트 매거진 VOL.3(2025)에 실린 이야기입니다.</p>
+        <p class="rv" style="--d:.1s">지난 항해에 함께한 사람들의 이야기입니다.</p>
       </div>
       <div class="voices">
         <ul class="names rv" role="tablist" id="names"></ul>
@@ -669,7 +663,7 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
           </dl>
         </div>
       </div>
-      <div class="fine"><span>STOP CO₂, GO ACTION!</span><span>환경재단 그린보트 자료를 웹으로 옮긴 페이지입니다.</span></div>
+      <div class="fine"><span>STOP CO₂, GO ACTION!</span><span>환경재단 바다 위 선상학교 자료를 웹으로 옮긴 페이지입니다.</span></div>
     </div>
   </footer>
 </div>
@@ -697,14 +691,6 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
       html+='<div class="gull" style="top:'+o[0]+'%;animation-duration:'+o[1]+'s;animation-delay:'+o[2]+'s;width:'+(26+i*5)+'px"><svg viewBox="0 0 34 12"><path d="M1 9 Q 9 0 17 8 Q 25 0 33 9"/></svg></div>';
     });
     g.innerHTML=html;
-  })();
-
-  /* wave text */
-  var wtext=$('wtext'), wLen=0, wOff=0;
-  (function(){
-    var parts=['지구를 생각하는 특별한 항해','GREEN BOAT','바다 위 선상학교','SAIL FOR THE EARTH'];
-    var s=''; for(var r=0;r<4;r++) parts.forEach(function(p,i){s+='<tspan'+(i%2?' class="a"':'')+'>'+esc(p)+'</tspan><tspan>  ·  </tspan>'});
-    wtext.innerHTML=s;
   })();
 
   /* statement */
@@ -735,12 +721,12 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
     [2019,'P','환경과 평화, 우리가 만드는 새로운 100년','4.9–4.16 · 7박 8일','여수 → 상하이 → 나가사키 → 제주 → 부산',1050],
     [2019,'G','에코라이프: 즐거운 불편','12.7–12.14 · 7박 8일','부산 → 기륭/타이베이 → 제주 → 부산',1187],
     [2025,'G','바다 위 지구학교','1.16–1.23 · 7박 8일','부산 → 기륭/타이베이 → 오키나와 → 사세보/나가사키 → 부산',2283],
-    [2026,'G','바다 위 선상학교','6.19–6.25 · 6박 7일','부산 → 하코다테 → 오타루 → 부산',2408]
+    [2026,'S','바다 위 선상학교','6.19–6.25 · 6박 7일','부산 → 하코다테 → 오타루 → 부산',2408]
   ];
   var maxP=2408, cum=[], sum=0; V.forEach(function(v){sum+=v[5];cum.push(sum)});
   var track=$('htrack');
   track.innerHTML=V.map(function(v,i){
-    return '<article class="voy glass"><div class="no">Voyage '+(i<9?'0':'')+(i+1)+' <em>'+(v[1]==='P'?'피스&amp;그린보트':'그린보트')+'</em></div><div class="y num">'+v[0]+'</div><h3>'+esc(v[2])+'</h3><div class="meta">'+esc(v[3])+'<br>'+esc(v[4])+'</div><div class="pax"><b class="num">'+v[5].toLocaleString('ko-KR')+'<small>명</small></b><div class="pbar"><i style="--w:'+(v[5]/maxP*100).toFixed(1)+'%"></i></div></div></article>';
+    return '<article class="voy glass"><div class="no">Voyage '+(i<9?'0':'')+(i+1)+' <em class="n'+v[1]+'">'+(v[1]==='P'?'피스&amp;그린보트':v[1]==='G'?'그린보트':'바다 위 선상학교')+'</em></div><div class="y num">'+v[0]+'</div><h3>'+esc(v[2])+'</h3><div class="meta">'+esc(v[3])+'<br>'+esc(v[4])+'</div><div class="pax"><b class="num">'+v[5].toLocaleString('ko-KR')+'<small>명</small></b><div class="pbar"><i style="--w:'+(v[5]/maxP*100).toFixed(1)+'%"></i></div></div></article>';
   }).join('');
   var voys=[].slice.call(track.children), curV=-1;
   var seaDone=$('seaDone'), seaLen=seaDone.getTotalLength();
@@ -763,14 +749,6 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
     if(pinMode){ travel=Math.max(0,track.scrollWidth-innerWidth); pin.style.height=(travel+innerHeight)+'px'; }
     else pin.style.height='';
     if(reduce) voys.forEach(function(y){y.classList.add('seen')});
-    /* wave-text path: viewBox matches the box in pixels, so glyphs are never scaled or cropped */
-    var ws=$('wtsvg'), W=ws.clientWidth||innerWidth, Hh=ws.clientHeight||200, mob=innerWidth<720;
-    ws.setAttribute('viewBox','0 0 '+W+' '+Hh);
-    ws.style.setProperty('--wtsize',(mob?30:46)+'px');
-    var base=Math.round(Hh*.68), amp=mob?12:20, wl=mob?640:1100, d='M-60 '+base, up=true;
-    for(var x=-60;x<W+wl*2;x+=wl/2){ d+=' Q '+(x+wl/4)+' '+(up?base-amp*2:base+amp*2)+' '+(x+wl/2)+' '+base; up=!up; }
-    $('wtp').setAttribute('d',d);
-    wLen=wtext.getComputedTextLength ? wtext.getComputedTextLength() : 0;
   }
   if('IntersectionObserver' in window){
     var vio=new IntersectionObserver(function(es){ if(pinMode) return; es.forEach(function(e){ if(e.isIntersecting) setV(voys.indexOf(e.target)); }); },{root:track,threshold:.6});
@@ -800,7 +778,7 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
   showP(0);
 
   /* gallery */
-  var shots=[['ship','부산항에 정박한 코스타 세레나호'],['deck','선상 산책로'],['wake','배가 지나간 자리'],['manzamo','오키나와 만좌모'],['rainbow','오키나와에서 만난 무지개'],['network','네트워킹 프로그램'],['night','밤바다 위의 그린보트'],['wind','풍력발전 탐방'],['river','맹그로브 숲'],['lighthouse','기륭항의 등대'],['coast','오키나와 해안'],['talk','선내 강연']];
+  var shots=[['ship','부산항에 정박한 코스타 세레나호'],['deck','선상 산책로'],['wake','배가 지나간 자리'],['manzamo','오키나와 만좌모'],['rainbow','오키나와에서 만난 무지개'],['network','네트워킹 프로그램'],['night','밤바다 위의 크루즈'],['wind','풍력발전 탐방'],['river','맹그로브 숲'],['lighthouse','기륭항의 등대'],['coast','오키나와 해안'],['talk','선내 강연']];
   function gHTML(alt){return shots.map(function(s){return '<figure class="shot"><div class="im"><img src="img/'+s[0]+'.webp" alt="'+(alt?esc(s[1]):'')+'" loading="lazy"></div><figcaption>'+esc(s[1])+'</figcaption></figure>'}).join('')}
   $('gallery').innerHTML=gHTML(true)+gHTML(false);
 
@@ -808,8 +786,8 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
   var voices=[
     ['최열','환경재단 이사장','다양한 사람을 만나고 함께 강의를 듣고 여행하고 공부하면 모두가 친구이자 선생님이 됩니다. 우리가 지구 공동체로서 앞으로 생활 습관 하나라도 친환경적으로 바꾸게 된다면 이것이 이번 여정의 가장 큰 결실이 될 것입니다.'],
     ['장사익','소리꾼','이번 여행을 하면서 많은 사람과 함께 육식이 배제된 식단이 나올 때도 즐겁게 식사하고, 일회용 물품 사용 없이도 불편함 없이 선상 생활을 하면서 새삼 환경의 소중함을 생각하는 계기가 되었다. … 배를 타면 노래가 저절로 나온다.'],
-    ['에디터 K','7박 8일 그린보트 체험기','각 나라, 도시를 배로 이동하는 시간마저 헛되이 쓰지 않고 배우는 시간. 수많은 사람과 어깨를 맞대고 함께 고개를 끄덕이며 지식을 나누는 순간들이 꽤 알찼다.'],
-    ['사진 공모전 01','제15회 참가자','지속가능성을 향한 항해, 그린보트에서 만난 푸른 바닷길! 지구가 정말 광대하다는 걸 알 수 있는 바닷길!'],
+    ['에디터 K','7박 8일 승선 체험기','각 나라, 도시를 배로 이동하는 시간마저 헛되이 쓰지 않고 배우는 시간. 수많은 사람과 어깨를 맞대고 함께 고개를 끄덕이며 지식을 나누는 순간들이 꽤 알찼다.'],
+    ['사진 공모전 12','제15회 참가자','이 창가는 너른 태평양과 광대한 일출을 내게 안겨줬다. 7박 8일간의 나의 안식처이자 아지트.'],
     ['사진 공모전 10','제15회 참가자','기륭 야시장에 다회용기 챙겨 가서 유명한 성젠바오 먹기! 주인 분이 흔쾌히 다회용기에 만두를 담아 주시던 장면이 아직도 생생하다.']
   ];
   var DUR=9000, vi=0, vtimer=null, paused=false, names=$('names');
@@ -961,10 +939,6 @@ footer::before{content:"";position:absolute;left:50%;bottom:-40%;width:120vw;hei
       setV(Math.round(prog*(V.length-1)),prog);
     }
     if(!reduce){
-      /* wave text flows, faster while scrolling */
-      wOff-=0.7+Math.min(14,Math.abs(dy))*0.6;
-      if(wLen>0 && -wOff>wLen/4) wOff+=wLen/4;
-      wtext.setAttribute('startOffset',wOff);
       /* bubbles only under water */
       var under2=y>hh*.7; cv.classList.toggle('on',under2);
       if(under2) drawBubbles(t||0);
